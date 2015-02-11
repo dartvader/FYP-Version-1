@@ -1,0 +1,13 @@
+{
+	"RuleSet" : {
+		"Rule" {
+			"RuleName": 1,
+			"Condition": {
+				""
+			},
+			"Consequence": {
+
+			}
+		}
+	}
+}

@@ -1,0 +1,35 @@
+[{RuleSetName: "Claim Rule Set",
+  Rules: [
+    {
+      RuleName: "ClaimType",
+      selectedObject: {/* value of the current object in drop downlist */},
+      Objects:[
+        {
+          "name":"Cve__Claim__C",
+          "var":"C",
+          "label"
+          "fields":[  
+             {"cve__BenefitType__C"},
+             {"cve__BenefitType__C"},
+             {"cve__BenefitType__C"}
+          ]
+        }
+      ], 
+      Conditions:[  
+         {  
+            "Object":"Cve__Claim__C",
+            "ComparisonType":"String",
+            "Field":"cve__BenefitType__C",
+            "Operator":"Equals",
+            "Value":"Test"
+         }
+      ],
+      Actions:{  
+         {  
+            Score:100,
+            Recommendation:"Take To Manager"
+         }
+       }
+    }
+  ]
+}];

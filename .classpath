@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="resources/rules/" kind="src" path="src"/>
+	<classpathentry excluding="rules/" kind="src" path="resources"/>
+	<classpathentry excluding="WEB-INF/classes/|WEB-INF/classes/" kind="src" path="WebContent"/>
+	<classpathentry kind="src" path="src/resources/rules"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/Java SE 8 [1.8.0_25]">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v6.0">
+		<attributes>
+			<attribute name="owner.project.facets" value="jst.web"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Drools"/>
+	<classpathentry kind="lib" path="/Users/leemcdonald/Documents/Jboss/cvfraud-v1/WebContent/WEB-INF/lib/kie-api-6.1.0.Final.jar" sourcepath="/Users/leemcdonald/.m2/repository/org/kie/kie-api/6.1.0.Final/kie-api-6.1.0.Final-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/leemcdonald/Documents/Jboss/kie-api.jar" sourcepath="/Users/leemcdonald/Documents/Jboss/kie-api.jar"/>
+	<classpathentry kind="output" path="WebContent/WEB-INF/classes"/>
+</classpath>

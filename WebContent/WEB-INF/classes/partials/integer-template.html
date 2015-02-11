@@ -1,0 +1,8 @@
+<div class="col-xs-3 min-padding">
+    <select class="form-control mini" ng-model="constraint.operator" ng-options="comparson.name for comparson in numericComparisons">
+        <option value="">-- Integer Comparisons --</option>
+    </select>
+</div>
+<div class="col-xs-4 min-padding" ng-if="!containsNull(constraint.operator.name)">
+    <input type="text" class="form-control mini" ng-model="constraint.value" placeholder="Amount">
+</div>
