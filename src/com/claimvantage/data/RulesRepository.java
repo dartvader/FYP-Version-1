@@ -1,25 +1,19 @@
 package com.claimvantage.data;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
-import com.claimvantage.drools.util.BuilderUtil;
-import com.claimvantage.model.DrlFile;
 import com.claimvantage.model.Rule;
-import com.claimvantage.model.Ruleset;
 
 public class RulesRepository {
 	
 	private static RulesRepository instance = null;
 	
 	private List<Rule> rules;
-	private Map<Rule, DrlFile> rulesetToString;
 
 	private RulesRepository () {
 		rules = new ArrayList<Rule>();
-		rulesetToString = new HashMap<Rule, DrlFile>();
 	}
 	
 	public static RulesRepository instance() {
@@ -30,7 +24,10 @@ public class RulesRepository {
 	}
 	
 	public void addRule(Rule rule) {
+		UUID randomId = UUID.randomUUID();
+		rule.setId(randomId);
 		rules.add(rule);
+		//TODO Remove this
 		System.out.println(rule.getScript());
 	}
 	
@@ -49,12 +46,8 @@ public class RulesRepository {
 	public void setRules(List<Rule> rules) {
 		this.rules = rules;
 	}
+	// TODO get rule by name
+	
+	
 
-	public Map<Rule, DrlFile> getRulesetToString() {
-		return rulesetToString;
-	}
-
-	public void setRulesetToString(Map<Rule, DrlFile> rulesetToString) {
-		this.rulesetToString = rulesetToString;
-	}
 }
