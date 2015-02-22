@@ -7,31 +7,115 @@ fraudControllers.controller('MainController', function($scope, $rootScope, $loca
 	
 });
 
-fraudControllers.controller('SessionController', function($scope, $rootScope, $location, SessionServices){
-	// Login shit and session id configuration to go here.
-	$scope.sessions;
-	$scope.alerts = [];
+fraudControllers.controller('SessionController', function($scope, $rootScope, $location, SessionServices, RulesServices){
 	
-	$scope.fireRules = function () {
-		SessionServices.fireRules();
+	$scope.sessions;
+	
+	$scope.inBuildingMode = false;
+	$scope.inEditingMode = false;
+	$scope.newSession = {};
+	$scope.selectedNewRules = [];
+	$scope.availableRules;
+	
+	$scope.selectedSession;
+	$scope.selectedSessions;
+	
+	$scope.$watchCollection("selectedSessions", function(){
+		$scope.selectedSession = {};
+		$scope.selectedSession = $scope.selectedSessions[0];
+		console.log("selected session " + JSON.stringify($scope.selsectedSession));
+	});
+	
+	$scope.init = function() {
+		$scope.getRules();
+		$scope.selectedSession = {};
+		$scope.selectedSessions = [];
+		var sessionPromise = SessionServices.getSessions();
+		sessionPromise.then(function(session) {
+			$scope.sessions = session;
+		});
+		
 	};
 	
-	$scope.getAlerts = function () {
-		var alertsPromise = SessionServices.getAlerts();
-		$scope.alerts = [];
+	$scope.buildNewSession = function() {
 		
-		alertsPromise.then(function(alerts) {
-			$scope.alerts = alerts;
+		$scope.selectedSession = {};
+		$scope.inBuildingMode = true;
+        $scope.newSession = {};
+    	$scope.selectedNewRules = [];
+		
+		return false;
+	};
+	
+	$scope.cancelNewSession = function() {
+		$scope.inBuildingMode = false;
+		$scope.selectedNewRules = [];
+        $scope.newSession = {};
+		return false;
+	};
+	
+	$scope.saveNewSession = function() {
+		
+		$scope.newSession.rules = $scope.selectedNewRules;
+		
+		SessionServices.saveSession(angular.toJson($scope.newSession));
+		var newSessionPromise = SessionServices.getSessions();
+		newSessionPromise.then(function(sessions) {
+			$scope.sessions = [];
+			$scope.sessions = sessions;
+		});
+		
+		$scope.selectedNewRules = [];
+		$scope.newSession = {};
+		$scope.inBuildingMode = false;
+		
+		return false;
+	};
+	
+	$scope.cancelNewSession = function() {
+		$scope.newSession = undefined;
+		$scope.inBuildingMode = false;
+		return false;
+	};
+	
+	$scope.isSelecetedSession = function() {
+		if ($scope.selectedSession  === undefined 
+					|| $scope.selectedSession  === null 
+					||  $scope.selectedSession  == "") {
+			return false;
+		} else {
+			return true;
+		}
+	};
+	
+	// TODO redo firing action as i will have to pass id/unique name to this api to fire the correct Schedule
+	$scope.executeRules = function (sessionId) {
+		console.log("session id " + sessionId);
+		var executeRulePromise = SessionServices.executeRules(sessionId);
+		
+		executeRulePromise.then(function(execution) {
+			
+			console.log("execution " +JSON.stringify(execution));
 		});
 	};
+	
+	$scope.getRules = function() {
+		var rulesPromise = RulesServices.getRules();
+		// console.log("Getting rules ");
+		$scope.rules = [];
+		
+		rulesPromise.then(function(rules) {
+			$scope.availableRules = rules;
+		});
+	};
+	$scope.init();
 });
 
 fraudControllers.controller('RuleCreationController', 
-		function($rootScope, $scope, $location, ngDialog, SobObjectsService, ConditionService, RulesServices) {
+		function($window, $route, $rootScope, $scope, $location, ngDialog, SobObjectsService, ConditionService, RulesServices) {
 
 	$scope.describedObjects = [];
 	$scope.rules = [];
-	$scope.ruleIdCount=0;
 	$scope.newRule= {};
 	$scope.newRuleMode = false;
 	$scope.stringComparisions = [];
@@ -53,12 +137,9 @@ fraudControllers.controller('RuleCreationController',
 	};
 
 	$scope.addRule = function() {
-		$scope.ruleIdCount = $scope.ruleIdCount+1;
 		var ruleName = null,
-			ruleId = $scope.ruleIdCount,
-			rule = {name: ruleName, id: ruleId},
+			rule = {name: ruleName},
 		    object = { sobApi: null, sobVar: null, sobLabel: null, sobType: null, sobFields:[]};
-		$scope.ruleIdCount = $scope.ruleIdCount+1; 
 		
         rule.consequence = {score: 0, recommendation: ""};
 		rule.conditions = [];
@@ -133,22 +214,28 @@ fraudControllers.controller('RuleCreationController',
 	};
 	
 	$scope.saveRule = function() {
+
+		var rulesPromise = RulesServices.getRules();
 		RulesServices.newRule(angular.toJson($scope.newRule));
-		$scope.newRule = undefined;
+		$scope.rules = [];
+		rulesPromise.then(function(rules) {
+			$scope.rules = rules;
+		});
+		$scope.newRule = {};
 		$scope.newRuleMode = false;
-		
-		$scope.getRules();
+		$scope.reloadRoute();
 		return false;
 	};
 	
 	$scope.cancelNewRule = function() {
-		$scope.newRule = undefined;
+		$scope.newRule = {};
 		$scope.newRuleMode = false;
 		return false;
 	};
 	
 	$scope.getRules = function() {
 		var rulesPromise = RulesServices.getRules();
+		console.log("Getting rules ");
 		$scope.rules = [];
 		
 		rulesPromise.then(function(rules) {
@@ -158,17 +245,25 @@ fraudControllers.controller('RuleCreationController',
 	
 	$scope.openSobjectSelection= function (r) {
 		var rule = r;
-		console.log("openSobjectSelection ");
 		$scope.value = true;
 
 		ngDialog.open({
-			template: 'partials/SobjectSelection.html',
+			template: 'partials/sobject-selection.html',
 			className: 'ngdialog-theme-plain',
 			scope: $scope,
 			data: rule
 		});
 	};
-
+	
+	$scope.$watch('rules', function(newVal, oldVal) {
+	    console.log(newVal, oldVal);
+	});
+	
+	$scope.reloadRoute = function() {
+	    //$route.reload();
+	    $window.location.reload();
+	}
+	
 	$scope.init();
 });
 
