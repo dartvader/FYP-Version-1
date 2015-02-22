@@ -55,14 +55,19 @@ public class TrackingWorkingMemoryEventListener extends DefaultRuleRuntimeEventL
 	public void objectInserted(final ObjectInsertedEvent event) {
 		Alert a;
 
+		/* 
+		System.out.println("<<< getFactHandle " + event.getFactHandle().toString() + " >>> ");
+		System.out.println("<<< Class Name " + event.getFactHandle()+ " >>> ");*/
+		System.out.println(" <<<  getObject " + event.getObject().toString() + " >>> ");
+		//System.out.println(" <<<  getObject class name " + event.getObject().getClass().getName() + " >>> ");
+
 		if ((handleFilter == null  && classFilter == null)
 				|| event.getFactHandle() == handleFilter
 				|| event.getObject().getClass().equals(classFilter)) {
 			
 			if (event.getObject().getClass().equals(Alert.class)) {
 				a = (Alert) event.getObject();
-				System.out.println(" alert " + a.getScore());
-				System.out.println(" alert " + a.getRuleName());
+				System.out.println(">>>> adding alert <<<<");
 				alerts.add(a);
 				log.trace("Insertion: " + a.getRuleName());
 			}

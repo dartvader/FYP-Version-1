@@ -225,7 +225,7 @@ public class Cve__Claim__C extends SObject {
 	@XmlElement(name = "cve__BenefitSummary__c", nillable = true)
 	protected String cve__BenefitSummary__C;
 	@XmlElement(name = "cve__BenefitType__c", nillable = true)
-	protected String cve__BenefitType__C;
+	public String cve__BenefitType__C;
 	@XmlElement(name = "cve__ClaimRelationships__r", nillable = true)
 	protected QueryResultType cve__ClaimRelationships__R;
 	@XmlElement(name = "cve__ClaimantInsuredAccountName__c", nillable = true)

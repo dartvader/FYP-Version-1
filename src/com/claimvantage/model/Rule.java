@@ -2,8 +2,16 @@ package com.claimvantage.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 import com.claimvantage.drools.util.BuilderUtil;
 
@@ -12,7 +20,8 @@ public class Rule {
 	
 	private String name;
 	private String description;
-	private Integer id;
+	@JsonIgnore
+	private UUID id;
 	private StringBuilder script;
 	private List<Condition> conditions;
 	private Consequence consequence;
@@ -23,11 +32,14 @@ public class Rule {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Integer getId() {
+	public UUID getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(UUID id) {
 		this.id = id;
+	}
+	public void setScript(StringBuilder script) {
+		this.script = script;
 	}
 	public List<Condition> getConditions() {
 		return conditions;
@@ -51,8 +63,7 @@ public class Rule {
 		return script;
 	}
 	public void buildScript() {
-		StringBuilder s = BuilderUtil.buildRuleScript(this);
-		System.out.println(s.toString());
+		// TODO Remove StringBuilder s = BuilderUtil.buildRuleScript(this);
 		this.script = BuilderUtil.buildRuleScript(this);
 	}
 }

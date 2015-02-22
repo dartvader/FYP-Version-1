@@ -6,6 +6,7 @@ var fraudApp = angular.module('fraudApp', [
 		'trNgGrid',
 		'fraudControllers',
 		'fraudServices',
+		'ui.bootstrap'
 		]);
 
 fraudApp.config(function ($routeProvider, ngDialogProvider) {
@@ -18,8 +19,8 @@ fraudApp.config(function ($routeProvider, ngDialogProvider) {
 		templateUrl:'partials/rules.html', 
 		controller:'RuleCreationController'
 	}).
-	when('/sessions', {
-		templateUrl:'partials/sessions.html', 
+	when('/session-manager', {
+		templateUrl:'partials/session-manager.html', 
 		controller:'SessionController'
 	}).
 	when('/maintainruleset', {

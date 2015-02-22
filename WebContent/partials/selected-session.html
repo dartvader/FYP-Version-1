@@ -1,0 +1,99 @@
+<div class="col-lg-12">
+	<!-- First row -->
+    <div class="row">
+        <div class="col-xs-3">
+			<div class="panel panel-primary panel-rounded">
+				<div class="panel-heading">Creation Date</div>
+				<div class="panel-body">
+					{{selectedSession.creationDateTime| date:'EEEE, MMMM d, y'}}
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-3">
+			<div class="panel panel-primary panel-rounded">
+				<div class="panel-heading">Creation Time</div>
+				<div class="panel-body">
+					{{selectedSession.creationDateTime| date:'shortTime'}}
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-3">
+			<div class="panel panel-primary panel-rounded">
+				<div class="panel-heading">Number of Alerts Raised</div>
+				<div class="panel-body">
+					{{selectedSession.totalNumberOfAlerts}}
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-3">
+			<div class="panel panel-primary panel-rounded">
+				<div class="panel-heading">Number of Rules Fired</div>
+				<div class="panel-body">
+					{{selectedSession.totalNumberOfRulesFired}}
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- selected rules -->
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="panel panel-info">
+				<div class="panel-heading" data-toggle="collapse" data-target="#collapseRuleTable" aria-expanded="false" aria-controls="collapseExample">
+					<span>
+					  Session Rules
+					</span>
+				</div>
+				<div class="panel-body">
+					<div id="collapseRuleTable" class="panel-collapse collapse in">
+						<table class="flat-table flat-table-1" tr-ng-grid=""
+							items="selectedSession.rules" page-items="5">
+							<thead>
+								<tr>
+									<th field-name="name" enable-filtering="false"></th>
+									<th field-name="description" display-name="Description"
+										enable-filtering="false"></th>
+									<th field-name="consequence.score" display-name="Fraud Score"
+										enable-filtering="false" display-align="center"></th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<div class="row">
+						<div class="form-group add-rule" id="btn-add-rule">
+							<div class="btn-group-justified" role="group"
+								aria-label="Justified button group">
+								<a class="btn btn-danger" role="button"
+									ng-click="executeRules(selectedSession.id)">Execute Rules</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Executions row -->
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="panel panel-info" ng-repeat="execution in selectedSession.executions">
+				<div class="panel-heading hover-link" data-toggle="collapse" data-parent="false" data-target="#collapseExecutionsTable">
+		          	<h4 class="panel-title">
+		            Executions {{execution.timeStamp| date:'shortTime'}}
+		          	</h4>
+		        </div>
+		        <div id="collapseExecutionsTable" class="panel-collapse collapse in">
+					<div class="panel-body">
+                          <table class="flat-table flat-table-1" tr-ng-grid="" items="execution.alerts" page-items="5">
+						    <thead>
+						        <tr>
+						            <th field-name="ruleName" display-name="Rule Name" enable-filtering="false" enable-sorting="false" cell-width="10em" display-align="right">
+						            </th>
+						    	</tr>
+						    </thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -21,7 +21,7 @@ public final class BuilderUtil {
 	
 	public final static String LOCAL_PACKAGE_RULES = "package com.rules \n";
 	public final static String IMPORTS_MODEL = "import com.claimvantage.model.* \n";
-	public final static String LOCAL_IMPORTS_OBJECTS = "import com.sforce.soap.enterprise.Cve__Claim__C \n";
+	public final static String LOCAL_IMPORTS_OBJECTS = "import com.sforce.soap.enterprise.sobject.*; \n";
 	
 	public final static String ANY_TRUE_BINDER = " || ";
 	public final static String ALL_TRUE_BINDER = " , ";
@@ -131,7 +131,6 @@ public final class BuilderUtil {
     	String pattern = "";
     	Boolean needsPatternBinder = false;
     	for (Constraint c : constraints) {
-    		System.out.println("patternBinder " + patternBinder);
     		pattern += needsPatternBinder == true ? patternBinder : "";
     		
 			pattern += c.getField().getType().contains("String") ? addStringConstraint(c.getField().getApi(), c.getOperator().getValue(), c.getValue()):
@@ -154,19 +153,20 @@ public final class BuilderUtil {
     }
     
     private static String addStringConstraint(String field, String operator, String value) {
-		String javaField = toJavaCodingConvention(field);
-    	return javaField + operator + "'" + value + "'";
+		// String javaField = toJavaCodingConvention(field); The Enterprise.sobjects dont use camel case fields
+    	return field + operator + "'" + value + "'";
     }
     
     private static String addNumericConstraint(String field, String operator, String value) {
-		String javaField = toJavaCodingConvention(field);
-    	return javaField + operator + value;
+		//String javaField = toJavaCodingConvention(field);
+    	return field + operator + value;
     }
-    // TODO Refactor this
+    
+    // TODO Refactor this logic.
     static String toJavaCodingConvention(String input) {
     	String firstCharUpper = firstToUpper(input);
-    	String lastCharUpper = lastToUpper(firstCharUpper);
-    	return lastCharUpper;
+    	//String lastCharUpper = lastToUpper(firstCharUpper);
+    	return firstCharUpper;
     }
     
     static String firstToUpper(String input){

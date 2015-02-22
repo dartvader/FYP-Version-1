@@ -4,7 +4,8 @@ var fraudServices = angular.module('fraudServices', []);
 var configForPost = {
     'headers': {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        'protocol':'https'
     }
 };
 
@@ -50,7 +51,7 @@ fraudServices.factory('RulesServices', function($http, $q){
 	var factory = {};
     
 	factory.newRule = function(rule) {
-		var postUrl = "http://localhost:8080/cvfraud-v1/rest/rules/add";
+		var postUrl = "http://localhost:8080/cvfraud-v1/rest/rules";
 		var deferred = $q.defer();
 		
 		var promise = $http.post(postUrl, rule, configForPost).success(function(data) {
@@ -64,12 +65,10 @@ fraudServices.factory('RulesServices', function($http, $q){
 	};
 	
 	factory.getRules = function() {
-		console.log("get rules call");
 		var getUrl = "http://localhost:8080/cvfraud-v1/rest/rules";
 		var deferred = $q.defer();
 		
 		var promise = $http.get(getUrl, configForGet).success(function(data) {
-			console.log("success " + JSON.stringify(data));
 			deferred.resolve(data);
 		}).error(function(data, status, headers, config) {
 			console.log("error " + status);
@@ -87,18 +86,33 @@ fraudServices.factory('SessionServices', function($http, $q){
 	var factory = {};
 	
 	factory.getSessions = function() {
-		console.log("Getting Sessions");
 		var getUrl = "http://localhost:8080/cvfraud-v1/rest/sessions";
 		var deferred = $q.defer();
 		
 		var promise = $http.get(getUrl, configForGet).success(function(data) {
-			console.log("success " + JSON.stringify(data));
+			console.log(" got sessions success ");
 			deferred.resolve(data);
 		}).error(function(data, status, headers, config) {
 			console.log("error " + status);
 			console.log("error config " + JSON.stringify(config));
 		});
-
+		return deferred.promise;
+	};
+	
+	factory.saveSession = function(session) {
+		var session = session;
+		
+		var postUrl = "http://localhost:8080/cvfraud-v1/rest/sessions";
+		var deferred = $q.defer();
+		
+		var promise = $http.post(postUrl, session, configForPost).success(function(data) {
+			console.log("success created " + JSON.stringify(data));
+			deferred.resolve(data);
+			
+		}).error(function(data, status, headers, config) {
+			console.log("error " + status);
+			console.log("error config " + JSON.stringify(config));
+		});
 		return deferred.promise;
 	};
 	
@@ -108,7 +122,7 @@ fraudServices.factory('SessionServices', function($http, $q){
 		var deferred = $q.defer();
 		
 		var promise = $http.get(getUrl, configForGet).success(function(data) {
-			console.log("success " + JSON.stringify(data));
+			// console.log("success " + JSON.stringify(data));
 			deferred.resolve(data);
 		}).error(function(data, status, headers, config) {
 			console.log("error " + status);
@@ -118,24 +132,15 @@ fraudServices.factory('SessionServices', function($http, $q){
 		return deferred.promise;
 	};
 	
-	factory.fireRules= function() {
-		console.log("fir fff");
+	factory.executeRules= function(sessionId) {
+		console.log("execute rules");
 		
-		var getUrl = "http://localhost:8080/cvfraud-v1/rest/sessions/fire";
+		var getUrl = "http://localhost:8080/cvfraud-v1/rest/sessions/execute/" + sessionId;
 		var deferred = $q.defer();
-		var req = {
-				 method: 'GET',
-				 url: 'http://localhost:8080/cvfraud-v1/rest/sessions/fire',
-				 headers: {
-				   'Content-Type': undefined
-				 }
-				}
 		
 		var promise = $http.get(getUrl).success(function(data) {
-			
 			console.log("success " + JSON.stringify(data));
-			
-			//deferred.resolve(data);
+			deferred.resolve(data);
 		}).error(function(data, status, headers, config) {
 			console.log("error " + status);
 			console.log("error config " + JSON.stringify(config));

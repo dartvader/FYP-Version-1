@@ -11,33 +11,22 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-
 import com.claimvantage.data.RulesRepository;
-import com.claimvantage.drools.controller.DroolsController;
-import com.claimvantage.model.Condition;
+import com.claimvantage.drools.controller.SessionExecutor;
 import com.claimvantage.model.Rule;
-import com.claimvantage.model.Ruleset;
-
-import javax.naming.CommunicationException;
-
-import org.codehaus.jettison.json.JSONObject;
 
 @Path("rules")
 public class RuleResourceRESTService {
 
 	private static RulesRepository rulesRepository = RulesRepository.instance();
-	private static DroolsController droolsController = DroolsController.instance();
 
 	@POST
-	@Path("/add")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addRule(Rule rule) {
 		
 		Response.ResponseBuilder builder = null;		
 		try {
-			System.out.println("adding rule set in RulesetResourceRESTService ");
 			rule.buildScript();
 			rulesRepository.addRule(rule);
 

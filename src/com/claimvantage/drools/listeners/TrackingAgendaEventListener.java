@@ -41,7 +41,6 @@ public class TrackingAgendaEventListener extends DebugAgendaEventListener {
                         + ruleMetaDataMap.get(key));
             }
         }
-        System.out.println(">>> after match ");
         log.debug(sb.toString());
     }
 

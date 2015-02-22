@@ -1,0 +1,46 @@
+<div class="col-xs-12">
+    <form name="rules" role="form">
+        <div class="form-group">
+            <div class="row">
+                <br>
+                <table class="flat-table flat-table-1" tr-ng-grid="" items="sessions" selection-mode="SingleRow" selected-items="selectedSessions" page-items="5">
+				    <thead>
+				        <tr>
+				            <th field-name="creationDateTime" display-name="Date Created" enable-filtering="false">
+				            </th>
+				            <th field-name="totalNumberOfAlerts" display-name="Total Alerts" enable-filtering="false" display-align="center">
+				            </th>
+				            <th field-name="totalNumberOfRulesFired" display-name="Fired Rules" enable-filtering="false" display-align="center">
+				            </th>
+				            <th field-name="totalNumberOfExecutions" display-name="Session Executions" enable-filtering="false" display-align="center">
+				            </th>
+				            <th field-name="lastExecution" display-name="Last Execution" enable-filtering="false">
+				            </th>
+				    	</tr>
+				    </thead>
+				    <tbody>
+				        <tr>
+				            <td field-name="creationDateTime">
+				                <div>{{gridDisplayItem.creationDateTime | date:'EEEE, MMMM d, y'}}</div>
+				            </td>            
+				        </tr>
+				        <tr>
+				            <td field-name="creationDateTime">
+				                <div>{{ gridDisplayItem.lastExecution | date:'EEEE, MMMM d, y'}}</div>
+				            </td>            
+				        </tr>
+				    </tbody>
+				</table>
+            </div>
+            <br>
+            <div class="row">
+                <div class="form-group add-rule" id="btn-add-rule" ng-if="newRuleMode == false">
+                    <div class="btn-group-justified" role="group" aria-label="Justified button group">
+                        <a class="btn btn-primary" role="button" ng-click="addRule('')">Create New Rule</a>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+    </form>
+</div>

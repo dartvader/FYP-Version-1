@@ -20,5 +20,12 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Drools"/>
 	<classpathentry kind="lib" path="/Users/leemcdonald/Documents/Jboss/cvfraud-v1/WebContent/WEB-INF/lib/kie-api-6.1.0.Final.jar" sourcepath="/Users/leemcdonald/.m2/repository/org/kie/kie-api/6.1.0.Final/kie-api-6.1.0.Final-sources.jar"/>
 	<classpathentry kind="lib" path="/Users/leemcdonald/Documents/Jboss/kie-api.jar" sourcepath="/Users/leemcdonald/Documents/Jboss/kie-api.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Hibernate">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+			<attribute name="owner.project.facets" value="jpt.jpa"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Salesforce WSC libraries"/>
 	<classpathentry kind="output" path="WebContent/WEB-INF/classes"/>
 </classpath>
