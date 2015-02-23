@@ -27,8 +27,6 @@ public class RulesRepository {
 		UUID randomId = UUID.randomUUID();
 		rule.setId(randomId);
 		rules.add(rule);
-		//TODO Remove this
-		System.out.println(rule.getScript());
 	}
 	
 	public static RulesRepository getInstance() {

@@ -37,6 +37,8 @@ import com.claimvantage.drools.listeners.TrackingWorkingMemoryEventListener;
 import com.claimvantage.drools.util.HardCodedRules;
 import com.sforce.soap.enterprise.Cve__Claim__C;
 
+// TODO TIDY up the class
+
 @JsonSerialize
 @XmlRootElement
 public class Session {
@@ -52,32 +54,27 @@ public class Session {
 	private int totalNumberOfRulesFired;
 	private int totalNumberOfExecutions;
 	private boolean isActive;
+	private String type;
+
 	private UUID id;
 
 	@JsonIgnore
 	private final String REPOSITORY_LOCATION = "src/main/resources/rules/";
 	
-	public Session() {
-
-        this.rules = new ArrayList<Rule>();
+	public Session(List<Rule> rules, String type, HashSet<Sobject> requiredObjects) {
 		this.creationDateTime = new Timestamp(new Date().getTime()).toLocalDateTime().toString();    
 		this.executions = new ArrayList<Execution>();
         this.isActive = true;
         this.totalNumberOfAlerts = 0;
         this.totalNumberOfRulesFired = 0;
         this.totalNumberOfExecutions = 0;
+        this.rules = new ArrayList<Rule>(rules);
+        this.requiredObjects = requiredObjects;
+        this.type = type;
 	}
 	
 	public Session(List<Rule> rules) {
-        this.rules = new ArrayList<Rule>();
-        this.rules.addAll(rules);
-        this.isActive = true;
-        this.creationDateTime = new Timestamp(new Date().getTime()).toLocalDateTime().toString();    
-		this.executions = new ArrayList<Execution>();
-        this.isActive = true;
-        this.totalNumberOfAlerts = 0;
-        this.totalNumberOfRulesFired = 0;
-        this.totalNumberOfExecutions = 0;
+		this(rules, "Custom Package", null);
 	}
 	
 	public int getTotalNumberOfAlerts() {
@@ -128,33 +125,38 @@ public class Session {
 		return kContainer.newKieSession();
 	}
 	
-	// TODO build in data exporter here
 	private void loadData(KieSession kieSession) {
 		// pass reference to the kieSession into the bulk data exporter
-        this.requiredObjects = getRequiredObjects(rules);
+        this.requiredObjects = this.requiredObjects == null ? 
+        		getRequiredObjects(rules): 
+        		this.requiredObjects;
+        		
         System.out.println("Required objects " + this.requiredObjects.size());
 		DataLoader.execute(kieSession, requiredObjects);
 	}
 	
 	public Execution executeRules() {
 		
-		System.out.println(" executing rules ");
 		incrementNumberOfExecutions();
 		List<Alert> alerts = new ArrayList<Alert>();
+		
 		TrackingWorkingMemoryEventListener workingMemoryListener = new TrackingWorkingMemoryEventListener();
 		this.kieSession = createKieSession(rules);
 		kieSession.addEventListener(workingMemoryListener);
         
-		// loadFakeClaims(); 
 		loadData(kieSession);
+		
 		int numberOfRuleFired = kieSession.fireAllRules();
+		long factCount = kieSession.getFactCount();
 		incrementNumberOfRulesFired(numberOfRuleFired);
 		
 		alerts = workingMemoryListener.getAlerts();
 		incrementNumberOfAlerts(alerts.size());
-		Execution execution = new Execution(alerts, rules, alerts.size(), numberOfRuleFired);
+		
+		
+		Execution execution = new Execution(alerts, rules, alerts.size(), numberOfRuleFired, factCount);
 		executions.add(execution);
-		System.out.println(" Fact count " + kieSession.getFactCount());
+		
 		// Cleaning up Session memory
 		kieSession.removeEventListener(workingMemoryListener);
 		kieSession.dispose();
@@ -174,35 +176,17 @@ public class Session {
 	private void incrementNumberOfExecutions() {
 		this.totalNumberOfExecutions++;
 	}
-
+	// TODO Write this rule to the file System
 	public void addRule(Rule rule) {
-		// TODO Write this rule to the file System
 		this.rules.add(rule);
 	}
-	
+	// TODO implement this
 	public void deleteRule(String ruleName) {
-		// TODO implement this
 		for (int i = 0;i < this.rules.size();i++) {
 			if (this.rules.get(i).getName() == ruleName) {
 				this.rules.remove(i);
-				System.out.println(">>> Deleted " + this.rules.get(i).getName());
 			}
 		}
-	}
-
-	public void loadFakeClaims() {
-		System.out.println("loading fake claims");
-		ArrayList<Cve__Claim__C> claims = new ArrayList<Cve__Claim__C>();
-        Cve__Claim__C c = new Cve__Claim__C();
-        for (int i = 0;i < 20;i++) {
-        	c = new Cve__Claim__C();
-        	c.setCve__BenefitType__C("STD");
-        	c.setCve__IncurredNet__C(100.00);
-        	c.setCve__LiabilityNet__C(200.00);
-        	claims.add(c);
-        	kieSession.insert(c);
-        }
-		System.out.println("Fact count " + kieSession.getFactCount());
 	}
 	
 	private HashSet<Sobject> getRequiredObjects(List<Rule> rules) {
@@ -263,4 +247,11 @@ public class Session {
 		this.rules = rules;
 	}
 	
+	public String getType() {
+		return this.type == null ? "Custom Package" : this.type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 }

@@ -25,6 +25,11 @@ public class Rule {
 	private StringBuilder script;
 	private List<Condition> conditions;
 	private Consequence consequence;
+	private Boolean status;
+	
+	private Rule() {
+		this.status = true;
+	}
 	
 	public String getName() {
 		return name;
@@ -65,5 +70,11 @@ public class Rule {
 	public void buildScript() {
 		// TODO Remove StringBuilder s = BuilderUtil.buildRuleScript(this);
 		this.script = BuilderUtil.buildRuleScript(this);
+	}
+	public Boolean getStatus() {
+		return status;
+	}
+	public void setStatus(Boolean status) {
+		this.status = status;
 	}
 }

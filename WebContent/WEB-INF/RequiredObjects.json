@@ -1,0 +1,817 @@
+[{ "sobApi" : "cve__Claim__c",
+    "sobFields" : [ { "api" : "cve__AllRequiredDocumentsReceived__c",
+          "label" : "All Required Documents Received",
+          "type" : "Date"
+        },
+        { "api" : "cve__AnticipatedClose__c",
+          "label" : "Anticipated Close",
+          "type" : "Date"
+        },
+        { "api" : "cve__BenefitSummary__c",
+          "label" : "Benefit Summary",
+          "type" : "TextArea"
+        },
+        { "api" : "cve__BenefitType__c",
+          "label" : "Benefit Type",
+          "type" : "String"
+        },
+        { "api" : "cve__ClaimantInsured__c",
+          "label" : "Claimant/Insured",
+          "type" : "Reference"
+        },
+        { "api" : "cve__ClaimantInsuredName__c",
+          "label" : "Claimant/Insured Names",
+          "type" : "String"
+        },
+        { "api" : "cve__ClaimantInsuredAccount__c",
+          "label" : "Claimant/Insured Organization",
+          "type" : "Reference"
+        },
+        { "api" : "cve__ClaimantInsuredAccountName__c",
+          "label" : "Claimant/Insured Organization Names",
+          "type" : "String"
+        },
+        { "api" : "Name",
+          "label" : "Claim Number",
+          "type" : "String"
+        },
+        { "api" : "CreatedById",
+          "label" : "Created By ID",
+          "type" : "Reference"
+        },
+        { "api" : "CreatedDate",
+          "label" : "Created Date",
+          "type" : "DateTime"
+        },
+        { "api" : "cve__DateOfDeath__c",
+          "label" : "Date of Death",
+          "type" : "Date"
+        },
+        { "api" : "cve__DateOfDiagnosis__c",
+          "label" : "Date of Diagnosis",
+          "type" : "Date"
+        },
+        { "api" : "cve__DateOfDisability__c",
+          "label" : "Date of Disability",
+          "type" : "Date"
+        },
+        { "api" : "cve__DateOfMaturityAnnuity__c",
+          "label" : "Date of Maturity/Annuity",
+          "type" : "Date"
+        },
+        { "api" : "cve__DateReceived__c",
+          "label" : "Date Received",
+          "type" : "Date"
+        },
+        { "api" : "IsDeleted",
+          "label" : "Deleted",
+          "type" : "Boolean"
+        },
+        { "api" : "cve__IncompleteDate__c",
+          "label" : "Incomplete Date",
+          "type" : "Date"
+        },
+        { "api" : "cve__IncurredBeforeTax__c",
+          "label" : "Incurred Before Tax",
+          "type" : "Double"
+        },
+        { "api" : "cve__IncurredLastCalculated__c",
+          "label" : "Incurred Last Calculated",
+          "type" : "DateTime"
+        },
+        { "api" : "cve__IncurredNet__c",
+          "label" : "Incurred Net",
+          "type" : "Double"
+        },
+        { "api" : "cve__InquiryPortalUrl__c",
+          "label" : "Inquiry Portal URL",
+          "type" : "String"
+        },
+        { "api" : "LastActivityDate",
+          "label" : "Last Activity Date",
+          "type" : "Date"
+        },
+        { "api" : "LastModifiedById",
+          "label" : "Last Modified By ID",
+          "type" : "Reference"
+        },
+        { "api" : "LastModifiedDate",
+          "label" : "Last Modified Date",
+          "type" : "DateTime"
+        },
+        { "api" : "LastReferencedDate",
+          "label" : "Last Referenced Date",
+          "type" : "DateTime"
+        },
+        { "api" : "LastViewedDate",
+          "label" : "Last Viewed Date",
+          "type" : "DateTime"
+        },
+        { "api" : "cve__LiabilityBeforeTax__c",
+          "label" : "Liability Before Tax",
+          "type" : "Double"
+        },
+        { "api" : "cve__LiabilityLastCalculated__c",
+          "label" : "Liability Last Calculated",
+          "type" : "DateTime"
+        },
+        { "api" : "cve__LiabilityNet__c",
+          "label" : "Liability Net",
+          "type" : "Double"
+        },
+        { "api" : "cve__OpaqueId__c",
+          "label" : "Opaque Id",
+          "type" : "String"
+        },
+        { "api" : "cve__OpaqueIdValidThrough__c",
+          "label" : "Opaque Id Valid Through",
+          "type" : "Date"
+        },
+        { "api" : "cve__OpenRequiredTaskCount__c",
+          "label" : "Open Required Task Count",
+          "type" : "Double"
+        },
+        { "api" : "cve__OpenTaskCount__c",
+          "label" : "Open Task Count",
+          "type" : "Double"
+        },
+        { "api" : "cve__OriginalName__c",
+          "label" : "Original Claim Number",
+          "type" : "String"
+        },
+        { "api" : "cve__OverpaymentBeforeTax__c",
+          "label" : "Overpayment Before Tax",
+          "type" : "Double"
+        },
+        { "api" : "cve__OverpaymentLastCalculated__c",
+          "label" : "Overpayment Last Calculated",
+          "type" : "DateTime"
+        },
+        { "api" : "cve__OverpaymentNet__c",
+          "label" : "Overpayment Net",
+          "type" : "Double"
+        },
+        { "api" : "OwnerId",
+          "label" : "Owner ID",
+          "type" : "Reference"
+        },
+        { "api" : "cve__PendingDate__c",
+          "label" : "Pending Date",
+          "type" : "Date"
+        },
+        { "api" : "cve__PerformanceGuarantee__c",
+          "label" : "Performance Guarantee",
+          "type" : "String"
+        },
+        { "api" : "cve__Policy__c",
+          "label" : "Policy",
+          "type" : "Reference"
+        },
+        { "api" : "cve__PolicyPremiumPaidThrough__c",
+          "label" : "Policy Premium Paid Through",
+          "type" : "Date"
+        },
+        { "api" : "cve__PolicyRelationship__c",
+          "label" : "Policy Relationship",
+          "type" : "Reference"
+        },
+        { "api" : "cve__PrecedingClaim__c",
+          "label" : "Preceding Claim",
+          "type" : "Reference"
+        },
+        { "api" : "cve__QuestionsLanguage__c",
+          "label" : "Questions Language",
+          "type" : "Picklist"
+        },
+        { "api" : "Id",
+          "label" : "Record ID",
+          "type" : "ID"
+        },
+        { "api" : "cve__Reopened__c",
+          "label" : "Reopened",
+          "type" : "Boolean"
+        },
+        { "api" : "cve__ReopenedDate__c",
+          "label" : "Reopened Date",
+          "type" : "DateTime"
+        },
+        { "api" : "cve__ReturnToWorkDate__c",
+          "label" : "Return to Work Date",
+          "type" : "Date"
+        },
+        { "api" : "cve__ReturnToWorkType__c",
+          "label" : "Return to Work Type",
+          "type" : "String"
+        },
+        { "api" : "cve__Status__c",
+          "label" : "Status",
+          "type" : "Picklist"
+        },
+        { "api" : "SystemModstamp",
+          "label" : "System Modstamp",
+          "type" : "DateTime"
+        },
+        { "api" : "cve__ToBeIncurredBeforeTax__c",
+          "label" : "To Be Incurred Before Tax",
+          "type" : "Double"
+        },
+        { "api" : "cve__ToBeIncurredLastCalculated__c",
+          "label" : "To Be Incurred Last Calculated",
+          "type" : "DateTime"
+        },
+        { "api" : "cve__ToBeIncurredNet__c",
+          "label" : "To Be Incurred Net",
+          "type" : "Double"
+        },
+        { "api" : "cve__TotalIncurredAsOf__c",
+          "label" : "Total Incurred as of",
+          "type" : "Date"
+        },
+        { "api" : "cve__TotalIncurred__c",
+          "label" : "Total Incurred Before Taxes",
+          "type" : "Double"
+        }
+      ],
+    "sobLabel" : "Claim"
+  },{ "sobApi" : "cve__Document__c",
+    "sobFields" : [ { "api" : "cve__Accepted__c",
+          "label" : "Accepted",
+          "type" : "Boolean"
+        },
+        { "api" : "cve__AttachmentLink__c",
+          "label" : "Attachment",
+          "type" : "String"
+        },
+        { "api" : "cve__AttachmentAdded__c",
+          "label" : "Attachment Added",
+          "type" : "Date"
+        },
+        { "api" : "cve__AttachmentId__c",
+          "label" : "Attachment Id",
+          "type" : "String"
+        },
+        { "api" : "cve__BenefitClaimed__c",
+          "label" : "Benefit Claimed",
+          "type" : "Reference"
+        },
+        { "api" : "cve__Claim__c",
+          "label" : "Claim",
+          "type" : "Reference"
+        },
+        { "api" : "cve__Comment__c",
+          "label" : "Comment",
+          "type" : "TextArea"
+        },
+        { "api" : "CreatedById",
+          "label" : "Created By ID",
+          "type" : "Reference"
+        },
+        { "api" : "CreatedDate",
+          "label" : "Created Date",
+          "type" : "DateTime"
+        },
+        { "api" : "IsDeleted",
+          "label" : "Deleted",
+          "type" : "Boolean"
+        },
+        { "api" : "Name",
+          "label" : "Document Name",
+          "type" : "String"
+        },
+        { "api" : "LastModifiedById",
+          "label" : "Last Modified By ID",
+          "type" : "Reference"
+        },
+        { "api" : "LastModifiedDate",
+          "label" : "Last Modified Date",
+          "type" : "DateTime"
+        },
+        { "api" : "cve__Received__c",
+          "label" : "Received",
+          "type" : "Date"
+        },
+        { "api" : "Id",
+          "label" : "Record ID",
+          "type" : "ID"
+        },
+        { "api" : "cve__Required__c",
+          "label" : "Required",
+          "type" : "Boolean"
+        },
+        { "api" : "SystemModstamp",
+          "label" : "System Modstamp",
+          "type" : "DateTime"
+        },
+        { "api" : "cve__Type__c",
+          "label" : "Type",
+          "type" : "Picklist"
+        }
+      ],
+    "sobLabel" : "Document"
+  }, { "sobApi" : "Contact",
+    "sobFields" : [ { "api" : "AccountId",
+          "label" : "Account ID",
+          "type" : "Reference"
+        },
+        { "api" : "cve__Age__c",
+          "label" : "Age",
+          "type" : "Double"
+        },
+        { "api" : "AssistantName",
+          "label" : "Assistant's Name",
+          "type" : "String"
+        },
+        { "api" : "AssistantPhone",
+          "label" : "Asst. Phone",
+          "type" : "Phone"
+        },
+        { "api" : "cve__BankAccountNumber__c",
+          "label" : "Bank Account Number",
+          "type" : "String"
+        },
+        { "api" : "cve__BankAccountType__c",
+          "label" : "Bank Account Type",
+          "type" : "Picklist"
+        },
+        { "api" : "cve__BankName__c",
+          "label" : "Bank Name",
+          "type" : "String"
+        },
+        { "api" : "cve__BankPhone__c",
+          "label" : "Bank Phone",
+          "type" : "Phone"
+        },
+        { "api" : "cve__BankRoutingNumber__c",
+          "label" : "Bank Routing Number",
+          "type" : "String"
+        },
+        { "api" : "Birthdate",
+          "label" : "Birthdate",
+          "type" : "Date"
+        },
+        { "api" : "cve__Bonus__c",
+          "label" : "Bonus",
+          "type" : "Double"
+        },
+        { "api" : "cve__BonusPeriod__c",
+          "label" : "Bonus Period",
+          "type" : "Picklist"
+        },
+        { "api" : "Fax",
+          "label" : "Business Fax",
+          "type" : "Phone"
+        },
+        { "api" : "Phone",
+          "label" : "Business Phone",
+          "type" : "Phone"
+        },
+        { "api" : "cve__CollegeMajor__c",
+          "label" : "College Major",
+          "type" : "String"
+        },
+        { "api" : "Description",
+          "label" : "Contact Description",
+          "type" : "TextArea"
+        },
+        { "api" : "Id",
+          "label" : "Contact ID",
+          "type" : "ID"
+        },
+        { "api" : "CreatedById",
+          "label" : "Created By ID",
+          "type" : "Reference"
+        },
+        { "api" : "CreatedDate",
+          "label" : "Created Date",
+          "type" : "DateTime"
+        },
+        { "api" : "Jigsaw",
+          "label" : "Data.com Key",
+          "type" : "String"
+        },
+        { "api" : "cve__DateOfEarningsIncrease__c",
+          "label" : "Date of Earnings Increase",
+          "type" : "Date"
+        },
+        { "api" : "cve__DateOfFullTimeHire__c",
+          "label" : "Date of Full Time Hire",
+          "type" : "Date"
+        },
+        { "api" : "cve__DateOfHire__c",
+          "label" : "Date of Hire",
+          "type" : "Date"
+        },
+        { "api" : "cve__DateOfRetirement__c",
+          "label" : "Date of Retirement",
+          "type" : "Date"
+        },
+        { "api" : "cve__Degree__c",
+          "label" : "Degree",
+          "type" : "Picklist"
+        },
+        { "api" : "IsDeleted",
+          "label" : "Deleted",
+          "type" : "Boolean"
+        },
+        { "api" : "Department",
+          "label" : "Department",
+          "type" : "String"
+        },
+        { "api" : "cve__Earnings__c",
+          "label" : "Earnings",
+          "type" : "Double"
+        },
+        { "api" : "cve__EarningsPeriod__c",
+          "label" : "Earnings Period",
+          "type" : "Picklist"
+        },
+        { "api" : "Email",
+          "label" : "Email",
+          "type" : "Type not supported"
+        },
+        { "api" : "EmailBouncedDate",
+          "label" : "Email Bounced Date",
+          "type" : "DateTime"
+        },
+        { "api" : "EmailBouncedReason",
+          "label" : "Email Bounced Reason",
+          "type" : "String"
+        },
+        { "api" : "HasOptedOutOfEmail",
+          "label" : "Email Opt Out",
+          "type" : "Boolean"
+        },
+        { "api" : "cve__Employed__c",
+          "label" : "Employed",
+          "type" : "Boolean"
+        },
+        { "api" : "cve__Employee__c",
+          "label" : "Employee",
+          "type" : "Boolean"
+        },
+        { "api" : "cve__EmployeeIdentificationNumber__c",
+          "label" : "Employee Identification Number",
+          "type" : "String"
+        },
+        { "api" : "HasOptedOutOfFax",
+          "label" : "Fax Opt Out",
+          "type" : "Boolean"
+        },
+        { "api" : "FirstName",
+          "label" : "First Name",
+          "type" : "String"
+        },
+        { "api" : "Name",
+          "label" : "Full Name",
+          "type" : "String"
+        },
+        { "api" : "cve__GedDiploma__c",
+          "label" : "GED Diploma",
+          "type" : "Boolean"
+        },
+        { "api" : "cve__Gender__c",
+          "label" : "Gender",
+          "type" : "Picklist"
+        },
+        { "api" : "cve__GraduateSchoolMajor__c",
+          "label" : "Graduate School Major",
+          "type" : "String"
+        },
+        { "api" : "cve__HighestGradeCompleted__c",
+          "label" : "Highest Grade Completed",
+          "type" : "Picklist"
+        },
+        { "api" : "cve__HighSchoolDiploma__c",
+          "label" : "High School Diploma",
+          "type" : "Boolean"
+        },
+        { "api" : "HomePhone",
+          "label" : "Home Phone",
+          "type" : "Phone"
+        },
+        { "api" : "cve__HoursWorkedPerWeek__c",
+          "label" : "Hours Worked per Week",
+          "type" : "Double"
+        },
+        { "api" : "IsEmailBounced",
+          "label" : "Is Email Bounced",
+          "type" : "Boolean"
+        },
+        { "api" : "JigsawContactId",
+          "label" : "Jigsaw Contact ID",
+          "type" : "String"
+        },
+        { "api" : "Languages__c",
+          "label" : "Languages",
+          "type" : "String"
+        },
+        { "api" : "LastActivityDate",
+          "label" : "Last Activity",
+          "type" : "Date"
+        },
+        { "api" : "LastModifiedById",
+          "label" : "Last Modified By ID",
+          "type" : "Reference"
+        },
+        { "api" : "LastModifiedDate",
+          "label" : "Last Modified Date",
+          "type" : "DateTime"
+        },
+        { "api" : "LastName",
+          "label" : "Last Name",
+          "type" : "String"
+        },
+        { "api" : "LastReferencedDate",
+          "label" : "Last Referenced Date",
+          "type" : "DateTime"
+        },
+        { "api" : "LastCURequestDate",
+          "label" : "Last Stay-in-Touch Request Date",
+          "type" : "DateTime"
+        },
+        { "api" : "LastCUUpdateDate",
+          "label" : "Last Stay-in-Touch Save Date",
+          "type" : "DateTime"
+        },
+        { "api" : "LastViewedDate",
+          "label" : "Last Viewed Date",
+          "type" : "DateTime"
+        },
+        { "api" : "LeadSource",
+          "label" : "Lead Source",
+          "type" : "Picklist"
+        },
+        { "api" : "Level__c",
+          "label" : "Level",
+          "type" : "Picklist"
+        },
+        { "api" : "cve__MaidenName__c",
+          "label" : "Maiden Name",
+          "type" : "String"
+        },
+        { "api" : "cve__MailingAddress__c",
+          "label" : "Mailing Address",
+          "type" : "String"
+        },
+        { "api" : "MailingAddress",
+          "label" : "Mailing Address",
+          "type" : "Type not supported"
+        },
+        { "api" : "MailingCity",
+          "label" : "Mailing City",
+          "type" : "String"
+        },
+        { "api" : "MailingCountry",
+          "label" : "Mailing Country",
+          "type" : "String"
+        },
+        { "api" : "MailingLatitude",
+          "label" : "Mailing Latitude",
+          "type" : "Double"
+        },
+        { "api" : "MailingLongitude",
+          "label" : "Mailing Longitude",
+          "type" : "Double"
+        },
+        { "api" : "MailingState",
+          "label" : "Mailing State/Province",
+          "type" : "String"
+        },
+        { "api" : "MailingStreet",
+          "label" : "Mailing Street",
+          "type" : "TextArea"
+        },
+        { "api" : "MailingPostalCode",
+          "label" : "Mailing Zip/Postal Code",
+          "type" : "String"
+        },
+        { "api" : "cve__MaritalStatus__c",
+          "label" : "Marital Status",
+          "type" : "Picklist"
+        },
+        { "api" : "MasterRecordId",
+          "label" : "Master Record ID",
+          "type" : "Reference"
+        },
+        { "api" : "MobilePhone",
+          "label" : "Mobile Phone",
+          "type" : "Phone"
+        },
+        { "api" : "cve__OccupationalDescription__c",
+          "label" : "Occupational Description",
+          "type" : "TextArea"
+        },
+        { "api" : "cve__AccountName__c",
+          "label" : "Organization Name",
+          "type" : "String"
+        },
+        { "api" : "OtherAddress",
+          "label" : "Other Address",
+          "type" : "Type not supported"
+        },
+        { "api" : "OtherCity",
+          "label" : "Other City",
+          "type" : "String"
+        },
+        { "api" : "OtherCountry",
+          "label" : "Other Country",
+          "type" : "String"
+        },
+        { "api" : "OtherLatitude",
+          "label" : "Other Latitude",
+          "type" : "Double"
+        },
+        { "api" : "OtherLongitude",
+          "label" : "Other Longitude",
+          "type" : "Double"
+        },
+        { "api" : "OtherPhone",
+          "label" : "Other Phone",
+          "type" : "Phone"
+        },
+        { "api" : "OtherState",
+          "label" : "Other State/Province",
+          "type" : "String"
+        },
+        { "api" : "OtherStreet",
+          "label" : "Other Street",
+          "type" : "TextArea"
+        },
+        { "api" : "OtherPostalCode",
+          "label" : "Other Zip/Postal Code",
+          "type" : "String"
+        },
+        { "api" : "OwnerId",
+          "label" : "Owner ID",
+          "type" : "Reference"
+        },
+        { "api" : "cve__Parent__c",
+          "label" : "Parent",
+          "type" : "Reference"
+        },
+        { "api" : "cve__PaymentMethod__c",
+          "label" : "Payment Method",
+          "type" : "Picklist"
+        },
+        { "api" : "PhotoUrl",
+          "label" : "Photo URL",
+          "type" : "Type not supported"
+        },
+        { "api" : "ReportsToId",
+          "label" : "Reports To ID",
+          "type" : "Reference"
+        },
+        { "api" : "Salutation",
+          "label" : "Salutation",
+          "type" : "Picklist"
+        },
+        { "api" : "cve__SocialSecurityNumber__c",
+          "label" : "Social Security Number",
+          "type" : "String"
+        },
+        { "api" : "cve__Speciality__c",
+          "label" : "Speciality",
+          "type" : "String"
+        },
+        { "api" : "cve__Spouse__c",
+          "label" : "Spouse",
+          "type" : "Reference"
+        },
+        { "api" : "SystemModstamp",
+          "label" : "System Modstamp",
+          "type" : "DateTime"
+        },
+        { "api" : "cve__TaxIdNumber__c",
+          "label" : "Tax ID Number",
+          "type" : "String"
+        },
+        { "api" : "cve__TerminationDate__c",
+          "label" : "Termination Date",
+          "type" : "Date"
+        },
+        { "api" : "cve__TerminationReason__c",
+          "label" : "Termination Reason",
+          "type" : "String"
+        },
+        { "api" : "cve__Testing__c",
+          "label" : "Testing",
+          "type" : "String"
+        },
+        { "api" : "Title",
+          "label" : "Title",
+          "type" : "String"
+        },
+        { "api" : "cve__WorkState__c",
+          "label" : "Work State",
+          "type" : "String"
+        },
+        { "api" : "cve__YearGraduatedFromCollege__c",
+          "label" : "Year Graduated from College",
+          "type" : "String"
+        },
+        { "api" : "cve__YearGraduatedFromGraduateSchool__c",
+          "label" : "Year Graduated from Graduate School",
+          "type" : "String"
+        },
+        { "api" : "cve__YearGraduatedFromHighSchool__c",
+          "label" : "Year Graduated from High School",
+          "type" : "String"
+        }
+      ],
+    "sobLabel" : "Contact"
+},{ "sobApi" : "cve__ClaimRelationship__c",
+    "sobFields" : [ { "api" : "cve__AccountWithAccountLabel__c",
+          "label" : "Account",
+          "type" : "Reference"
+        },
+        { "api" : "cve__Claim__c",
+          "label" : "Claim",
+          "type" : "Reference"
+        },
+        { "api" : "cve__ClaimBenefitType__c",
+          "label" : "Claim Benefit Type",
+          "type" : "String"
+        },
+        { "api" : "Name",
+          "label" : "Claim Relationship Name",
+          "type" : "String"
+        },
+        { "api" : "cve__ClaimStatus__c",
+          "label" : "Claim Status",
+          "type" : "String"
+        },
+        { "api" : "cve__ContactWithContactLabel__c",
+          "label" : "Contact",
+          "type" : "Reference"
+        },
+        { "api" : "CreatedById",
+          "label" : "Created By ID",
+          "type" : "Reference"
+        },
+        { "api" : "CreatedDate",
+          "label" : "Created Date",
+          "type" : "DateTime"
+        },
+        { "api" : "IsDeleted",
+          "label" : "Deleted",
+          "type" : "Boolean"
+        },
+        { "api" : "cve__InquiryPortalUrl__c",
+          "label" : "Inquiry Portal Url",
+          "type" : "String"
+        },
+        { "api" : "LastModifiedById",
+          "label" : "Last Modified By ID",
+          "type" : "Reference"
+        },
+        { "api" : "LastModifiedDate",
+          "label" : "Last Modified Date",
+          "type" : "DateTime"
+        },
+        { "api" : "cve__OpaqueId__c",
+          "label" : "Opaque Id",
+          "type" : "String"
+        },
+        { "api" : "cve__OpaqueIdValidThrough__c",
+          "label" : "Opaque Id Valid Through",
+          "type" : "Date"
+        },
+        { "api" : "cve__Account__c",
+          "label" : "Organization",
+          "type" : "Reference"
+        },
+        { "api" : "cve__Contact__c",
+          "label" : "Person",
+          "type" : "Reference"
+        },
+        { "api" : "Id",
+          "label" : "Record ID",
+          "type" : "ID"
+        },
+        { "api" : "cve__Type__c",
+          "label" : "Relationship Type",
+          "type" : "Picklist"
+        },
+        { "api" : "cve__Reporter__c",
+          "label" : "Reporter",
+          "type" : "Boolean"
+        },
+        { "api" : "cve__Speciality__c",
+          "label" : "Speciality",
+          "type" : "String"
+        },
+        { "api" : "cve__Start__c",
+          "label" : "Start",
+          "type" : "Date"
+        },
+        { "api" : "SystemModstamp",
+          "label" : "System Modstamp",
+          "type" : "DateTime"
+        },
+        { "api" : "cve__Through__c",
+          "label" : "Through",
+          "type" : "Date"
+        }
+      ],
+    "sobLabel" : "Claim Relationship"
+}]

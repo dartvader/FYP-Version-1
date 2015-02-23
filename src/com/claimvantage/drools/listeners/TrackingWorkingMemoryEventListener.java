@@ -57,10 +57,10 @@ public class TrackingWorkingMemoryEventListener extends DefaultRuleRuntimeEventL
 
 		/* 
 		System.out.println("<<< getFactHandle " + event.getFactHandle().toString() + " >>> ");
-		System.out.println("<<< Class Name " + event.getFactHandle()+ " >>> ");*/
-		System.out.println(" <<<  getObject " + event.getObject().toString() + " >>> ");
-		//System.out.println(" <<<  getObject class name " + event.getObject().getClass().getName() + " >>> ");
-
+		System.out.println("<<< Class Name " + event.getFactHandle()+ " >>> ");
+		System.out.println("<<<  getObject " + event.getObject().toString() + " >>> ");
+		System.out.println("<<<  getObject class name " + event.getObject().getClass().getName() + " >>> ");
+		*/
 		if ((handleFilter == null  && classFilter == null)
 				|| event.getFactHandle() == handleFilter
 				|| event.getObject().getClass().equals(classFilter)) {

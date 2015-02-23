@@ -1,0 +1,30 @@
+[{
+    "description": "This rule is designed to detect individual who could be financially unstable",
+    "name": "Contact Earnings Rule",
+    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.* rule 'Contact Earnings Rule' when Contact($ContactId : id, cve__Earnings__c == null); $Claim : Cve__Claim__c($ClaimId : id, cve__ClaimantInsured__c == $ContactId); then insert(new Alert(drools.getRule().getName(), 100, 'Contact Claimant to ensure financial stability')); end",
+	"consequence":{"score":100, "recommendation":"Contact Claimant to ensure financial stability"}
+},
+{
+    "description": "The Missing Address Rule should detect claimants who are acting shady and supplying little personal information",
+    "name": "Contact Missing Address Rule",
+    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.* rule 'Contact Missing Address Rule' when Contact($ContactId : id, cve__MailingAddress__c == null, OtherAddress == null); $Claim : Cve__Claim__c($ClaimId : id, cve__ClaimantInsured__c == $ContactId); then insert(new Alert(drools.getRule().getName(), 100, 'Check Claimant details and get an address on record')); end",
+	"consequence":{"score":100, "recommendation":"Check Claimant details and get an address on record"}
+},
+{
+    "description": "The Missing Documents Rule should detect any claim that is missing any kind of required correspondence",
+    "name": "Missing Documents Rule",
+    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.* rule 'Missing All Documents Rule' when Cve__Claim__c($ClaimId : id); Cve__Document__c(cve__Claim__c == $ClaimId, cve__Required__c == true, cve__Received__c == null, cve__Accepted__c == false, cve__Type__c == 'Medical'); then insert(new Alert(drools.getRule().getName(), 50,'Contact Claim to follow up on missing documents')); end",
+	"consequence": {"score":50, "recommendation":"Contact Claim to follow up on missing documents"}
+},
+{
+    "description": "The Missing Medical Documents Rule should detect any claim that is missing any kind of medical correspondence",
+    "name": "Missing Medical Documents rule",
+    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.* rule 'Missing Medical Documents Rule' when Cve__Claim__c($ClaimId : id); Cve__Document__c(cve__Claim__c == $ClaimId, cve__Required__c == true, cve__Received__c == null, cve__Accepted__c == false, cve__Type__c == 'Medical'); then insert(new Alert(drools.getRule().getName(), 50, 'Contact Claim to follow up on missing documents')); end",
+	"consequence": {"score":50, "recommendation":"Contact Claim to follow up on missing documents"}
+},
+{
+    "description": "The Missing Physician rule detects if there is a claim that has no attending Physician ",
+    "name": "Missing Medical Documents rule",
+    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.* import java.util.ArrayList rule 'Missing Physician Rule' when Cve__Claim__c($ClaimId : id); $AttendingPhysicans : ArrayList(size == 0)  from collect( Cve__ClaimRelationship__c( cve__Claim__c == $ClaimId, cve__Type__c == 'Attending Physician'))then insert(new Alert(drools.getRule().getName(), 100, 'Investigate the Claimants medical claim')); end",
+	"consequence": {"score":100, "recommendation":"Investigate the Claimants Medical Claim"}
+}]

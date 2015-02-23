@@ -14,6 +14,7 @@ fraudControllers.controller('SessionController', function($scope, $rootScope, $l
 	$scope.inBuildingMode = false;
 	$scope.inEditingMode = false;
 	$scope.newSession = {};
+	$scope.coreSession = {};
 	$scope.selectedNewRules = [];
 	$scope.availableRules;
 	
@@ -33,6 +34,12 @@ fraudControllers.controller('SessionController', function($scope, $rootScope, $l
 		var sessionPromise = SessionServices.getSessions();
 		sessionPromise.then(function(session) {
 			$scope.sessions = session;
+		});
+		
+		var coreSessionPromise = SessionServices.loadCoreProduct();
+		coreSessionPromise.then(function(session) {	
+			console.log("Core session product ");
+			$scope.coreSession = session;
 		});
 		
 	};
@@ -108,6 +115,7 @@ fraudControllers.controller('SessionController', function($scope, $rootScope, $l
 			$scope.availableRules = rules;
 		});
 	};
+	
 	$scope.init();
 });
 

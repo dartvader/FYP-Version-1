@@ -27,7 +27,6 @@ public class DataLoader {
 	
 	private static ArrayList<String> buildQueries(HashSet<Sobject> objects) {
 
-		System.out.println(">>> Building Queries ");
 		ArrayList<String> exportQueries = new ArrayList<String>();
 		
 		for (Sobject object : objects) {
@@ -40,7 +39,6 @@ public class DataLoader {
 
 	public static ArrayList<QueryResult> exportData(ArrayList<String> queries) {
 
-		System.out.println(">>> exportData ");
 		EnterpriseConnection connection = createConnection();
 		ArrayList<QueryResult> results = new ArrayList<QueryResult>();
 		
@@ -55,8 +53,6 @@ public class DataLoader {
 	}
 	
 	public static void loadData(KieSession kieSession, ArrayList<QueryResult> results) {
-
-		System.out.println(">>> load Data ");
 		
 		for (QueryResult result : results) {
 			if (result.getSize() > 0) {
@@ -79,11 +75,6 @@ public class DataLoader {
 		config.setPassword(PASSWORD);
 		try {
 			connection = Connector.newConnection(config);
-			// display some current settings
-			System.out.println("Auth EndPoint: " + config.getAuthEndpoint());
-			System.out.println("Service EndPoint: " + config.getServiceEndpoint());
-			System.out.println("Username: " + config.getUsername());
-			System.out.println("SessionId: " + config.getSessionId());
 		} catch (ConnectionException e1) {
 			e1.printStackTrace();
 		}

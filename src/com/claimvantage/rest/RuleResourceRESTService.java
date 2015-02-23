@@ -12,7 +12,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import com.claimvantage.data.RulesRepository;
-import com.claimvantage.drools.controller.SessionExecutor;
 import com.claimvantage.model.Rule;
 
 @Path("rules")

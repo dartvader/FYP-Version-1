@@ -11,9 +11,10 @@ public class Execution {
 	private String timeStamp;
 	private int numberOfRulesFired;
 	private int sessionId;
+	private long factCount;
 	
-	public Execution(List<Alert> alerts, List<Rule> rules, int sessionId, int numberOfRulesFired) {
-		System.out.println("in execution Alerts " + alerts.size());
+	public Execution(List<Alert> alerts, List<Rule> rules, int sessionId, int numberOfRulesFired, long factCount2) {
+		this.setFactCount(factCount2);
 		this.setNumberOfRulesFired(numberOfRulesFired);
 		this.setAlerts(alerts);
 		this.setRules(rules);
@@ -21,20 +22,16 @@ public class Execution {
 		this.setTimeStamp(new Timestamp(new Date().getTime()).toLocalDateTime().toString());
 	}
 	
+	public Execution(List<Alert> alerts, List<Rule> rules, int sessionId, int numberOfRulesFired) {
+		this(alerts, rules, sessionId, numberOfRulesFired, 0);
+	}
+	
 	public Execution(List<Alert> alerts, List<Rule> rules, int sessionId) {
-		System.out.println("in execution Alerts " + alerts.size());
-		this.setAlerts(alerts);
-		this.setRules(rules);
-		this.setSessionId(sessionId);
-		this.setTimeStamp(new Timestamp(new Date().getTime()).toLocalDateTime().toString());
+		this(alerts, rules, sessionId, 0);
 	}
 	
 	public Execution(List<Alert> alerts, List<Rule> rules) {
-		System.out.println("in execution Alerts " + alerts.size());
-		this.alerts = alerts;
-		this.rules = rules;
-		Date date= new Date();
-		this.timeStamp = new Timestamp(date.getTime()).toLocalDateTime().toString();
+		this(alerts, rules, 0);
 	}
 
 	public List<Alert> getAlerts() {
@@ -75,6 +72,14 @@ public class Execution {
 
 	public void setNumberOfRulesFired(int numberOfRulesFired) {
 		this.numberOfRulesFired = numberOfRulesFired;
+	}
+
+	public long getFactCount() {
+		return factCount;
+	}
+
+	public void setFactCount(long factCount) {
+		this.factCount = factCount;
 	}
 	
 }

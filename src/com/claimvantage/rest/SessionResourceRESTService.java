@@ -1,9 +1,14 @@
 package com.claimvantage.rest;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -14,20 +19,29 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.camel.Consume;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import com.claimvantage.data.RulesRepository;
 import com.claimvantage.data.SessionRepository;
-import com.claimvantage.drools.controller.SessionExecutor;
 import com.claimvantage.model.Alert;
 import com.claimvantage.model.Execution;
 import com.claimvantage.model.Rule;
 import com.claimvantage.model.Session;
+import com.claimvantage.model.Sobject;
+
+import org.codehaus.jackson.type.TypeReference;
 
 @Path("sessions")
 public class SessionResourceRESTService {
 	
 	private static SessionRepository sessionRepo = SessionRepository.instance();
 	private static RulesRepository rulesRepo = RulesRepository.instance();
+	private Session corePackageSession = null;
+	
+	@javax.ws.rs.core.Context 
+	ServletContext context;
 	
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -37,9 +51,7 @@ public class SessionResourceRESTService {
     	Response.ResponseBuilder builder = null;	
     	
 		try {
-			System.out.println(">>> create new session <<< ");
 			sessionRepo.addSession(session);
-			
             builder = Response.ok();
         } catch (Exception e) {
             // Handle generic exceptions
@@ -59,6 +71,37 @@ public class SessionResourceRESTService {
     @Produces(MediaType.APPLICATION_JSON)
 	public List<Session> getCurrentSession() {
 		return sessionRepo.getSessions();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@GET
+	@Path("/core")
+    @Produces(MediaType.APPLICATION_JSON)
+	public Session loadCorePackage() {
+		
+		if (!sessionRepo.isCorePackageCreated()) {
+			String webInfPath = context.getRealPath("WEB-INF");
+			try {
+				ObjectMapper mapper = new ObjectMapper();
+				List<Rule> rules = (List<Rule>) mapper.readValue(new File(webInfPath +"/Rules.json"), new TypeReference<List<Rule>>(){});
+				System.out.println("Rules " + rules.size());
+				
+				HashSet<Sobject> requiredObjects = (HashSet<Sobject>) mapper.readValue(new File(webInfPath +"/RequiredObjects.json"), new TypeReference<HashSet<Sobject>>(){});
+				System.out.println("Objects " + requiredObjects.size());
+				
+				Session corePackageSession = new Session(rules, "Custom Package", requiredObjects);
+				sessionRepo.setCorePackage(corePackageSession);
+				sessionRepo.addSession(corePackageSession);
+				sessionRepo.hasCorePackageCreated(true);
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return sessionRepo.getCorePackage();
 	}
 	
 	@GET

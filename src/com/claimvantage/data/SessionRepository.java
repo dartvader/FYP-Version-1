@@ -12,9 +12,12 @@ public class SessionRepository {
 	
 	private static SessionRepository instance = null;
 	private List<Session> sessions;
+	private Boolean corePackageCreated;
+	private Session corePackage;
 	
 	public SessionRepository() {
 		sessions = new ArrayList<Session>();
+		this.corePackageCreated = false;
 	}
 
 	public static SessionRepository instance() {
@@ -45,15 +48,26 @@ public class SessionRepository {
 
 	public Session getSessionsById(String sessionId) {
 		for (Session s : sessions) {
-			System.out.println("sessionId " + sessionId + "s.getId" + s.getId());
-			System.out.println(sessionId == s.getId().toString());
-			System.out.println(s.getId().toString().contains(sessionId));
-			
 			if (s.getId().toString().contains(sessionId)) {
-				System.out.println("Printing the session " + s.toString());
 				return s;
 			}
 		}
 		return null;
+	}
+	
+	public Boolean isCorePackageCreated() {
+		return corePackageCreated;
+	}
+
+	public void hasCorePackageCreated(Boolean corePackageCreated) {
+		this.corePackageCreated = corePackageCreated;
+	}
+
+	public Session getCorePackage() {
+		return corePackage;
+	}
+
+	public void setCorePackage(Session corePackage) {
+		this.corePackage = corePackage;
 	}
 }

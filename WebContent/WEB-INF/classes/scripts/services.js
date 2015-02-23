@@ -149,6 +149,23 @@ fraudServices.factory('SessionServices', function($http, $q){
 		return deferred.promise;
 	};
 	
+	factory.loadCoreProduct= function() {
+		console.log("Loading core product");
+		
+		var getUrl = "http://localhost:8080/cvfraud-v1/rest/sessions/core";
+		var deferred = $q.defer();
+		
+		var promise = $http.get(getUrl).success(function(data) {
+			console.log("success " + JSON.stringify(data));
+			deferred.resolve(data);
+		}).error(function(data, status, headers, config) {
+			console.log("error " + status);
+			console.log("error config " + JSON.stringify(config));
+		});
+
+		return deferred.promise;
+	};
+	
 	return factory;
 });
 
