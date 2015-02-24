@@ -154,7 +154,7 @@ public class Session {
 		incrementNumberOfAlerts(alerts.size());
 		
 		
-		Execution execution = new Execution(alerts, rules, alerts.size(), numberOfRuleFired, factCount);
+		Execution execution = new Execution(alerts, rules, this.getId(), numberOfRuleFired, factCount, alerts.size());
 		executions.add(execution);
 		
 		// Cleaning up Session memory

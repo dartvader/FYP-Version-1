@@ -9,13 +9,12 @@
             </li>
         </ol>
         <div class="row">
-	        <div class="form-group add-rule" id="btn-add-rule">
-	            <div class="btn-group-justified" role="group" aria-label="Justified button group"  ng-if="!inBuildingMode">
-	                <a class="btn btn-primary" role="button" ng-click="buildNewSession()">Build New Session</a>
+	        <div class="pull-right">
+				<div class="add-rule pull-right" id="btn-add-rule" ng-if="!inBuildingMode">
+			 		<a class="btn btn-primary" role="button" ng-click="buildNewSession()">Build New Session</a>
 	            </div>
-	        </div>
+			</div>
 	    </div>
-	    {{coreSession}}
 	    <div class="panel panel-primary"  ng-if="inBuildingMode" >
 			<div class="panel-heading">Building New Session</div>
 			<div class="panel-body">

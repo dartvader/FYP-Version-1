@@ -437,10 +437,6 @@
           "label" : "Email Bounced Reason",
           "type" : "String"
         },
-        { "api" : "HasOptedOutOfEmail",
-          "label" : "Email Opt Out",
-          "type" : "Boolean"
-        },
         { "api" : "cve__Employed__c",
           "label" : "Employed",
           "type" : "Boolean"
@@ -452,10 +448,6 @@
         { "api" : "cve__EmployeeIdentificationNumber__c",
           "label" : "Employee Identification Number",
           "type" : "String"
-        },
-        { "api" : "HasOptedOutOfFax",
-          "label" : "Fax Opt Out",
-          "type" : "Boolean"
         },
         { "api" : "FirstName",
           "label" : "First Name",

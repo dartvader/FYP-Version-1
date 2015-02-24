@@ -4,10 +4,15 @@
             Rules 
         </h1>
         <ol class="breadcrumb">
-            <li class="active">
-                <i class="fa fa-wrench"></i> Create New Rule Set
+        	<li class="active">
+            	<i class="fa fa-wrench"></i> Create New Rule
             </li>
         </ol>
+        <div class="pull-right">
+			<div class="add-rule pull-right" id="btn-add-rule" ng-if="newRuleMode == false">
+		 		<a class="btn btn-primary" role="button" ng-click="addRule('')">Create New Rule</a>
+		 	</div>
+		</div>
     </div>
 </div>
 <div class="col-lg-10">
@@ -29,13 +34,6 @@
 				</table>
             </div>
             <br>
-            <div class="row">
-                <div class="form-group add-rule" id="btn-add-rule" ng-if="newRuleMode == false">
-                    <div class="btn-group-justified" role="group" aria-label="Justified button group">
-                        <a class="btn btn-primary" role="button" ng-click="addRule('')">Create New Rule</a>
-                    </div>
-                </div>
-            </div>
             <br>
             <!-- Template for creating a new rule -->
             <div ng-if="newRuleMode == true" ng-include src="'partials/new-rule.html'">

@@ -2,7 +2,9 @@ package com.claimvantage.model;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class Execution {
 	
@@ -10,28 +12,66 @@ public class Execution {
 	private List<Rule> rules;
 	private String timeStamp;
 	private int numberOfRulesFired;
-	private int sessionId;
+	private UUID sessionId;
 	private long factCount;
+	private int numberOfAlerts;
+	private HashMap<String, Integer> ruleFrequency; 
 	
-	public Execution(List<Alert> alerts, List<Rule> rules, int sessionId, int numberOfRulesFired, long factCount2) {
-		this.setFactCount(factCount2);
+	public Execution(List<Alert> alerts, List<Rule> rules, UUID uuid, int numberOfRulesFired, long factCount, int numberOfAlerts) {
+		this.setFactCount(factCount);
 		this.setNumberOfRulesFired(numberOfRulesFired);
 		this.setAlerts(alerts);
 		this.setRules(rules);
-		this.setSessionId(sessionId);
+		this.setSessionId(uuid);
+		this.setNumberOfAlerts(numberOfAlerts);
 		this.setTimeStamp(new Timestamp(new Date().getTime()).toLocalDateTime().toString());
+		// Calculate the Frequency of the Alerts rules
+		this.ruleFrequency = calculateRuleFrequency(alerts, rules);
+		System.out.println("Calculating Rule Frequency ");
 	}
 	
-	public Execution(List<Alert> alerts, List<Rule> rules, int sessionId, int numberOfRulesFired) {
+	
+
+	public Execution(List<Alert> alerts, List<Rule> rules, UUID sessionId, int numberOfRulesFired, long factCount) {
+		this(alerts, rules, sessionId, numberOfRulesFired, factCount, 0);
+	}
+	
+	public Execution(List<Alert> alerts, List<Rule> rules, UUID sessionId, int numberOfRulesFired) {
 		this(alerts, rules, sessionId, numberOfRulesFired, 0);
 	}
 	
-	public Execution(List<Alert> alerts, List<Rule> rules, int sessionId) {
+	public Execution(List<Alert> alerts, List<Rule> rules, UUID sessionId) {
 		this(alerts, rules, sessionId, 0);
 	}
 	
 	public Execution(List<Alert> alerts, List<Rule> rules) {
-		this(alerts, rules, 0);
+		this(alerts, rules, null);
+	}
+	
+	private HashMap<String, Integer> calculateRuleFrequency(List<Alert> alerts, List<Rule> rules) {
+		System.out.println("Calculating Rule Frequency ");
+		HashMap<String, Integer> ruleFrequency = new HashMap<String, Integer>();
+		// Add rules that occurred
+		for (Alert alert: alerts) {
+			String ruleName = alert.getRuleName();
+			if (!ruleFrequency.containsKey(ruleName)) {
+				ruleFrequency.put(ruleName, 1);
+			} else {
+				int key = ruleFrequency.get(ruleName);
+				key = key + 1;
+				System.out.println("incrementing key " + key);
+				ruleFrequency.replace(ruleName, key);
+			}
+		}
+		// Add rules that never occured
+		for (Rule rule: rules) {
+			String ruleName = rule.getName();
+			if (!ruleFrequency.containsKey(ruleName)) {
+				ruleFrequency.put(ruleName, 0);
+			} 
+		}
+		System.out.println("Calculating Rule Frequency t" + ruleFrequency.toString());
+		return ruleFrequency;
 	}
 
 	public List<Alert> getAlerts() {
@@ -58,12 +98,12 @@ public class Execution {
 		this.timeStamp = timeStamp;
 	}
 
-	public int getSessionId() {
+	public UUID getSessionId() {
 		return sessionId;
 	}
 
-	public void setSessionId(int sessionId) {
-		this.sessionId = sessionId;
+	public void setSessionId(UUID uuid) {
+		this.sessionId = uuid;
 	}
 
 	public int getNumberOfRulesFired() {
@@ -81,5 +121,20 @@ public class Execution {
 	public void setFactCount(long factCount) {
 		this.factCount = factCount;
 	}
+
+	public int getNumberOfAlerts() {
+		return numberOfAlerts;
+	}
+
+	public void setNumberOfAlerts(int numberOfAlerts) {
+		this.numberOfAlerts = numberOfAlerts;
+	}
 	
+	public HashMap<String, Integer> getRuleFrequency() {
+		return ruleFrequency;
+	}
+
+	public void setRuleFrequency(HashMap<String, Integer> ruleFrequency) {
+		this.ruleFrequency = ruleFrequency;
+	}
 }
