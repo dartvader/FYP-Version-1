@@ -83,11 +83,13 @@ public class SessionResourceRESTService {
 			String webInfPath = context.getRealPath("WEB-INF");
 			try {
 				ObjectMapper mapper = new ObjectMapper();
+				
 				List<Rule> rules = (List<Rule>) mapper.readValue(new File(webInfPath +"/Rules.json"), new TypeReference<List<Rule>>(){});
-				System.out.println("Rules " + rules.size());
+				for(Rule rule : rules) {
+					rulesRepo.addRule(rule);
+				}
 				
 				HashSet<Sobject> requiredObjects = (HashSet<Sobject>) mapper.readValue(new File(webInfPath +"/RequiredObjects.json"), new TypeReference<HashSet<Sobject>>(){});
-				System.out.println("Objects " + requiredObjects.size());
 				
 				Session corePackageSession = new Session(rules, "Custom Package", requiredObjects);
 				sessionRepo.setCorePackage(corePackageSession);
@@ -107,7 +109,7 @@ public class SessionResourceRESTService {
 	@GET
 	@Path("/execute/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-	public Execution executeSessionRules(@PathParam("id") String id) {
+	public Session executeSessionRules(@PathParam("id") String id) {
 		/* 
 		 * TODO Execute this in  thread
 		 * Try calculate time and poll back to the user
@@ -116,6 +118,9 @@ public class SessionResourceRESTService {
 		Session session = sessionRepo.getSessionsById(id);
 
 		System.out.println(" session id that is being executed " + session.getCreationDateTime());
-		return session.executeRules();
+		session.executeRules();
+		Session sessionUpdate = sessionRepo.getSessionsById(id);
+		
+		return sessionUpdate;
 	}
 }

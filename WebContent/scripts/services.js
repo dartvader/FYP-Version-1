@@ -55,7 +55,7 @@ fraudServices.factory('RulesServices', function($http, $q){
 		var deferred = $q.defer();
 		
 		var promise = $http.post(postUrl, rule, configForPost).success(function(data) {
-			console.log("success " + JSON.stringify(data));
+			console.log(" Rule Creation was successful ");
 		}).error(function(data, status, headers, config) {
 			console.log("error " + status);
 			console.log("error config " + JSON.stringify(config));
@@ -90,7 +90,8 @@ fraudServices.factory('SessionServices', function($http, $q){
 		var deferred = $q.defer();
 		
 		var promise = $http.get(getUrl, configForGet).success(function(data) {
-			console.log(" got sessions success ");
+			console.log(">>>>> sessions ");
+			
 			deferred.resolve(data);
 		}).error(function(data, status, headers, config) {
 			console.log("error " + status);
@@ -139,7 +140,7 @@ fraudServices.factory('SessionServices', function($http, $q){
 		var deferred = $q.defer();
 		
 		var promise = $http.get(getUrl).success(function(data) {
-			console.log("success " + JSON.stringify(data));
+			console.log("Executer rules " + data);
 			deferred.resolve(data);
 		}).error(function(data, status, headers, config) {
 			console.log("error " + status);
@@ -156,7 +157,7 @@ fraudServices.factory('SessionServices', function($http, $q){
 		var deferred = $q.defer();
 		
 		var promise = $http.get(getUrl).success(function(data) {
-			console.log("success " + JSON.stringify(data));
+			console.log("Loading core product " + JSON.stringify(data));
 			deferred.resolve(data);
 		}).error(function(data, status, headers, config) {
 			console.log("error " + status);

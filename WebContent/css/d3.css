@@ -1,0 +1,188 @@
+/* 1 */
+#split {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#split td, #split th {
+    font-size: .8em;
+    border: 1px solid #98bf21;
+    padding: 3px 7px 2px 7px;
+}
+
+#split th {
+    font-size: .9em;
+    text-align: left;
+    padding-top: 5px;
+    padding-bottom: 4px;
+    background-color: #A7C942;
+    color: #ffffff;
+}
+
+#split tr.alt td {
+    color: #000000;
+    background-color: #EAF2D3;
+}
+/* 2 i think */
+.bar:hover {
+  fill: brown;
+}
+
+.bar-text {
+	fill: #00ff00;
+	font-size: 7px;
+	padding: 2px;
+}
+.bar-text:hover {
+	font-size: 12px;
+	background: #fff;
+	fill: #000;
+}
+
+.axis {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+table.split {
+	border: 1px;
+}
+
+path.slice{
+	stroke-width:2px;
+}
+polyline{
+	opacity: .3;
+	stroke: black;
+	stroke-width: 1.5px;
+	fill: none;
+} 
+svg text.percent{
+	fill:white;
+	text-anchor:middle;
+	font-size:10px;
+}
+svg text.percent:hover{
+	fill:black;
+	text-anchor:end;
+	font-size:40px;
+	font-weight: bold;
+	z-index: 100;
+}
+svg {
+  font: 10px sans-serif;
+}
+
+.y.axis path {
+  display: none;
+}
+
+.y.axis line {
+  stroke: #fff;
+  stroke-opacity: .2;
+  shape-rendering: crispEdges;
+}
+
+.y.axis .zero line {
+  stroke: #000;
+  stroke-opacity: 1;
+}
+
+.title {
+  font: 300 50px Helvetica Neue;
+  fill: #666;
+}
+.birthyear,
+
+.age {
+  text-anchor: middle;
+}
+.birthyear {
+  fill: #000;
+}
+/*
+rect {
+  fill-opacity: .6;
+  fill: #e377c2;
+}
+rect:first-child {
+  fill: #1f77b4;
+}
+*/
+/* 5a */
+.chart5a {
+background: #b0e0f8;
+margin: 5px;
+}
+ 
+.chart5a rect {
+  stroke: white;
+  fill: steelblue;
+}
+ 
+.chart5a text {
+  fill: white;
+}
+ 
+.chart5a text.name {
+  fill: #fff;
+}
+.chart5a text.score {
+  color:#fff;
+  fill: #fff;
+}
+ 
+.chart5a line {
+  stroke: #c1c1c1;
+}
+ 
+.chart5a .rule {
+  fill: #fff;
+}
+
+/* a bit of hovering effect for each bar */
+#horizontal-chart .chart5a rect:hover {
+  fill: #64707D;
+} 
+
+/* 6 */
+path {  stroke: #fff; }
+path:hover {  opacity:0.9; }
+rect:hover {  fill:blue; }
+.axis {  font: 8px sans-serif; }
+.legend tr{    border-bottom:1px solid grey; }
+.legend tr:first-child{    border-top:1px solid grey; }
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {  display: none; }
+.legend{
+    margin-bottom:76px;
+    display:inline-block;
+    border-collapse: collapse;
+    border-spacing: 0px;
+}
+.legend td{
+    padding:4px 5px;
+    vertical-align:bottom;
+}
+.legendFreq, .legendPerc{
+    align:right;
+    width:50px;
+}

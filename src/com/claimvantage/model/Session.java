@@ -42,14 +42,15 @@ import com.sforce.soap.enterprise.Cve__Claim__C;
 @JsonSerialize
 @XmlRootElement
 public class Session {
-	
+
 	@JsonIgnore
 	private KieSession kieSession;
 	private List<Rule> rules;
 	private HashSet<Sobject> requiredObjects;
 	private List<Execution> executions;
 	private String creationDateTime;
-	private String lastExecution;
+	private String lastExecutionDate;
+	private int numberOfRules;
 	private int totalNumberOfAlerts;
 	private int totalNumberOfRulesFired;
 	private int totalNumberOfExecutions;
@@ -60,23 +61,26 @@ public class Session {
 
 	@JsonIgnore
 	private final String REPOSITORY_LOCATION = "src/main/resources/rules/";
-	
-	public Session(List<Rule> rules, String type, HashSet<Sobject> requiredObjects) {
-		this.creationDateTime = new Timestamp(new Date().getTime()).toLocalDateTime().toString();    
+
+	public Session(List<Rule> rules, String type,
+			HashSet<Sobject> requiredObjects) {
+		this.creationDateTime = new Timestamp(new Date().getTime())
+				.toLocalDateTime().toString();
 		this.executions = new ArrayList<Execution>();
-        this.isActive = true;
-        this.totalNumberOfAlerts = 0;
-        this.totalNumberOfRulesFired = 0;
-        this.totalNumberOfExecutions = 0;
-        this.rules = new ArrayList<Rule>(rules);
-        this.requiredObjects = requiredObjects;
-        this.type = type;
+		this.isActive = true;
+		this.totalNumberOfAlerts = 0;
+		this.totalNumberOfRulesFired = 0;
+		this.totalNumberOfExecutions = 0;
+		this.rules = new ArrayList<Rule>(rules);
+		this.requiredObjects = requiredObjects;
+		this.type = type;
+		this.numberOfRules = rules.size();
 	}
-	
+
 	public Session(List<Rule> rules) {
 		this(rules, "Custom Package", null);
 	}
-	
+
 	public int getTotalNumberOfAlerts() {
 		return totalNumberOfAlerts;
 	}
@@ -101,94 +105,104 @@ public class Session {
 		this.totalNumberOfExecutions = totalNumberOfExecutions;
 	}
 
-	/* Not sure if creating a whole new Service, repo and file system is very effecient and could
-	** cause memory leaks, needs to be reviewed and possible manage on kieRepository and use the 
-	** kieRepository.removeKieModule(ReleaseId) to remove the rules from the session once the 
-	** execution of the rules is complete
-	*/ 
+	/*
+	 * Not sure if creating a whole new Service, repo and file system is very
+	 * effecient and could* cause memory leaks, needs to be reviewed and
+	 * possible manage on kieRepository and use the*
+	 * kieRepository.removeKieModule(ReleaseId) to remove the rules from the
+	 * session once the* execution of the rules is complete
+	 */
 	public KieSession createKieSession(List<Rule> rules) {
-		
+
 		KieServices kieServices = KieServices.Factory.get();
-        KieRepository kieRepository = kieServices.getRepository();
-        KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
-    	for (Rule r :rules) {
-    		kieFileSystem.write(REPOSITORY_LOCATION + r.getName() +".drl", r.getScript().toString());
-    	}
-        KieBuilder kb = kieServices.newKieBuilder(kieFileSystem);
-        kb.buildAll(); // kieModule is automatically deployed to KieRepository if successfully built.
+		KieRepository kieRepository = kieServices.getRepository();
+		KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
+		for (Rule r : rules) {
+			kieFileSystem.write(REPOSITORY_LOCATION + r.getName() + ".drl", r
+					.getScript().toString());
+		}
+		KieBuilder kb = kieServices.newKieBuilder(kieFileSystem);
+		kb.buildAll(); // kieModule is automatically deployed to KieRepository
+						// if successfully built.
 
-        if (kb.getResults().hasMessages(Level.ERROR)) {
-            throw new RuntimeException("Build Errors:\n" + kb.getResults().toString());
-        }
+		if (kb.getResults().hasMessages(Level.ERROR)) {
+			throw new RuntimeException("Build Errors:\n"
+					+ kb.getResults().toString());
+		}
 
-        KieContainer kContainer = kieServices.newKieContainer(kieRepository.getDefaultReleaseId());
+		KieContainer kContainer = kieServices.newKieContainer(kieRepository
+				.getDefaultReleaseId());
 		return kContainer.newKieSession();
 	}
-	
+
 	private void loadData(KieSession kieSession) {
 		// pass reference to the kieSession into the bulk data exporter
-        this.requiredObjects = this.requiredObjects == null ? 
-        		getRequiredObjects(rules): 
-        		this.requiredObjects;
-        		
-        System.out.println("Required objects " + this.requiredObjects.size());
+		this.requiredObjects = this.requiredObjects == null ? getRequiredObjects(rules)
+				: this.requiredObjects;
+
+		System.out.println("Required objects " + this.requiredObjects.size());
 		DataLoader.execute(kieSession, requiredObjects);
 	}
-	
+
 	public Execution executeRules() {
-		
+
 		incrementNumberOfExecutions();
 		List<Alert> alerts = new ArrayList<Alert>();
-		
+
 		TrackingWorkingMemoryEventListener workingMemoryListener = new TrackingWorkingMemoryEventListener();
 		this.kieSession = createKieSession(rules);
 		kieSession.addEventListener(workingMemoryListener);
-        
+
 		loadData(kieSession);
-		
+
 		int numberOfRuleFired = kieSession.fireAllRules();
 		long factCount = kieSession.getFactCount();
 		incrementNumberOfRulesFired(numberOfRuleFired);
-		
+
 		alerts = workingMemoryListener.getAlerts();
 		incrementNumberOfAlerts(alerts.size());
-		
-		
-		Execution execution = new Execution(alerts, rules, this.getId(), numberOfRuleFired, factCount, alerts.size());
+
+		Execution execution = new Execution(alerts, rules, this.getId(),
+				numberOfRuleFired, factCount, alerts.size());
 		executions.add(execution);
+		this.setLastExecutionDate(new Timestamp(new Date().getTime()).toLocalDateTime().toString());
 		
 		// Cleaning up Session memory
 		kieSession.removeEventListener(workingMemoryListener);
 		kieSession.dispose();
-		this.lastExecution = new Timestamp(new Date().getTime()).toLocalDateTime().toString();   
 		
+
 		return execution;
 	}
-	
+
 	private void incrementNumberOfRulesFired(int numberOfRuleFired) {
-		this.totalNumberOfRulesFired = totalNumberOfRulesFired + numberOfRuleFired;
+		this.totalNumberOfRulesFired = totalNumberOfRulesFired
+				+ numberOfRuleFired;
 	}
 
 	private void incrementNumberOfAlerts(int numberOfAlertsRaised) {
-		this.totalNumberOfAlerts = this.totalNumberOfAlerts + numberOfAlertsRaised;
+		this.totalNumberOfAlerts = this.totalNumberOfAlerts
+				+ numberOfAlertsRaised;
 	}
-	
+
 	private void incrementNumberOfExecutions() {
 		this.totalNumberOfExecutions++;
 	}
+
 	// TODO Write this rule to the file System
 	public void addRule(Rule rule) {
 		this.rules.add(rule);
 	}
+
 	// TODO implement this
 	public void deleteRule(String ruleName) {
-		for (int i = 0;i < this.rules.size();i++) {
+		for (int i = 0; i < this.rules.size(); i++) {
 			if (this.rules.get(i).getName() == ruleName) {
 				this.rules.remove(i);
 			}
 		}
 	}
-	
+
 	private HashSet<Sobject> getRequiredObjects(List<Rule> rules) {
 		HashSet<Sobject> objects = new HashSet<Sobject>();
 		for (Rule r : rules) {
@@ -214,13 +228,13 @@ public class Session {
 	public void setExecutions(List<Execution> executions) {
 		this.executions = executions;
 	}
-	
-	public String getLastExecution() {
-		return lastExecution;
+
+	public String getLastExecutionDate() {
+		return lastExecutionDate;
 	}
 
-	public void setLastExecution(String lastExecution) {
-		this.lastExecution = lastExecution;
+	public void setLastExecutionDate(String lastExecutionDate) {
+		this.lastExecutionDate = lastExecutionDate;
 	}
 
 	public UUID getId() {
@@ -230,7 +244,7 @@ public class Session {
 	public void setId(UUID id) {
 		this.id = id;
 	}
-	
+
 	public boolean isActive() {
 		return isActive;
 	}
@@ -238,7 +252,7 @@ public class Session {
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
-	
+
 	public List<Rule> getRules() {
 		return rules;
 	}
@@ -246,12 +260,20 @@ public class Session {
 	public void setRules(List<Rule> rules) {
 		this.rules = rules;
 	}
-	
+
 	public String getType() {
 		return this.type == null ? "Custom Package" : this.type;
 	}
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public int getNumberOfRules() {
+		return numberOfRules;
+	}
+
+	public void setNumberOfRules(int numberOfRules) {
+		this.numberOfRules = numberOfRules;
 	}
 }

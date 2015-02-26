@@ -1,6 +1,8 @@
 package com.claimvantage.model;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +13,7 @@ public class Execution {
 	private List<Alert> alerts;
 	private List<Rule> rules;
 	private String timeStamp;
+	private String formattedDate;
 	private int numberOfRulesFired;
 	private UUID sessionId;
 	private long factCount;
@@ -25,6 +28,10 @@ public class Execution {
 		this.setSessionId(uuid);
 		this.setNumberOfAlerts(numberOfAlerts);
 		this.setTimeStamp(new Timestamp(new Date().getTime()).toLocalDateTime().toString());
+		Date now = new Date();
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MMM HH:mm");
+		System.out.println(dateFormatter.format(now));
+		this.setFormattedDate(dateFormatter.format(now));
 		// Calculate the Frequency of the Alerts rules
 		this.ruleFrequency = calculateRuleFrequency(alerts, rules);
 		System.out.println("Calculating Rule Frequency ");
@@ -47,7 +54,7 @@ public class Execution {
 	public Execution(List<Alert> alerts, List<Rule> rules) {
 		this(alerts, rules, null);
 	}
-	
+	// Calculating the frequency for the dashboard
 	private HashMap<String, Integer> calculateRuleFrequency(List<Alert> alerts, List<Rule> rules) {
 		System.out.println("Calculating Rule Frequency ");
 		HashMap<String, Integer> ruleFrequency = new HashMap<String, Integer>();
@@ -63,7 +70,7 @@ public class Execution {
 				ruleFrequency.replace(ruleName, key);
 			}
 		}
-		// Add rules that never occured
+		
 		for (Rule rule: rules) {
 			String ruleName = rule.getName();
 			if (!ruleFrequency.containsKey(ruleName)) {
@@ -136,5 +143,13 @@ public class Execution {
 
 	public void setRuleFrequency(HashMap<String, Integer> ruleFrequency) {
 		this.ruleFrequency = ruleFrequency;
+	}
+	
+	public String getFormattedDate() {
+		return formattedDate;
+	}
+	
+	public void setFormattedDate(String formattedDate) {
+		this.formattedDate = formattedDate;
 	}
 }

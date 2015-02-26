@@ -8,30 +8,80 @@
                 <i class="fa fa-wrench"></i> Rule Engine Session
             </li>
         </ol>
-        <div class="row">
-	        <div class="pull-right">
-				<div class="add-rule pull-right" id="btn-add-rule" ng-if="!inBuildingMode">
-			 		<a class="btn btn-primary" role="button" ng-click="buildNewSession()">Build New Session</a>
-	            </div>
-			</div>
+        
+		session {{loadingSessions}}
+		core session {{loadingCoreSession}}
+	   	<div class="row row-centered">
+		   	<div class="panel panel-primary" ng-if="!inBuildingMode && !isSelecetedSession()">
+				<div class="panel-heading">
+					<h1 class="panel-title">All Session</h1>
+				</div>
+				<div class="panel-body">
+		    		<div class="all-sessions" ng-if="!inBuildingMode" ng-include src="'partials/all-sessions.html'"></div>
+	    		</div>
+	    	</div>
 	    </div>
-	    <div class="panel panel-primary"  ng-if="inBuildingMode" >
+	   	
+	   	<div class="row" ng-if="isSelecetedSession()">
+			<div id="selected-session" ng-if="isSelecetedSession()" ng-include src="'partials/selected-session.html'"></div>
+	   	</div>
+	   	
+	   	<div class="row row-centered"  data-ng-show="isSelecetedSession()">
+	    	<div class="panel panel-info">
+	    		<div class="panel-heading" data-toggle="collapse" data-target="#collapseStats" aria-expanded="false" aria-controls="collapseExample">
+					<span>
+						Rule Frequency Statistics
+					</span>
+				</div>
+				<div class="panel-body">
+					
+					<div id="collapseStats" class="panel-collapse collapse">
+						<div id="dashboard"></div>
+						<div class="col-lg-8  col-centered" ng-if="!isSelecetedSession()">
+						    <div class="panel panel-green">
+						        <div class="panel-heading">
+						            <div class="row">
+						                <div class="col-xs-3">
+						                    <i class="fa fa-clipboard fa-5x"></i>
+						                </div>
+						                <div class="col-xs-9 text-right">
+						                    <div class="huge">Select a Package</div>
+						                </div>
+						            </div>
+						        </div>
+						    </div>
+						</div>
+					</div>
+					<div class="col-lg-10  col-centered" ng-if="isSelecetedSession() && !objectExist(selectedSession.executions)">
+					    <div class="panel panel-red">
+					        <div class="panel-heading">
+					            <div class="row">
+					                <div class="col-xs-3">
+					                    <i class="fa fa-bar-chart fa-5x"></i>
+					                </div>
+					                <div class="col-xs-9 text-right">
+					                    <div class="huge">There is No Execution History</div>
+					                    <div>No rule have been fired on this package</div>
+					                </div>
+					            </div>
+					        </div>
+					    </div>
+					</div>
+				</div>
+	    	</div>
+		</div>
+		
+		<div class="panel panel-primary"  ng-if="inBuildingMode" >
 			<div class="panel-heading">Building New Session</div>
 			<div class="panel-body">
 	    		<div id="new-session" ng-if="inBuildingMode" ng-include src="'partials/new-session.html'"></div>
 	    	</div>
 	    </div>
-	    <div class="panel panel-primary" ng-if="isSelecetedSession()">
-			<div class="panel-heading">Selected Session</div>
-			<div class="panel-body">
-	    		<div id="selected-session" ng-if="isSelecetedSession()" ng-include src="'partials/selected-session.html'"></div>
-	   		</div>
-	   	</div>
-	   	<div class="panel panel-primary" ng-if="!inBuildingMode">
-			<div class="panel-heading">All Session</div>
-			<div class="panel-body">
-	    		<div class="all-sessions" ng-if="!inBuildingMode" ng-include src="'partials/all-sessions.html'"></div>
-    		</div>
-    	</div>
+	    
+		<div class="row">
+			<div class="add-rule" id="btn-add-rule" ng-if="!inBuildingMode && !isSelecetedSession()">
+		 		<a class="btn btn-primary" role="button" ng-click="buildNewSession()">Build New Session</a>
+            </div>
+	    </div>
     </div>
 </div>
