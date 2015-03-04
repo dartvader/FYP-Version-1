@@ -2,6 +2,7 @@ package com.claimvantage.rest;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -47,6 +48,7 @@ public class SessionResourceRESTService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
 	public Response saveSession(Session session) {
+		
 		System.out.println(">>> create new session <<< ");
     	Response.ResponseBuilder builder = null;	
     	
@@ -84,7 +86,9 @@ public class SessionResourceRESTService {
 			try {
 				ObjectMapper mapper = new ObjectMapper();
 				
-				List<Rule> rules = (List<Rule>) mapper.readValue(new File(webInfPath +"/Rules.json"), new TypeReference<List<Rule>>(){});
+				ArrayList<Rule> rules = (ArrayList<Rule>) mapper.readValue(new File(webInfPath +"/Rules.json"), new TypeReference<ArrayList<Rule>>(){});
+				System.out.println("Incoming rules from the file " + rules.size());
+				
 				for(Rule rule : rules) {
 					rulesRepo.addRule(rule);
 				}

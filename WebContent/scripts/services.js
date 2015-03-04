@@ -55,7 +55,21 @@ fraudServices.factory('RulesServices', function($http, $q){
 		var deferred = $q.defer();
 		
 		var promise = $http.post(postUrl, rule, configForPost).success(function(data) {
-			console.log(" Rule Creation was successful ");
+			// console.log(" Rule Creation was successful ");
+		}).error(function(data, status, headers, config) {
+			console.log("error " + status);
+			console.log("error config " + JSON.stringify(config));
+		});
+
+		return deferred.promise;
+	};
+	
+	factory.updateRuleConfiguration = function(rules) {
+		var putUrl = "http://localhost:8080/cvfraud-v1/rest/rules";
+		var deferred = $q.defer();
+		
+		var promise = $http.put(putUrl, rules, configForPost).success(function(data) {
+			// console.log(" Rule Creation was successful ");
 		}).error(function(data, status, headers, config) {
 			console.log("error " + status);
 			console.log("error config " + JSON.stringify(config));
@@ -65,10 +79,14 @@ fraudServices.factory('RulesServices', function($http, $q){
 	};
 	
 	factory.getRules = function() {
+		
 		var getUrl = "http://localhost:8080/cvfraud-v1/rest/rules";
 		var deferred = $q.defer();
 		
 		var promise = $http.get(getUrl, configForGet).success(function(data) {
+
+			// console.log(" Get Rules " + JSON.stringify(data));
+			
 			deferred.resolve(data);
 		}).error(function(data, status, headers, config) {
 			console.log("error " + status);

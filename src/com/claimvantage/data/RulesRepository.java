@@ -9,11 +9,15 @@ import com.claimvantage.model.Rule;
 public class RulesRepository {
 	
 	private static RulesRepository instance = null;
-	
-	private List<Rule> rules;
+	private ArrayList<Rule> rules;
 
 	private RulesRepository () {
 		rules = new ArrayList<Rule>();
+	}
+	
+	public void updateRules(ArrayList<Rule> updatedRules) {
+		this.rules.clear();
+		this.rules.addAll(updatedRules);
 	}
 	
 	public static RulesRepository instance() {
@@ -41,11 +45,34 @@ public class RulesRepository {
 		return rules;
 	}
 
-	public void setRules(List<Rule> rules) {
+	public void setRules(ArrayList<Rule> rules) {
 		this.rules = rules;
 	}
-	// TODO get rule by name
+	// TODO 
+	public Rule getRuleByName(String rule) {
+		Rule returnRule = null;
+		
+		
+		return returnRule = null;
+	}
 	
+	public ArrayList<Rule> getRulesByNames(ArrayList<String> rules) {
+		ArrayList<Rule> returnRules = new ArrayList<Rule>();	
+		
+		for (Rule rule : this.rules) {
+			for (String ruleName : rules) {
+				// This might change to the settings
+				if (rule.getName() == ruleName || (rule.getName().contains(ruleName))) {
+					returnRules.add(rule);
+				}
+			}
+		}
+		return returnRules = null;
+	}
 	
-
+	public ArrayList<Rule> getRulesByCategory(ArrayList<String> rules) {
+		ArrayList returnRules = new ArrayList<Rule>();	
+		
+		return returnRules = null;
+	}
 }

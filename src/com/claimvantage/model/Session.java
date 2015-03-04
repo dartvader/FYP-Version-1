@@ -61,10 +61,8 @@ public class Session {
 	@JsonIgnore
 	private final String REPOSITORY_LOCATION = "src/main/resources/rules/";
 
-	public Session(List<Rule> rules, String type,
-			HashSet<Sobject> requiredObjects) {
-		this.creationDateTime = new Timestamp(new Date().getTime())
-				.toLocalDateTime().toString();
+	public Session(List<Rule> rules, String type, HashSet<Sobject> requiredObjects) {
+		this.creationDateTime = new Timestamp(new Date().getTime()).toLocalDateTime().toString();
 		this.executions = new ArrayList<Execution>();
 		this.isActive = true;
 		this.totalNumberOfAlerts = 0;

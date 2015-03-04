@@ -17,30 +17,19 @@ fraudApp.config(function ($routeProvider, ngDialogProvider) {
 	}).
 	when('/rules', {
 		templateUrl:'partials/rules.html', 
-		controller:'RuleCreationController'
+		controller:'RuleConfigurationController'
 	}).
 	when('/session-manager', {
 		templateUrl:'partials/session-manager.html', 
 		controller:'SessionController'
 	}).
-	when('/maintainruleset', {
-		templateUrl:'partials/maintainruleset.html', 
-		controller:'MainController'
+	when('/new-rule', {
+		templateUrl:'partials/new-rule.html', 
+		controller:'CustomBuildRuleController'
 	}).
 	otherwise({
 		redirectTo:'/dashboard', 
 		controller:'MainController'
 	});
 
-	ngDialogProvider.setDefaults({
-		className: 'ngdialog-theme-default',
-		plain: false,
-		showClose: true,
-		closeByDocument: true,
-		closeByEscape: true,
-		appendTo: false,
-		preCloseCallback: function () {
-			console.log('default pre-close callback');
-		}
-	});
 });

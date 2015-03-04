@@ -1,3 +1,5 @@
 /scripts/
-/WEB-INF/
 /partials/
+/vendor/
+/WEB-INF/
+/com/
