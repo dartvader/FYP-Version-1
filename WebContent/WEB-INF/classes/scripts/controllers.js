@@ -11,8 +11,8 @@ fraudControllers.controller('SessionController', function($scope, $rootScope, $l
 	
 	$scope.sessions;
 	
-	$scope.loadingSessions = false;
-	$scope.loadingCoreSession = false;
+	$scope.loadingSessions = true;
+	$scope.loadingCoreSession = true;
 	$scope.loadingExecution = false;
 	
 	$scope.inBuildingMode = false;
@@ -28,21 +28,25 @@ fraudControllers.controller('SessionController', function($scope, $rootScope, $l
 	 * 
 	 */
 	$scope.initSession = function() {
+
+		console.log(" -----------   initSession --------------- ");
+		
 		$scope.getRules();
 		$scope.selectedSession = {};
 		$scope.selectedSessions = [];
 		
 		var sessionPromise = SessionServices.getSessions();
+		
 		$scope.loadingSessions = true;
-		sessionPromise.then(function(session) {
-			console.log("Sessions loaded " + session);
-			$scope.sessions = session;
+		sessionPromise.then(function(sessions) {
+			// console.log("Sessions loaded " + sessions);
+			$scope.sessions = sessions;
 		});
 
 		$scope.loadingCoreSession = true;
 		var coreSessionPromise = SessionServices.loadCoreProduct();
 		coreSessionPromise.then(function(session) {	
-			console.log("Core Session loaded " + session);
+			// console.log("Core Session loaded " + session);
 			$scope.coreSession = session;
 		});
 	};
@@ -144,12 +148,12 @@ fraudControllers.controller('SessionController', function($scope, $rootScope, $l
 	});
 	
 	$scope.$watch("coreSession", function(){
-		console.log(" core session " + JSON.stringify($scope.coreSession));
+		console.log(" loadingCoreSession = false " + $scope.loadingCoreSession);
 		$scope.loadingCoreSession = false;
 	});
 	
 	$scope.$watch("sessions", function(){
-		console.log(" sessions " + JSON.stringify($scope.sessions));
+		console.log(" loadingSessions " + $scope.loadingSessions);
 		$scope.loadingSessions = false;
 	});
 	

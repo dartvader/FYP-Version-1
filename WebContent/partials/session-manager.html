@@ -8,10 +8,31 @@
                 <i class="fa fa-wrench"></i> Rule Engine Session
             </li>
         </ol>
-        
+        <div class="col-md-3" data-ng-show="loadingSessions || loadingCoreSession">
+		    <div class="panel panel-yellow">
+		        <div class="panel-heading">
+		            <div class="row">
+		                <div class="col-xs-3">
+			                    <i class="fa fa-cog fa-spin fa-4x"></i>
+		                </div>
+		                <div class="col-xs-9 text-right">
+		                    <div class="huge"> Loading </div>
+		                    <div></div>
+		                </div>
+		            </div>
+		        </div>
+		        <a href="#">
+		            <div class="panel-footer">
+		                <span class="pull-left">Sessions</span>
+		                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+		                <div class="clearfix"></div>
+		            </div>
+		        </a>
+		    </div>
+		</div>
 		session {{loadingSessions}}
 		core session {{loadingCoreSession}}
-	   	<div class="row row-centered">
+	   	<div class="row row-centered" data-ng-show="!loadingSessions && !loadingCoreSession">
 		   	<div class="panel panel-primary" ng-if="!inBuildingMode && !isSelecetedSession()">
 				<div class="panel-heading">
 					<h1 class="panel-title">All Session</h1>

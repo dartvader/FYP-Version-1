@@ -35,7 +35,6 @@ import com.claimvantage.data.exporter.DataLoader;
 import com.claimvantage.drools.listeners.TrackingAgendaEventListener;
 import com.claimvantage.drools.listeners.TrackingWorkingMemoryEventListener;
 import com.claimvantage.drools.util.HardCodedRules;
-import com.sforce.soap.enterprise.Cve__Claim__C;
 
 // TODO TIDY up the class
 
@@ -130,8 +129,7 @@ public class Session {
 					+ kb.getResults().toString());
 		}
 
-		KieContainer kContainer = kieServices.newKieContainer(kieRepository
-				.getDefaultReleaseId());
+		KieContainer kContainer = kieServices.newKieContainer(kieRepository.getDefaultReleaseId());
 		return kContainer.newKieSession();
 	}
 
@@ -154,7 +152,13 @@ public class Session {
 		kieSession.addEventListener(workingMemoryListener);
 
 		loadData(kieSession);
-
+		
+		for (Rule rule : rules) {
+			if (rule.getSetting() != null && rule.getGlobal() != null) {
+				kieSession.setGlobal(rule.getGlobal(), rule.getSetting());
+			}
+		}
+		
 		int numberOfRuleFired = kieSession.fireAllRules();
 		long factCount = kieSession.getFactCount();
 		incrementNumberOfRulesFired(numberOfRuleFired);

@@ -7,10 +7,15 @@ public class Alert {
 	private String recommendation;
 	private int score;
 	
-	public Alert(String ruleName, int score, String recommendation) {
+	public Alert(String ruleName, int score, String recommendation, String claimId) {
 		this.ruleName = ruleName;
 		this.recommendation = recommendation;
 		this.score = score;
+		this.claimId = claimId;
+	}
+	
+	public Alert(String ruleName, int score, String recommendation) {
+		this(ruleName, score, recommendation, "Not Available");
 	}
 	
 	public int getScore() {

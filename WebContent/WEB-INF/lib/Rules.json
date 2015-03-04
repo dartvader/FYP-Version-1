@@ -1,0 +1,15 @@
+[{
+	"description" : "This rule is designed to detect individual who",
+    "name" : "Contact Earnings Rule",
+    "script" : "\npackage com.rules \n
+    			import com.claimvantage.model.* \n
+    			import com.sforce.soap.enterprise.sobject.*; \n
+    			
+    			rule 'Contact Earnings Rule' when \n
+    				$con : Contact($ContactId : id, cve__Earnings__c == null);\n
+    				$Claim : Cve__Claim__c($ClaimId : id, cve__ClaimantInsured__c == $ContactId);
+    			then \n 
+    				insert( new Alert(drools.getRule().getName(), 100, 'Contact Claimant')); \n
+    			end \n"
+}]
+

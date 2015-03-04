@@ -10,22 +10,22 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlRootElement;
-
 import org.codehaus.jackson.annotate.JsonIgnore;
-
 import com.claimvantage.drools.util.BuilderUtil;
+import com.claimvantage.rules.Setting;
 
 @XmlRootElement
 public class Rule {
 	
 	private String name;
 	private String description;
-	@JsonIgnore
 	private UUID id;
 	private StringBuilder script;
 	private List<Condition> conditions;
 	private Consequence consequence;
 	private Boolean status;
+	private String global;
+	private Setting setting;
 	
 	private Rule() {
 		this.status = true;
@@ -76,5 +76,21 @@ public class Rule {
 	}
 	public void setStatus(Boolean status) {
 		this.status = status;
+	}
+
+	public String getGlobal() {
+		return global;
+	}
+
+	public void setGlobal(String global) {
+		this.global = global;
+	}
+
+	public Setting getSetting() {
+		return setting;
+	}
+
+	public void setSetting(Setting setting) {
+		this.setting = setting;
 	}
 }
