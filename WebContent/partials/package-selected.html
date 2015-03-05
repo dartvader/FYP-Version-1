@@ -4,7 +4,7 @@
 	<div class="col-md-2">
 	    <div class="panel panel-danger">
 	        <div class="panel-heading">
-	            <div class="row btn" role="button" ng-click="unselectSession()">
+	            <div class="row btn" role="button" ng-click="unselectPackage()">
 	                <div class="col-xs-4">
 	                    <i class="fa fa-angle-double-left fa-5x"></i>
 	                </div>
@@ -24,7 +24,7 @@
 	                    <i class="fa fa-table fa-4x"></i>
 	                </div>
 	                <div class="col-xs-9 text-right">
-	                    <div class="huge">{{selectedSession.numberOfRules}}</div>
+	                    <div class="huge">{{selectedPackage.numberOfRules}}</div>
 	                    <div></div>
 	                </div>
 	            </div>
@@ -48,7 +48,7 @@
 	                    <i class="fa fa-bomb fa-4x"></i>
 	                </div>
 	                <div class="col-xs-9 text-right">
-	                    <div class="huge">{{selectedSession.totalNumberOfAlerts}}</div>
+	                    <div class="huge">{{selectedPackage.totalNumberOfAlerts}}</div>
 	                    <div></div>
 	                </div>
 	            </div>
@@ -76,7 +76,7 @@
 		                </div>
 	                </div>
 	                <div class="col-xs-9 text-right">
-	                    <div class="huge">{{selectedSession.totalNumberOfExecutions}}</div>
+	                    <div class="huge">{{selectedPackage.totalNumberOfExecutions}}</div>
 	                    <div></div>
 	                </div>
 	            </div>
@@ -104,7 +104,7 @@
 					<!-- Rules Table -->
 					<div class="col-md-8">
 						<table class="table table-striped table-bordered table-hover dataTable no-footer" tr-ng-grid=""
-							items="selectedSession.rules" page-items="5">
+							items="selectedPackage.rules" page-items="5">
 							<thead>
 								<tr>
 									<th field-name="name" enable-filtering="false"></th>
@@ -123,7 +123,7 @@
 							<div class="col-md-12">
 							    <div class="panel panel-danger">
 							        <div class="panel-heading">
-							            <div class="row btn" role="button" ng-click="executeRules(selectedSession.id)">
+							            <div class="row btn" role="button" ng-click="executeRules(selectedPackage.id)">
 							                <div class="col-xs-12" data-ng-show="!loadingExecution">
 							                    <i class="fa fa-cogs fa-5x"></i>
 							                </div>
@@ -206,7 +206,7 @@
 					<!-- Executions Table -->
 					<div class="col-md-8">
 						<table class="table table-striped table-bordered table-hover dataTable no-footer" tr-ng-grid=""
-							items="selectedSession.executions" page-items="5">
+							items="selectedPackage.executions" page-items="5">
 							<thead>
 								<tr>
 									<th field-name="formattedDate" enable-filtering="false"></th>
@@ -308,7 +308,7 @@
 					<!-- Executions Table -->
 					<div class="col-md-8">
 						<table class="table table-striped table-bordered table-hover dataTable no-footer" tr-ng-grid=""
-							items="selectedSession.alerts" page-items="5">
+							items="selectedPackage.alerts" page-items="5">
 							<thead>
 								<tr>
 									<th field-name="claimId" enable-filtering="false"></th>

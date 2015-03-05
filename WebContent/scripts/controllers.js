@@ -1,196 +1,191 @@
 'use strict';
-var fraudControllers = angular.module('fraudControllers', [ 'ngRoute',
-		'ngDialog' ]);
+var fraudControllers = angular.module('fraudControllers', [ 'ngRoute', 'ngDialog' ]);
 
 // Controller for individual functionalities
-fraudControllers.controller('MainController', function($scope, $rootScope,
-		$location, ngDialog, SessionServices) {
-	// Login shit and session id configuration to go here.
+fraudControllers.controller('MainController', function($scope, $rootScope, $location, ngDialog, PackageServices) {
 
 	$scope.loading = true;
 	$scope.initLoadingApp = function() {
 		console.log(" -----------   Loading Application --------------- ");
 
-		var coreSessionPromise = SessionServices.loadCoreProduct();
-		coreSessionPromise.then(function(session) {
+		var corePacakgePromise = PackageServices.loadCoreProduct();
+		corePacakgePromise.then(function(corePackage) {
 			console.log(" Load rules from UI ");
-			$scope.coreSession = session;
+			$scope.corePackage = corePackage;
 		});
 	};
 
-	$scope.$watch("coreSession", function() {
-		console.log(" loadingSessions " + $);
+	$scope.$watch("corePackage", function() {
+		console.log(" loadingcorePackage ");
 		$scope.loading = false;
 	});
 	$scope.initLoadingApp();
 
 });
 
-fraudControllers
-		.controller(
-				'SessionController',
-				function($scope, $rootScope, $location, SessionServices,
-						RulesServices) {
+fraudControllers.controller('PackageManagerController', 
+		function($scope, $rootScope, $location, PackageServices, RulesServices) {
 
-					$scope.sessions;
-					$scope.loadingSessions = true;
-					$scope.loadingCoreSession = true;
-					$scope.loadingExecution = true;
+	$scope.packages;
+	$scope.loadingPackages = true;
+	$scope.loadingCorePackage = true;
+	$scope.loadingExecution = true;
 
-					$scope.inBuildingMode = false;
-					$scope.inEditingMode = false;
-					$scope.newSession = {};
-					$scope.coreSession = {};
+	$scope.inBuildingMode = false;
+	$scope.inEditingMode = false;
+	$scope.corePackage = {};
+	
+	$scope.selectedPackage;
+	$scope.selectedPackages;
 
-					$scope.availableRules;
-					$scope.selectedSession;
-					$scope.selectedSessions;
+	$scope.initPackage = function() {
+		console.log(" -----------   init Package Services --------------- ");
 
-					/*
-					 * 
-					 */
-					$scope.initSession = function() {
+		$scope.getRules();
+		$scope.Package = {};
+		$scope.selectedPackages = [];
 
-						console
-								.log(" -----------   initSession --------------- ");
+		var packagePromise = PackageServices.getPackages();
+		
+		$scope.loadingPackages = true;
+		packagePromise.then(function(packages) {
+			console.log("Package loaded " + packages);
+			$scope.packages = packages;
+		});
+		
+	};
 
-						$scope.getRules();
-						$scope.selectedSession = {};
-						$scope.selectedSessions = [];
+	$scope.unselectPackage = function() {
+		$scope.selectedPackage = {};
+		$scope.selectedPackages = [];
+	}
 
-						var sessionPromise = SessionServices.getSessions();
-						$scope.loadingSessions = true;
-						sessionPromise.then(function(sessions) {
-							// console.log("Sessions loaded " + sessions);
-							$scope.sessions = sessions;
-						});
-					};
+	$scope.isSelecetedPackage = function() {
+		if ($scope.selectedPackage === undefined
+				|| $scope.selectedPackage === null
+				|| $scope.selectedPackage == ""
+				|| $scope.selectedPackage == {}) {
+			return false;
+		} else {
+			return true;
+		}
+	};
 
-					$scope.buildNewSession = function() {
-						$scope.inBuildingMode = true;
-						$scope.newSession = {};
-						$scope.selectedNewRules = [];
+	$scope.objectExist = function(object) {
+		if (object === undefined || object === null
+				|| object == "") {
+			return false;
+		} else {
+			return true;
+		}
+	};
 
-						return false;
-					};
+	// TODO redo firing action as i will have to pass id/unique
+	// name to this api to fire the correct Schedule
+	$scope.executeRules = function(pacakgeId) {
+		
+		var executeRulePromise = PackageServices.executeRules(pacakgeId);
+		$scope.loadingExecution = true;
+		
+		executeRulePromise.then(function(updatedPackage) {
+			$scope.Package = updatedPackage;
+		});
+	};
 
-					$scope.cancelNewSession = function() {
-						$scope.inBuildingMode = false;
-						$scope.selectedNewRules = [];
-						$scope.newSession = {};
-						return false;
-					};
+	$scope.getRules = function() {
+		var rulesPromise = RulesServices.getRules();
+		console.log("Getting rules ");
+		$scope.rules = [];
+		rulesPromise.then(function(rules) {
+			$scope.availableRules = rules;
+		});
+	};
 
-					$scope.unselectSession = function() {
-						$scope.selectedSession = {};
-						$scope.selectedSessions = [];
-					}
+	$scope.$watchCollection("selectedPackages", function() {
 
-					$scope.saveNewSession = function() {
+		console.log("Selected Package " + $scope.selectedPackages);
+		
+		if ($scope.objectExist($scope.selectedPackages)) {
+			
+			$scope.selectedPackage = {};
+			console.log("Packages " + $scope.selectedPackages);
+			$scope.selectedPackage = $scope.selectedPackages[0];
+			
+			$scope.loadingExecution = false;
+			
+			if ($scope.isSelecetedPackage() && $scope.objectExist($scope.selectedPackage.executions)) {
+				Dashboard.draw('#dashboard', $scope.selectedPackage.executions);
+			}
+			
+		}
+	});
 
-						$scope.newSession.rules = $scope.selectedNewRules;
+	$scope.$watch("packages", function() {
+		console.log(" loadingPackages " + $scope.loadingPackages);
+		$scope.loadingPackages = false;
+	});
 
-						SessionServices.saveSession(angular
-								.toJson($scope.newSession));
-						var newSessionPromise = SessionServices.getSessions();
-						newSessionPromise.then(function(sessions) {
-							$scope.sessions = [];
-							$scope.sessions = sessions;
-							$scope.loadingSessions = true;
-						});
+	$scope.$watch("selectedPackage", function() {
+		$scope.loadingExecution = false;
+	});
 
-						$scope.selectedNewRules = [];
-						$scope.newSession = {};
-						$scope.inBuildingMode = false;
+	$scope.initPackage();
+});
 
-						return false;
-					};
 
-					$scope.cancelNewSession = function() {
-						$scope.newSession = undefined;
-						$scope.inBuildingMode = false;
-						return false;
-					};
+fraudControllers.controller('PackageBuilderController', function($scope, $rootScope, $location, ngDialog, PackageServices, RulesServices) {
 
-					$scope.isSelecetedSession = function() {
-						if ($scope.selectedSession === undefined
-								|| $scope.selectedSession === null
-								|| $scope.selectedSession == ""
-								|| $scope.selectedSession == {}) {
-							return false;
-						} else {
-							return true;
-						}
-					};
+	$scope.loading = true;
+	$scope.availableRules;
+	$scope.newPackage;
+	$scope.selectedNewRules;
+	
+	$scope.init = function() {
+		console.log(" -----------   Loading Package builder --------------- ");
+		$scope.newPackage = {};
+		$scope.selectedNewRules = [];
+		
+		$scope.getRules();
+	};
 
-					$scope.objectExist = function(object) {
-						if (object === undefined || object === null
-								|| object == "") {
-							return false;
-						} else {
-							return true;
-						}
-					};
+	$scope.getRules = function() {
+		var rulesPromise = RulesServices.getRules();
+		console.log("Getting rules ");
+		$scope.rules = [];
+		rulesPromise.then(function(rules) {
+			$scope.availableRules = rules;
+		});
+	};
+	
+	$scope.saveNewPackage = function() {
+		
+		var listOfRuleName = [],
+			numberOfSelectedRules = $scope.selectedNewRules.length;
+		
+		
+		for (var i = 0; i < numberOfSelectedRules; i++) {
+			console.log("rules in for loop " + JSON.stringify($scope.selectedNewRules[i]));
+			listOfRuleName[i] = $scope.selectedNewRules[i].name;
+		};
+		
+		$scope.newPackage.ruleNames = listOfRuleName;
+		console.log("rules " + JSON.stringify($scope.newPackage.rules));
+		
+		// PackageServices.savePackage(angular.toJson($scope.newPackage));
 
-					// TODO redo firing action as i will have to pass id/unique
-					// name to this api to fire the correct Schedule
-					$scope.executeRules = function(sessionId) {
-						var executeRulePromise = SessionServices
-								.executeRules(sessionId);
+		return false;
+	};
+	
+	$scope.cancelNewPackage = function() {
+		
+		return false;
+	};
+	
+	$scope.init();
 
-						$scope.loadingExecution = true;
-						executeRulePromise.then(function(updatedSession) {
-							$scope.selectedSession = updatedSession;
-						});
-					};
+});
 
-					$scope.getRules = function() {
-						var rulesPromise = RulesServices.getRules();
-						// console.log("Getting rules ");
-						$scope.rules = [];
-
-						rulesPromise.then(function(rules) {
-							$scope.availableRules = rules;
-						});
-					};
-
-					$scope
-							.$watchCollection(
-									"selectedSessions",
-									function() {
-										$scope.selectedSession = {};
-										$scope.selectedSession = $scope.selectedSessions[0];
-										$scope.loadingExecution = false;
-										if ($scope.isSelecetedSession()
-												&& $scope
-														.objectExist($scope.selectedSession.executions)) {
-											Dashboard
-													.draw(
-															'#dashboard',
-															$scope.selectedSession.executions);
-										}
-									});
-
-					$scope.$watch("coreSession", function() {
-						console.log(" loadingCoreSession = false "
-								+ $scope.loadingCoreSession);
-						$scope.loadingCoreSession = false;
-					});
-
-					$scope.$watch("sessions", function() {
-						console.log(" loadingSessions "
-								+ $scope.loadingSessions);
-						$scope.loadingSessions = false;
-					});
-
-					$scope.$watch("selectedSession", function() {
-						$scope.loadingExecution = false;
-					});
-
-					$scope.initSession();
-				});
-
-fraudControllers.controller('RuleConfigurationController', function($window, $route,
+fraudControllers.controller('RuleManagerController', function($window, $route,
 		$rootScope, $scope, $location, ngDialog, RulesServices) {
 
 	$scope.rules;
@@ -199,7 +194,7 @@ fraudControllers.controller('RuleConfigurationController', function($window, $ro
 	$scope.loadingRules = true;
 	$scope.oneAtATime = true;
 	
-	$scope.savingChanges;
+	$scope.savingChanges = false;
 
 	$scope.init = function() {
 		$scope.getRules();
@@ -209,18 +204,20 @@ fraudControllers.controller('RuleConfigurationController', function($window, $ro
 	$scope.getRules = function() {
 		var rulesPromise = RulesServices.getRules();
 		$scope.loadingRules = true;
+		
 		rulesPromise.then(function(rules) {
 			$scope.rules = rules;
 			$scope.oldRules = rules;
 		});
+		
 	};
 	
 	$scope.saveChanges = function() {
 		console.log("saving changes");
-		var rulesPromise = RulesServices.updateRuleConfiguration($scope.rules);
+		var rulesPromise = RulesServices.updateRuleConfiguration(angular.toJson($scope.rules));
 		
 		rulesPromise.then(function(success) {
-			$scope.savingChanges = success;
+			// Just assume it worked 
 		});
 	};
 	
@@ -228,6 +225,13 @@ fraudControllers.controller('RuleConfigurationController', function($window, $ro
 		console.log("undoing changes");
 		$scope.rules = {};
 		$scope.rules = $scope.oldRules;
+		
+		if(!$scope.$$phase) {
+			console.log("!$scope.$$phase");
+			//$digest or $apply
+			//$scope.$apply();
+			//$scope.digest();
+		}
 	};
 	
 	$scope.isEmpty = function(value) {
@@ -236,13 +240,10 @@ fraudControllers.controller('RuleConfigurationController', function($window, $ro
 
 	$scope.$watch('rules', function(newVal, oldVal) {
 		$scope.loadingRules = false;
-	});
-	
-	$scope.$watch('savingChanges', function(newVal, oldVal) {
-		if (newVal == true) {
-			console.log("update successful");
-		} else {
-			console.log("update failed");
+		if(!$scope.$$phase) {
+			  //$digest or $apply
+			$scope.$apply();
+			$scope.digest();
 		}
 	});
 
@@ -250,9 +251,9 @@ fraudControllers.controller('RuleConfigurationController', function($window, $ro
 });
 
 
-fraudControllers.controller('CustomBuildRuleController', function($scope, $rootScope,
+fraudControllers.controller('RuleBuilderController', function($scope, $rootScope,
 		$location, ngDialog, RulesServices, SobObjectsService, ConditionService) {
-	// Login shit and session id configuration to go here.
+	// Login shit and package id configuration to go here.
 
 	$scope.describedObjects = [];
 	$scope.stringComparisions = [];

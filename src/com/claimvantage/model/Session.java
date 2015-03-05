@@ -45,6 +45,8 @@ public class Session {
 	@JsonIgnore
 	private KieSession kieSession;
 	private List<Rule> rules;
+	
+	private List<String> ruleNames;
 	private HashSet<Sobject> requiredObjects;
 	private List<Execution> executions;
 	private String creationDateTime;

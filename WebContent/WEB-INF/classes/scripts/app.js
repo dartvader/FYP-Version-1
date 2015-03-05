@@ -15,17 +15,21 @@ fraudApp.config(function ($routeProvider, ngDialogProvider) {
 		templateUrl:'partials/dashboard.html', 
 		controller:'MainController'
 	}).
-	when('/rules', {
-		templateUrl:'partials/rules.html', 
-		controller:'RuleConfigurationController'
+	when('/rule-manager', {
+		templateUrl:'partials/rule-manager.html', 
+		controller:'RuleManagerController'
 	}).
-	when('/session-manager', {
-		templateUrl:'partials/session-manager.html', 
-		controller:'SessionController'
+	when('/package-manager', {
+		templateUrl:'partials/package-manager.html', 
+		controller:'PackageManagerController'
 	}).
-	when('/new-rule', {
-		templateUrl:'partials/new-rule.html', 
-		controller:'CustomBuildRuleController'
+	when('/package-builder', {
+		templateUrl:'partials/package-builder.html', 
+		controller:'PackageBuilderController'
+	}).
+	when('/rule-builder', {
+		templateUrl:'partials/rule-builder.html', 
+		controller:'RuleBuilderController'
 	}).
 	otherwise({
 		redirectTo:'/dashboard', 

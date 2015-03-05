@@ -28,7 +28,6 @@ fraudServices.factory('SobObjectsService', function($http, $q){
 	return factory;
 });
 
-
 fraudServices.factory('ConditionService', function($http, $q){
 	var factory = {};
 	
@@ -100,15 +99,15 @@ fraudServices.factory('RulesServices', function($http, $q){
 });
 
 
-fraudServices.factory('SessionServices', function($http, $q){
+fraudServices.factory('PackageServices', function($http, $q){
 	var factory = {};
 	
-	factory.getSessions = function() {
+	factory.getPackages = function() {
 		var getUrl = "http://localhost:8080/cvfraud-v1/rest/sessions";
 		var deferred = $q.defer();
 		
 		var promise = $http.get(getUrl, configForGet).success(function(data) {
-			console.log(">>>>> sessions ");
+			console.log(">>>>> packages ");
 			
 			deferred.resolve(data);
 		}).error(function(data, status, headers, config) {
@@ -118,13 +117,13 @@ fraudServices.factory('SessionServices', function($http, $q){
 		return deferred.promise;
 	};
 	
-	factory.saveSession = function(session) {
+	factory.savePackage = function(newPackage) {
 		var session = session;
 		
 		var postUrl = "http://localhost:8080/cvfraud-v1/rest/sessions";
 		var deferred = $q.defer();
 		
-		var promise = $http.post(postUrl, session, configForPost).success(function(data) {
+		var promise = $http.post(postUrl, newPackage, configForPost).success(function(data) {
 			console.log("success created " + JSON.stringify(data));
 			deferred.resolve(data);
 			
@@ -136,7 +135,6 @@ fraudServices.factory('SessionServices', function($http, $q){
 	};
 	
 	factory.getAlerts = function() {
-		console.log("Getting Sessions");
 		var getUrl = "http://localhost:8080/cvfraud-v1/rest/sessions/alerts";
 		var deferred = $q.defer();
 		
@@ -151,10 +149,10 @@ fraudServices.factory('SessionServices', function($http, $q){
 		return deferred.promise;
 	};
 	
-	factory.executeRules= function(sessionId) {
+	factory.executeRules= function(packageId) {
 		console.log("execute rules");
 		
-		var getUrl = "http://localhost:8080/cvfraud-v1/rest/sessions/execute/" + sessionId;
+		var getUrl = "http://localhost:8080/cvfraud-v1/rest/sessions/execute/" + packageId;
 		var deferred = $q.defer();
 		
 		var promise = $http.get(getUrl).success(function(data) {
