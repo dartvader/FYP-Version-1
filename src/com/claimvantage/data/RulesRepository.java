@@ -15,9 +15,11 @@ public class RulesRepository {
 		rules = new ArrayList<Rule>();
 	}
 	
-	public void updateRules(ArrayList<Rule> updatedRules) {
+	// Quick and dirty need to maybe re-factor this TODO
+	public ArrayList<Rule> updateRules(ArrayList<Rule> updatedRules) {
 		this.rules.clear();
 		this.rules.addAll(updatedRules);
+		return this.rules;
 	}
 	
 	public static RulesRepository instance() {
@@ -42,37 +44,42 @@ public class RulesRepository {
 	}
 
 	public List<Rule> getRules() {
-		return rules;
+		return this.rules;
 	}
 
 	public void setRules(ArrayList<Rule> rules) {
 		this.rules = rules;
 	}
-	// TODO 
-	public Rule getRuleByName(String rule) {
-		Rule returnRule = null;
-		
-		
-		return returnRule = null;
-	}
 	
-	public ArrayList<Rule> getRulesByNames(ArrayList<String> rules) {
-		ArrayList<Rule> returnRules = new ArrayList<Rule>();	
+	public ArrayList<Rule> getRulesByNames(ArrayList<String> packageRuleNames) {
 		
-		for (Rule rule : this.rules) {
-			for (String ruleName : rules) {
+		
+		ArrayList<Rule> returnRules = new ArrayList<Rule>();	
+		for (String ruleName : packageRuleNames) {
+			
+			for (Rule rule : this.rules) {
 				// This might change to the settings
-				if (rule.getName() == ruleName || (rule.getName().contains(ruleName))) {
+				if (rule.getName() == ruleName || rule.getName().contains(ruleName)) {
+					System.out.println("<<<< Matching >>>>> " + ruleName);
 					returnRules.add(rule);
 				}
 			}
 		}
-		return returnRules = null;
+		return returnRules;
 	}
 	
-	public ArrayList<Rule> getRulesByCategory(ArrayList<String> rules) {
-		ArrayList returnRules = new ArrayList<Rule>();	
+	public ArrayList<Rule> getRulesByCategory(ArrayList<String> packageRuleCategories) {
 		
-		return returnRules = null;
+		ArrayList returnRules = new ArrayList<Rule>();	
+		for (String ruleCategory : packageRuleCategories) {
+			for (Rule rule : this.rules) {
+				// This might change to the settings
+				if (rule.getName() == ruleCategory || rule.getName().contains(ruleCategory)) {
+					System.out.println("<<<< Matching Category >>>>> " + ruleCategory);
+					returnRules.add(rule);
+				}
+			}
+		}
+		return returnRules = returnRules;
 	}
 }

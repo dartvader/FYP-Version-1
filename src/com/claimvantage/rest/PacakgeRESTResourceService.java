@@ -25,21 +25,22 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.claimvantage.data.RulesRepository;
-import com.claimvantage.data.SessionRepository;
+import com.claimvantage.data.PackageRepository;
+import com.claimvantage.drools.controller.PackageExecutor;
 import com.claimvantage.model.Alert;
 import com.claimvantage.model.Execution;
 import com.claimvantage.model.Rule;
-import com.claimvantage.model.Session;
+import com.claimvantage.model.Package;
 import com.claimvantage.model.Sobject;
 
 import org.codehaus.jackson.type.TypeReference;
 
-@Path("sessions")
-public class SessionResourceRESTService {
+@Path("packages")
+public class PacakgeRESTResourceService {
 	
-	private static SessionRepository sessionRepo = SessionRepository.instance();
+	private static PackageRepository packageRepo = PackageRepository.instance();
 	private static RulesRepository rulesRepo = RulesRepository.instance();
-	private Session corePackageSession = null;
+	private Package corePackageSession = null;
 	
 	@javax.ws.rs.core.Context 
 	ServletContext context;
@@ -47,14 +48,26 @@ public class SessionResourceRESTService {
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-	public Response saveSession(Session session) {
+	public Response saveSession(ArrayList<String> newPackageRules) {
 		
-		System.out.println(">>> create new session <<< ");
+		System.out.println(">>> create new Package <<< " + newPackageRules.size());
     	Response.ResponseBuilder builder = null;	
     	
 		try {
-			sessionRepo.addSession(session);
+			/*
+			 * This is going to be a problem Because Rules that are custom built need to build there own required objects.
+			 * I did not take into consideration that you could have custom and core rules in the same package.
+			 * I am just going to manually add all the required objects into the system for every package.
+			 */
+			String webInfPath = context.getRealPath("WEB-INF");
+			ObjectMapper mapper = new ObjectMapper();
+			HashSet<Sobject> requiredObjects = (HashSet<Sobject>) mapper.readValue(new File(webInfPath +"/RequiredObjects.json"), new TypeReference<HashSet<Sobject>>(){});
+			
+			Package newPackage = new Package(newPackageRules, "Custom Package", requiredObjects);
+			
+			packageRepo.addPackage(newPackage);
             builder = Response.ok();
+            
         } catch (Exception e) {
             // Handle generic exceptions
             System.out.println("Error in Rules set resource REST service");
@@ -71,17 +84,19 @@ public class SessionResourceRESTService {
 	
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
-	public List<Session> getCurrentSession() {
-		return sessionRepo.getSessions();
+	public List<Package> getPackages() {
+		
+		System.out.println("Getting packages ");
+		return packageRepo.getPackages();
 	}
 	
 	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/core")
     @Produces(MediaType.APPLICATION_JSON)
-	public Session loadCorePackage() {
+	public Package loadCorePackage() {
 		
-		if (!sessionRepo.isCorePackageCreated()) {
+		if (!packageRepo.isCorePackageCreated()) {
 			String webInfPath = context.getRealPath("WEB-INF");
 			try {
 				ObjectMapper mapper = new ObjectMapper();
@@ -89,16 +104,19 @@ public class SessionResourceRESTService {
 				ArrayList<Rule> rules = (ArrayList<Rule>) mapper.readValue(new File(webInfPath +"/Rules.json"), new TypeReference<ArrayList<Rule>>(){});
 				System.out.println("Incoming rules from the file " + rules.size());
 				
+				ArrayList<String> rulesForPackage = new ArrayList<String>();
 				for(Rule rule : rules) {
 					rulesRepo.addRule(rule);
+					rulesForPackage.add(rule.getName());
 				}
 				
 				HashSet<Sobject> requiredObjects = (HashSet<Sobject>) mapper.readValue(new File(webInfPath +"/RequiredObjects.json"), new TypeReference<HashSet<Sobject>>(){});
 				
-				Session corePackageSession = new Session(rules, "Custom Package", requiredObjects);
-				sessionRepo.setCorePackage(corePackageSession);
-				sessionRepo.addSession(corePackageSession);
-				sessionRepo.hasCorePackageCreated(true);
+				Package corePackage = new Package(rulesForPackage, "Core Package", requiredObjects);
+				
+				packageRepo.setCorePackage(corePackage);
+				packageRepo.addPackage(corePackage);
+				packageRepo.hasCorePackageCreated(true);
 			} catch (JsonParseException e) {
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
@@ -107,24 +125,30 @@ public class SessionResourceRESTService {
 				e.printStackTrace();
 			}
 		}
-		return sessionRepo.getCorePackage();
+		return packageRepo.getCorePackage();
 	}
 	
 	@GET
 	@Path("/execute/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-	public Session executeSessionRules(@PathParam("id") String id) {
-		/* 
-		 * TODO Execute this in  thread
-		 * Try calculate time and poll back to the user
-		 */
-		System.out.println(" session id that is being executed " + id);
-		Session session = sessionRepo.getSessionsById(id);
-
-		System.out.println(" session id that is being executed " + session.getCreationDateTime());
-		session.executeRules();
-		Session sessionUpdate = sessionRepo.getSessionsById(id);
+	public Package executePacakgeRules(@PathParam("id") String packageId) {
 		
-		return sessionUpdate;
+		PackageExecutor packageExecution = new PackageExecutor(packageId);
+		packageExecution.execute();
+		
+		Package packageUpdate = packageRepo.getPackagesById(packageId);
+		return packageUpdate;
+	}
+	
+	@GET
+	@Path("/rules/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Rule> getPacakgeRules(@PathParam("id") String id) {
+		System.out.println(" GEtting package rules " + id);
+		
+		Package selectedPacakge = packageRepo.getPackagesById(id);
+		System.out.println(" score " + rulesRepo.getRulesByNames(selectedPacakge.getRuleNames()).get(0).getSetting().getScore());
+		
+		return rulesRepo.getRulesByNames(selectedPacakge.getRuleNames());
 	}
 }

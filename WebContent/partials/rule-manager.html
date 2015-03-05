@@ -16,8 +16,7 @@
 	    <i class="fa fa-spinner fa-spin fa-5x"></i>
 	</div>
 </div>
-{{loadingRules}}
-{{rules}}
+
  <accordion close-others="oneAtATime">
     <accordion-group heading="{{rule.name}}" ng-repeat="rule in rules">
         <div class="row">
@@ -66,7 +65,8 @@
 				</div>
 			</div>
 			<div class="col-xs-6 pull-right">
-				chart for rule, Maybe
+				chart for rule, Maybe. JSON for now
+				{{rule.setting}}
 			</div>
 		</div>
     </accordion-group>

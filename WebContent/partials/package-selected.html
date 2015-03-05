@@ -104,13 +104,15 @@
 					<!-- Rules Table -->
 					<div class="col-md-8">
 						<table class="table table-striped table-bordered table-hover dataTable no-footer" tr-ng-grid=""
-							items="selectedPackage.rules" page-items="5">
+							items="selectedPackageRules" page-items="5">
 							<thead>
 								<tr>
 									<th field-name="name" enable-filtering="false"></th>
 									<th field-name="description" display-name="Description"
 										enable-filtering="false"></th>
-									<th field-name="consequence.score" display-name="Fraud Score"
+									<th field-name="setting.recommendation" display-name="Investigation Recommendation"
+										enable-filtering="false" display-align="center"></th>
+									<th field-name="setting.score" display-name="Investigation Recommendation"
 										enable-filtering="false" display-align="center"></th>
 								</tr>
 							</thead>

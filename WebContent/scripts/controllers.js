@@ -10,13 +10,11 @@ fraudControllers.controller('MainController', function($scope, $rootScope, $loca
 
 		var corePacakgePromise = PackageServices.loadCoreProduct();
 		corePacakgePromise.then(function(corePackage) {
-			console.log(" Load rules from UI ");
 			$scope.corePackage = corePackage;
 		});
 	};
 
 	$scope.$watch("corePackage", function() {
-		console.log(" loadingcorePackage ");
 		$scope.loading = false;
 	});
 	$scope.initLoadingApp();
@@ -30,24 +28,24 @@ fraudControllers.controller('PackageManagerController',
 	$scope.loadingPackages = true;
 	$scope.loadingCorePackage = true;
 	$scope.loadingExecution = true;
+	$scope.loadingRules = true;
 
 	$scope.inBuildingMode = false;
 	$scope.inEditingMode = false;
 	$scope.corePackage = {};
 	
 	$scope.selectedPackage;
+	$scope.selectedPackageRules;
 	$scope.selectedPackages;
 
 	$scope.initPackage = function() {
-		console.log(" -----------   init Package Services --------------- ");
+		console.log(" -----------   init Package Manager Controller --------------- ");
 
-		$scope.getRules();
 		$scope.Package = {};
 		$scope.selectedPackages = [];
 
-		var packagePromise = PackageServices.getPackages();
-		
 		$scope.loadingPackages = true;
+		var packagePromise = PackageServices.getPackages();
 		packagePromise.then(function(packages) {
 			console.log("Package loaded " + packages);
 			$scope.packages = packages;
@@ -58,6 +56,7 @@ fraudControllers.controller('PackageManagerController',
 	$scope.unselectPackage = function() {
 		$scope.selectedPackage = {};
 		$scope.selectedPackages = [];
+		$scope.selectedPackageRules = [];
 	}
 
 	$scope.isSelecetedPackage = function() {
@@ -80,53 +79,53 @@ fraudControllers.controller('PackageManagerController',
 		}
 	};
 
-	// TODO redo firing action as i will have to pass id/unique
-	// name to this api to fire the correct Schedule
 	$scope.executeRules = function(pacakgeId) {
 		
 		var executeRulePromise = PackageServices.executeRules(pacakgeId);
 		$scope.loadingExecution = true;
 		
 		executeRulePromise.then(function(updatedPackage) {
-			$scope.Package = updatedPackage;
+			$scope.selectedPackage = updatedPackage;
 		});
 	};
 
-	$scope.getRules = function() {
-		var rulesPromise = RulesServices.getRules();
-		console.log("Getting rules ");
-		$scope.rules = [];
-		rulesPromise.then(function(rules) {
-			$scope.availableRules = rules;
-		});
-	};
 
 	$scope.$watchCollection("selectedPackages", function() {
-
-		console.log("Selected Package " + $scope.selectedPackages);
 		
 		if ($scope.objectExist($scope.selectedPackages)) {
 			
 			$scope.selectedPackage = {};
-			console.log("Packages " + $scope.selectedPackages);
 			$scope.selectedPackage = $scope.selectedPackages[0];
-			
 			$scope.loadingExecution = false;
+
+			console.log("selectedPackage.id " + $scope.selectedPackage.id);
+			$scope.loadingRules = true;
+			var rulesPromise = PackageServices.getPackageRules($scope.selectedPackage.id);
+			
+			rulesPromise.then(function(rules) {
+				console.log("getting package rules promise");
+				$scope.selectedPackageRules = rules;
+			});
 			
 			if ($scope.isSelecetedPackage() && $scope.objectExist($scope.selectedPackage.executions)) {
 				Dashboard.draw('#dashboard', $scope.selectedPackage.executions);
 			}
-			
 		}
 	});
 
 	$scope.$watch("packages", function() {
-		console.log(" loadingPackages " + $scope.loadingPackages);
+		console.log(" loading Packages  ");
 		$scope.loadingPackages = false;
 	});
 
 	$scope.$watch("selectedPackage", function() {
 		$scope.loadingExecution = false;
+	});
+	
+	$scope.$watch("selectedPackageRules", function() {
+
+		console.log("Got package rules " + $scope.selectedPackageRules);
+		$scope.loadingRules = false;
 	});
 
 	$scope.initPackage();
@@ -142,7 +141,7 @@ fraudControllers.controller('PackageBuilderController', function($scope, $rootSc
 	
 	$scope.init = function() {
 		console.log(" -----------   Loading Package builder --------------- ");
-		$scope.newPackage = {};
+		$scope.newPackage = [];
 		$scope.selectedNewRules = [];
 		
 		$scope.getRules();
@@ -150,36 +149,48 @@ fraudControllers.controller('PackageBuilderController', function($scope, $rootSc
 
 	$scope.getRules = function() {
 		var rulesPromise = RulesServices.getRules();
-		console.log("Getting rules ");
-		$scope.rules = [];
+		
+		$scope.loading = true;
+		
 		rulesPromise.then(function(rules) {
 			$scope.availableRules = rules;
 		});
 	};
 	
 	$scope.saveNewPackage = function() {
-		
-		var listOfRuleName = [],
+
+		console.log(" Strat New Package" + JSON.stringify($scope.newPackage));
+		var listOfRuleName = [], 
 			numberOfSelectedRules = $scope.selectedNewRules.length;
 		
-		
+		$scope.newPackage.ruleNames = [];
 		for (var i = 0; i < numberOfSelectedRules; i++) {
 			console.log("rules in for loop " + JSON.stringify($scope.selectedNewRules[i]));
-			listOfRuleName[i] = $scope.selectedNewRules[i].name;
+			$scope.newPackage.push($scope.selectedNewRules[i].name);
 		};
 		
-		$scope.newPackage.ruleNames = listOfRuleName;
-		console.log("rules " + JSON.stringify($scope.newPackage.rules));
+		console.log("New Package" + JSON.stringify($scope.newPackage));
+		PackageServices.savePackage(angular.toJson($scope.newPackage));
 		
-		// PackageServices.savePackage(angular.toJson($scope.newPackage));
-
 		return false;
 	};
 	
 	$scope.cancelNewPackage = function() {
-		
 		return false;
 	};
+	
+	$scope.$watch('availableRules', function() {
+		console.log("rules updated " + $scope.loading);
+		$scope.loading = false;
+		if(!$scope.$$phase) {
+			console.log("!$scope.$$phase");
+			//$digest or $apply
+			$scope.$apply();
+			$scope.digest();
+		}
+
+		console.log("rules updated " + JSON.stringify($scope.availableRules));
+	});
 	
 	$scope.init();
 
@@ -190,34 +201,35 @@ fraudControllers.controller('RuleManagerController', function($window, $route,
 
 	$scope.rules;
 	$scope.oldRules;
-	
 	$scope.loadingRules = true;
 	$scope.oneAtATime = true;
 	
-	$scope.savingChanges = false;
-
 	$scope.init = function() {
+
+		console.log(" ---- init rules manager ----- ");
 		$scope.getRules();
 		return false;
 	};
 
 	$scope.getRules = function() {
 		var rulesPromise = RulesServices.getRules();
+		
 		$scope.loadingRules = true;
-		
 		rulesPromise.then(function(rules) {
+			
 			$scope.rules = rules;
-			$scope.oldRules = rules;
+			//$scope.oldRules = rules;
 		});
-		
 	};
 	
 	$scope.saveChanges = function() {
-		console.log("saving changes");
-		var rulesPromise = RulesServices.updateRuleConfiguration(angular.toJson($scope.rules));
+		console.log("saving changes " + JSON.stringify($scope.rules));
 		
-		rulesPromise.then(function(success) {
-			// Just assume it worked 
+		$scope.loadingRules = true;
+		var rulesPromise = RulesServices.updateRuleConfiguration(angular.toJson($scope.rules));
+		rulesPromise.then(function(updateRules) {
+			
+			$scope.rules = updatedRules;
 		});
 	};
 	
@@ -238,13 +250,11 @@ fraudControllers.controller('RuleManagerController', function($window, $route,
 		return value == 0 ? true : false;
 	}
 
-	$scope.$watch('rules', function(newVal, oldVal) {
+	$scope.$watch('rules', function() {
+		console.log("rules updated " + $scope.loadingRules);
 		$scope.loadingRules = false;
-		if(!$scope.$$phase) {
-			  //$digest or $apply
-			$scope.$apply();
-			$scope.digest();
-		}
+
+		console.log("rules updated " + JSON.stringify($scope.rules));
 	});
 
 	$scope.init();
@@ -265,7 +275,7 @@ fraudControllers.controller('RuleBuilderController', function($scope, $rootScope
 	$scope.newRuleMode = false;
 	
 	$scope.init = function() {
-		console.log(" -----------   Loading Custom building rule --------------- ");
+		console.log(" -----------   init Custom building rule --------------- ");
 		
 		var returnedObjects = SobObjectsService.getSobObjectsDescription();
 
@@ -321,11 +331,14 @@ fraudControllers.controller('RuleBuilderController', function($scope, $rootScope
 	};
 
 	$scope.addPattern = function(condition, object, type) {
-		var condition = condition, object = object, type = type, pattern = {
-			object : object,
-			type : type,
-			constraints : []
-		};
+		var condition = condition, 
+			object = object, 
+			type = type, 
+			pattern = {
+				object : object,
+				type : type,
+				constraints : []
+			};
 		if (type === 'Single') {
 			$scope.addConstraint(pattern);
 		}

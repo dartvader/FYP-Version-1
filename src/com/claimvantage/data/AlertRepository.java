@@ -6,7 +6,7 @@ import java.util.List;
 import javax.persistence.Entity;
 
 import com.claimvantage.model.Alert;
-import com.claimvantage.model.Session;
+import com.claimvantage.model.Package;
 
 public class AlertRepository {
 	

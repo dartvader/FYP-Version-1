@@ -31,6 +31,7 @@ import org.kie.internal.builder.KnowledgeBuilder;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.io.ResourceFactory;
 
+import com.claimvantage.data.RulesRepository;
 import com.claimvantage.data.exporter.DataLoader;
 import com.claimvantage.drools.listeners.TrackingAgendaEventListener;
 import com.claimvantage.drools.listeners.TrackingWorkingMemoryEventListener;
@@ -40,15 +41,13 @@ import com.claimvantage.drools.util.HardCodedRules;
 
 @JsonSerialize
 @XmlRootElement
-public class Session {
-
-	@JsonIgnore
-	private KieSession kieSession;
-	private List<Rule> rules;
+public class Package {
 	
-	private List<String> ruleNames;
-	private HashSet<Sobject> requiredObjects;
-	private List<Execution> executions;
+	@JsonIgnore
+	private static RulesRepository rulesRepo = RulesRepository.instance();
+	private ArrayList<String> ruleNames;
+	public HashSet<Sobject> requiredObjects;
+	public List<Execution> executions;
 	private String creationDateTime;
 	private String lastExecutionDate;
 	private int numberOfRules;
@@ -63,21 +62,21 @@ public class Session {
 	@JsonIgnore
 	private final String REPOSITORY_LOCATION = "src/main/resources/rules/";
 
-	public Session(List<Rule> rules, String type, HashSet<Sobject> requiredObjects) {
+	public Package(ArrayList<String> ruleNames, String type, HashSet<Sobject> requiredObjects) {
 		this.creationDateTime = new Timestamp(new Date().getTime()).toLocalDateTime().toString();
 		this.executions = new ArrayList<Execution>();
 		this.isActive = true;
 		this.totalNumberOfAlerts = 0;
 		this.totalNumberOfRulesFired = 0;
 		this.totalNumberOfExecutions = 0;
-		this.rules = new ArrayList<Rule>(rules);
+		this.ruleNames = new ArrayList<String>(ruleNames);
 		this.requiredObjects = requiredObjects;
 		this.type = type;
-		this.numberOfRules = rules.size();
+		this.numberOfRules = ruleNames.size();
 	}
 
-	public Session(List<Rule> rules) {
-		this(rules, "Custom Package", null);
+	public Package(ArrayList<String> ruleNames, String type) {
+		this(ruleNames, type, null);
 	}
 
 	public int getTotalNumberOfAlerts() {
@@ -104,117 +103,42 @@ public class Session {
 		this.totalNumberOfExecutions = totalNumberOfExecutions;
 	}
 
-	/*
-	 * Not sure if creating a whole new Service, repo and file system is very
-	 * effecient and could* cause memory leaks, needs to be reviewed and
-	 * possible manage on kieRepository and use the*
-	 * kieRepository.removeKieModule(ReleaseId) to remove the rules from the
-	 * session once the* execution of the rules is complete
-	 */
-	public KieSession createKieSession(List<Rule> rules) {
+	
 
-		KieServices kieServices = KieServices.Factory.get();
-		KieRepository kieRepository = kieServices.getRepository();
-		KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
-		for (Rule r : rules) {
-			kieFileSystem.write(REPOSITORY_LOCATION + r.getName() + ".drl", r
-					.getScript().toString());
-		}
-		KieBuilder kb = kieServices.newKieBuilder(kieFileSystem);
-		kb.buildAll(); // kieModule is automatically deployed to KieRepository
-						// if successfully built.
-
-		if (kb.getResults().hasMessages(Level.ERROR)) {
-			throw new RuntimeException("Build Errors:\n"
-					+ kb.getResults().toString());
-		}
-
-		KieContainer kContainer = kieServices.newKieContainer(kieRepository.getDefaultReleaseId());
-		return kContainer.newKieSession();
-	}
-
-	private void loadData(KieSession kieSession) {
-		// pass reference to the kieSession into the bulk data exporter
-		this.requiredObjects = this.requiredObjects == null ? getRequiredObjects(rules)
-				: this.requiredObjects;
-
-		System.out.println("Required objects " + this.requiredObjects.size());
-		DataLoader.execute(kieSession, requiredObjects);
-	}
-
-	public Execution executeRules() {
-
-		incrementNumberOfExecutions();
-		List<Alert> alerts = new ArrayList<Alert>();
-
-		TrackingWorkingMemoryEventListener workingMemoryListener = new TrackingWorkingMemoryEventListener();
-		this.kieSession = createKieSession(rules);
-		kieSession.addEventListener(workingMemoryListener);
-
-		loadData(kieSession);
-		
-		for (Rule rule : rules) {
-			if (rule.getSetting() != null && rule.getGlobal() != null) {
-				kieSession.setGlobal(rule.getGlobal(), rule.getSetting());
-			}
-		}
-		
-		int numberOfRuleFired = kieSession.fireAllRules();
-		long factCount = kieSession.getFactCount();
-		incrementNumberOfRulesFired(numberOfRuleFired);
-
-		alerts = workingMemoryListener.getAlerts();
-		incrementNumberOfAlerts(alerts.size());
-
-		Execution execution = new Execution(alerts, rules, this.getId(),
-				numberOfRuleFired, factCount, alerts.size());
-		executions.add(execution);
-		this.setLastExecutionDate(new Timestamp(new Date().getTime()).toLocalDateTime().toString());
-		
-		// Cleaning up Session memory
-		kieSession.removeEventListener(workingMemoryListener);
-		kieSession.dispose();
-		
-
-		return execution;
-	}
-
-	private void incrementNumberOfRulesFired(int numberOfRuleFired) {
+	public void incrementNumberOfRulesFired(int numberOfRuleFired) {
 		this.totalNumberOfRulesFired = totalNumberOfRulesFired
 				+ numberOfRuleFired;
 	}
 
-	private void incrementNumberOfAlerts(int numberOfAlertsRaised) {
+	public void incrementNumberOfAlerts(int numberOfAlertsRaised) {
 		this.totalNumberOfAlerts = this.totalNumberOfAlerts
 				+ numberOfAlertsRaised;
 	}
 
-	private void incrementNumberOfExecutions() {
+	public void incrementNumberOfExecutions() {
 		this.totalNumberOfExecutions++;
 	}
-
-	// TODO Write this rule to the file System
-	public void addRule(Rule rule) {
-		this.rules.add(rule);
-	}
-
-	// TODO implement this
-	public void deleteRule(String ruleName) {
-		for (int i = 0; i < this.rules.size(); i++) {
-			if (this.rules.get(i).getName() == ruleName) {
-				this.rules.remove(i);
-			}
-		}
-	}
-
-	private HashSet<Sobject> getRequiredObjects(List<Rule> rules) {
+	/*  No Need for this as the custom rule builder is not working 
+	 
+	public HashSet<Sobject> createRequiredObjects(ArrayList<Rule> rules) {
 		HashSet<Sobject> objects = new HashSet<Sobject>();
+		
 		for (Rule r : rules) {
 			for (Condition c : r.getConditions()) {
 				objects.add(c.getObject());
 			}
 		}
 		return objects;
+	}
+	*/
+	public HashSet<Sobject> getRequiredObjects() {
+
+		//== null ? createRequiredObjects(rulesRepo.getRulesByNames(this.ruleNames)) : this.requiredObjects;
+		return this.requiredObjects;
+	}
+
+	public void setRequiredObjects(HashSet<Sobject> requiredObjects) {
+		this.requiredObjects = requiredObjects;
 	}
 
 	public String getCreationDateTime() {
@@ -257,14 +181,6 @@ public class Session {
 		this.isActive = isActive;
 	}
 
-	public List<Rule> getRules() {
-		return rules;
-	}
-
-	public void setRules(List<Rule> rules) {
-		this.rules = rules;
-	}
-
 	public String getType() {
 		return this.type == null ? "Custom Package" : this.type;
 	}
@@ -280,4 +196,86 @@ public class Session {
 	public void setNumberOfRules(int numberOfRules) {
 		this.numberOfRules = numberOfRules;
 	}
+
+	public ArrayList<String> getRuleNames() {
+		return ruleNames;
+	}
+
+	public void setRuleNames(ArrayList<String> ruleNames) {
+		this.ruleNames = ruleNames;
+	}
+	
+	/*
+	 * Not sure if creating a whole new Service, repo and file system is very
+	 * effecient and could* cause memory leaks, needs to be reviewed and
+	 * possible manage on kieRepository and use the*
+	 * kieRepository.removeKieModule(ReleaseId) to remove the rules from the
+	 * session once the* execution of the rules is complete
+	 */
+	/*
+	public KieSession createKieSession(List<Rule> rules) {
+
+		KieServices kieServices = KieServices.Factory.get();
+		KieRepository kieRepository = kieServices.getRepository();
+		KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
+		for (Rule r : rules) {
+			kieFileSystem.write(REPOSITORY_LOCATION + r.getName() + ".drl", r
+					.getScript().toString());
+		}
+		KieBuilder kb = kieServices.newKieBuilder(kieFileSystem);
+		kb.buildAll(); // kieModule is automatically deployed to KieRepository
+						// if successfully built.
+
+		if (kb.getResults().hasMessages(Level.ERROR)) {
+			throw new RuntimeException("Build Errors:\n"
+					+ kb.getResults().toString());
+		}
+
+		KieContainer kContainer = kieServices.newKieContainer(kieRepository.getDefaultReleaseId());
+		return kContainer.newKieSession();
+	}
+
+	private void loadData(KieSession kieSession) {
+		// pass reference to the kieSession into the bulk data exporter
+		System.out.println("Required objects " + this.requiredObjects.size());
+		DataLoader.execute(kieSession, this.getRequiredObjects());
+	}
+	
+	public Execution executeRules() {
+
+		incrementNumberOfExecutions();
+		List<Alert> alerts = new ArrayList<Alert>();
+
+		TrackingWorkingMemoryEventListener workingMemoryListener = new TrackingWorkingMemoryEventListener();
+		this.kieSession = createKieSession(rules);
+		kieSession.addEventListener(workingMemoryListener);
+
+		loadData(kieSession);
+		
+		for (Rule rule : rules) {
+			if (rule.getSetting() != null && rule.getGlobal() != null) {
+				kieSession.setGlobal(rule.getGlobal(), rule.getSetting());
+			}
+		}
+		
+		int numberOfRuleFired = kieSession.fireAllRules();
+		long factCount = kieSession.getFactCount();
+		incrementNumberOfRulesFired(numberOfRuleFired);
+
+		alerts = workingMemoryListener.getAlerts();
+		incrementNumberOfAlerts(alerts.size());
+
+		Execution execution = new Execution(alerts, rules, this.getId(),
+				numberOfRuleFired, factCount, alerts.size());
+		executions.add(execution);
+		this.setLastExecutionDate(new Timestamp(new Date().getTime()).toLocalDateTime().toString());
+		
+		// Cleaning up Session memory
+		kieSession.removeEventListener(workingMemoryListener);
+		kieSession.dispose();
+
+		return execution;
+	}
+	*/
+
 }

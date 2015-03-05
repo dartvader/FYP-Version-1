@@ -18,7 +18,7 @@ import com.claimvantage.data.RulesRepository;
 import com.claimvantage.model.Rule;
 
 @Path("rules")
-public class RuleResourceRESTService {
+public class RuleRESTResourceService {
 
 	private static RulesRepository rulesRepository = RulesRepository.instance();
 
@@ -47,26 +47,21 @@ public class RuleResourceRESTService {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateRules(ArrayList<Rule> rules) {
+	public ArrayList<Rule> updateRules(ArrayList<Rule> rules) {
 		
-		System.out.println("put rule size " + rules.size());
-		System.out.println("put current rule size " + rulesRepository.getRules().size());
-		
-		Response.ResponseBuilder builder = null;		
+		ArrayList<Rule> updatedRules = null;
 		try {
-			// TODO update the rule repo with the whole new rules pushed
-			rulesRepository.updateRules(rules);
-            builder = Response.ok();
+			
+			updatedRules = new ArrayList<Rule>(rulesRepository.updateRules(rules));
+			
         } catch (Exception e) {
-            System.out.println("Error in Rules set resource REST service");
+            System.out.println("Error updating the rules");
             System.out.println("Error " +  e.getMessage());
             System.out.println("Error " +  e.getLocalizedMessage());
             System.out.println("Error " +  e.getStackTrace());
-            Map<String, String> responseObj = new HashMap<String, String>();
-            responseObj.put("error ", e.getMessage());
-            builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
         }
-		return builder.build();
+		
+		return updatedRules;
 	}
 	
     @GET
