@@ -1,0 +1,402 @@
+<div class="row">
+	<!-- Back Button -->
+<!-- Number Rules -->
+	<div class="col-md-2">
+	    <div class="panel panel-danger">
+	        <div class="panel-heading">
+	            <div class="row btn" role="button" ng-click="unselectPackage()">
+	                <div class="col-xs-4">
+	                    <i class="fa fa-angle-double-left fa-5x"></i>
+	                </div>
+	                <div class="col-xs-4">
+	                    <i class="fa fa-angle-double-left fa-5x"></i>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	<!-- Number Rules -->
+	<div class="col-md-3">
+	    <div class="panel panel-info">
+	        <div class="panel-heading">
+	            <div class="row">
+	                <div class="col-xs-3">
+	                    <i class="fa fa-table fa-4x"></i>
+	                </div>
+	                <div class="col-xs-9 text-right">
+	                    <div class="huge">{{selectedPackage.numberOfRules}}</div>
+	                    <div></div>
+	                </div>
+	            </div>
+	        </div>
+	        <a href="#">
+	            <div class="panel-footer">
+	                <span class="pull-left">Package Rules</span>
+	                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+	                <div class="clearfix"></div>
+	            </div>
+	        </a>
+	    </div>
+	</div>
+	
+	<!-- Alerts -->
+	<div class="col-md-3">
+	    <div class="panel panel-danger">
+	        <div class="panel-heading">
+	            <div class="row">
+	                <div class="col-xs-3">
+	                    <i class="fa fa-bomb fa-4x"></i>
+	                </div>
+	                <div class="col-xs-9 text-right">
+	                    <div class="huge">{{selectedPackage.totalNumberOfAlerts}}</div>
+	                    <div></div>
+	                </div>
+	            </div>
+	        </div>
+	        <a href="#">
+	            <div class="panel-footer">
+	                <span class="pull-left">Alerts</span>
+	                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+	                <div class="clearfix"></div>
+	            </div>
+	        </a>
+	    </div>
+	</div>
+	<!-- Executions -->
+	<div class="col-md-3">
+	    <div class="panel panel-yellow">
+	        <div class="panel-heading">
+	            <div class="row">
+	                <div class="col-xs-3">
+	                	<div data-ng-show="!loadingExecution">
+		                    <i class="fa fa-cogs fa-4x"></i>
+		                </div>
+		                <div data-ng-show="loadingExecution">
+		                    <i class="fa fa-cog fa-spin fa-4x"></i>
+		                </div>
+	                </div>
+	                <div class="col-xs-9 text-right">
+	                    <div class="huge">{{selectedPackage.totalNumberOfExecutions}}</div>
+	                    <div></div>
+	                </div>
+	            </div>
+	        </div>
+	        <a href="#">
+	            <div class="panel-footer">
+	                <span class="pull-left">Package Executions</span>
+	                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+	                <div class="clearfix"></div>
+	            </div>
+	        </a>
+	    </div>
+	</div>
+</div>
+<!--  End of Dashboard -->
+<!-- Package  rules -->
+<div class="col-lg-12">
+	<div class="panel panel-info">
+		<div class="panel-heading" data-toggle="collapse" data-target="#collapsePackageRules" aria-expanded="false" aria-controls="collapseExample">
+			<h1 class="panel-title">Package Rules</h1>
+		</div>
+		<div class="panel-body">
+			<div class="row">
+				<div id="collapsePackageRules" class="panel-collapse collapse">
+					<!-- Rules Table -->
+					<div class="col-md-8">
+						<table class="table table-striped table-bordered table-hover dataTable no-footer" tr-ng-grid=""
+							items="selectedPackageRules" page-items="5">
+							<thead>
+								<tr>
+									<th field-name="name" enable-filtering="false"></th>
+									<th field-name="description" display-name="Description"
+										enable-filtering="false"></th>
+									<th field-name="setting.recommendation" display-name="Investigation Recommendation"
+										enable-filtering="false" display-align="center"></th>
+									<th field-name="setting.score" display-name="Investigation Recommendation"
+										enable-filtering="false" display-align="center"></th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<!--End of  Rules -->
+					<!-- Rule info -->
+					<div class="col-md-4">
+						<div class="row row-centered">
+							<div class="col-md-12">
+							    <div class="panel panel-danger">
+							        <div class="panel-heading">
+							            <div class="row btn" role="button" ng-click="executeRules(selectedPackage.id)">
+							                <div class="col-xs-12" data-ng-show="!loadingExecution">
+							                    <i class="fa fa-cogs fa-5x"></i>
+							                </div>
+							                <div class="col-xs-12" data-ng-show="loadingExecution">
+							                    <i class="fa fa-cog fa-spin fa-5x"></i>
+							                </div>
+							            </div>
+							        </div>
+							        <a href="#">
+							            <div class="panel-footer">
+							                <span class="center">Fire Rules</span>
+							            </div>
+							        </a>
+							    </div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+							    <div class="panel panel-info">
+							        <div class="panel-heading">
+							            <div class="row">
+							                <div class="col-xs-3">
+							                    <i class="fa fa-table fa-4x"></i>
+							                </div>
+							                <div class="col-xs-9 text-right">
+							                    <div class="huge">21</div>
+							                    <div></div>
+							                </div>
+							            </div>
+							        </div>
+							        <a href="#">
+							            <div class="panel-footer">
+							                <span class="pull-left">Stat</span>
+							                <div class="clearfix"></div>
+							            </div>
+							        </a>
+							    </div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+							    <div class="panel panel-info">
+							        <div class="panel-heading">
+							            <div class="row">
+							                <div class="col-xs-3">
+							                    <i class="fa fa-table fa-4x"></i>
+							                </div>
+							                <div class="col-xs-9 text-right">
+							                    <div class="huge">2</div>
+							                    <div></div>
+							                </div>
+							            </div>
+							        </div>
+							        <a href="#">
+							            <div class="panel-footer">
+							                <span class="pull-left">Stat</span>
+							                <div class="clearfix"></div>
+							            </div>
+							        </a>
+							    </div>
+							</div>
+						</div>
+					</div>
+					<!-- End of Rule info -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Package Executions -->
+<div class="col-lg-12">
+	<div class="panel panel-yellow">
+		<div class="panel-heading" data-toggle="collapse" data-target="#collapseExecutions" aria-expanded="false" aria-controls="collapseExample">
+			<h1 class="panel-title">Executions</h1>
+		</div>
+		<div class="panel-body">
+			<div class="row">
+				<div id="collapseExecutions" class="panel-collapse collapse">
+					<!-- Executions Table -->
+					<div class="col-md-8">
+						<table class="table table-striped table-bordered table-hover dataTable no-footer" tr-ng-grid=""
+							items="selectedPackage.executions" page-items="5">
+							<thead>
+								<tr>
+									<th field-name="formattedDate" enable-filtering="false"></th>
+									<th field-name="numberOfRulesFired" enable-filtering="false"></th>
+									<th field-name="factCount" enable-filtering="false"></th>
+									<th field-name="numberOfAlerts" enable-filtering="false"></th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<!--End of Executions Table -->
+					<!-- Rule info -->
+					<div class="col-md-4">
+						<div class="row">
+							<div class="col-md-12">
+							    <div class="panel panel-info">
+							        <div class="panel-heading">
+							            <div class="row">
+							                <div class="col-xs-3">
+							                    <i class="fa fa-table fa-4x"></i>
+							                </div>
+							                <div class="col-xs-9 text-right">
+							                    <div class="huge">12</div>
+							                    <div></div>
+							                </div>
+							            </div>
+							        </div>
+							        <a href="#">
+							            <div class="panel-footer">
+							                <span class="pull-left">Time to run package</span>
+							                <div class="clearfix"></div>
+							            </div>
+							        </a>
+							    </div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+							    <div class="panel panel-info">
+							        <div class="panel-heading">
+							            <div class="row">
+							                <div class="col-xs-3">
+							                    <i class="fa fa-table fa-4x"></i>
+							                </div>
+							                <div class="col-xs-9 text-right">
+							                    <div class="huge">21</div>
+							                    <div></div>
+							                </div>
+							            </div>
+							        </div>
+							        <a href="#">
+							            <div class="panel-footer">
+							                <span class="pull-left">Stat</span>
+							                <div class="clearfix"></div>
+							            </div>
+							        </a>
+							    </div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+							    <div class="panel panel-info">
+							        <div class="panel-heading">
+							            <div class="row">
+							                <div class="col-xs-3">
+							                    <i class="fa fa-table fa-4x"></i>
+							                </div>
+							                <div class="col-xs-9 text-right">
+							                    <div class="huge">2</div>
+							                    <div></div>
+							                </div>
+							            </div>
+							        </div>
+							        <a href="#">
+							            <div class="panel-footer">
+							                <span class="pull-left">Stat</span>
+							                <div class="clearfix"></div>
+							            </div>
+							        </a>
+							    </div>
+							</div>
+						</div>
+					</div>
+					<!-- End of Rule info -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Package Alerts -->
+<div class="col-lg-12">
+	<div class="panel panel-danger">
+		<div class="panel-heading" data-toggle="collapse" data-target="#collapseAlerts" aria-expanded="false" aria-controls="collapseExample">
+			<h1 class="panel-title">Alerts</h1>
+		</div>
+		<div class="panel-body">
+			<div class="row">
+				<div id="collapseAlerts" class="panel-collapse collapse">
+					<!-- Executions Table -->
+					<div class="col-md-8">
+						<table class="table table-striped table-bordered table-hover dataTable no-footer" tr-ng-grid=""
+							items="selectedPackage.alerts" page-items="5">
+							<thead>
+								<tr>
+									<th field-name="claimId" enable-filtering="false"></th>
+									<th field-name="ruleName" enable-filtering="false"></th>
+									<th field-name="recommendation" enable-filtering="false"></th>
+									<th field-name="score" enable-filtering="false"></th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<!--End of Alerts Table -->
+					<!-- Alerts info -->
+					<div class="col-md-4">
+						<div class="row">
+							<div class="col-md-12">
+							    <div class="panel panel-info">
+							        <div class="panel-heading">
+							            <div class="row">
+							                <div class="col-xs-3">
+							                    <i class="fa fa-table fa-4x"></i>
+							                </div>
+							                <div class="col-xs-9 text-right">
+							                    <div class="huge">12</div>
+							                    <div></div>
+							                </div>
+							            </div>
+							        </div>
+							        <a href="#">
+							            <div class="panel-footer">
+							                <span class="pull-left">Alerts</span>
+							                <div class="clearfix"></div>
+							            </div>
+							        </a>
+							    </div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+							    <div class="panel panel-info">
+							        <div class="panel-heading">
+							            <div class="row">
+							                <div class="col-xs-3">
+							                    <i class="fa fa-table fa-4x"></i>
+							                </div>
+							                <div class="col-xs-9 text-right">
+							                    <div class="huge">21</div>
+							                    <div></div>
+							                </div>
+							            </div>
+							        </div>
+							        <a href="#">
+							            <div class="panel-footer">
+							                <span class="pull-left">Stat</span>
+							                <div class="clearfix"></div>
+							            </div>
+							        </a>
+							    </div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+							    <div class="panel panel-info">
+							        <div class="panel-heading">
+							            <div class="row">
+							                <div class="col-xs-3">
+							                    <i class="fa fa-table fa-4x"></i>
+							                </div>
+							                <div class="col-xs-9 text-right">
+							                    <div class="huge">2</div>
+							                    <div></div>
+							                </div>
+							            </div>
+							        </div>
+							        <a href="#">
+							            <div class="panel-footer">
+							                <span class="pull-left">Stat</span>
+							                <div class="clearfix"></div>
+							            </div>
+							        </a>
+							    </div>
+							</div>
+						</div>
+					</div>
+					<!-- End of Alert info -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

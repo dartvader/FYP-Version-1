@@ -54,6 +54,8 @@ public class Package {
 	private int totalNumberOfAlerts;
 	private int totalNumberOfRulesFired;
 	private int totalNumberOfExecutions;
+	private int lastestNumberOfAlerts;
+	private int lastestNumberOfRulesFired;
 	private boolean isActive;
 	private String type;
 
@@ -103,14 +105,14 @@ public class Package {
 		this.totalNumberOfExecutions = totalNumberOfExecutions;
 	}
 
-	
-
 	public void incrementNumberOfRulesFired(int numberOfRuleFired) {
+		this.lastestNumberOfRulesFired = numberOfRuleFired;
 		this.totalNumberOfRulesFired = totalNumberOfRulesFired
 				+ numberOfRuleFired;
 	}
 
 	public void incrementNumberOfAlerts(int numberOfAlertsRaised) {
+		this.lastestNumberOfAlerts = numberOfAlertsRaised;
 		this.totalNumberOfAlerts = this.totalNumberOfAlerts
 				+ numberOfAlertsRaised;
 	}
@@ -182,7 +184,7 @@ public class Package {
 	}
 
 	public String getType() {
-		return this.type == null ? "Custom Package" : this.type;
+		return this.type;
 	}
 
 	public void setType(String type) {
@@ -204,78 +206,21 @@ public class Package {
 	public void setRuleNames(ArrayList<String> ruleNames) {
 		this.ruleNames = ruleNames;
 	}
-	
-	/*
-	 * Not sure if creating a whole new Service, repo and file system is very
-	 * effecient and could* cause memory leaks, needs to be reviewed and
-	 * possible manage on kieRepository and use the*
-	 * kieRepository.removeKieModule(ReleaseId) to remove the rules from the
-	 * session once the* execution of the rules is complete
-	 */
-	/*
-	public KieSession createKieSession(List<Rule> rules) {
 
-		KieServices kieServices = KieServices.Factory.get();
-		KieRepository kieRepository = kieServices.getRepository();
-		KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
-		for (Rule r : rules) {
-			kieFileSystem.write(REPOSITORY_LOCATION + r.getName() + ".drl", r
-					.getScript().toString());
-		}
-		KieBuilder kb = kieServices.newKieBuilder(kieFileSystem);
-		kb.buildAll(); // kieModule is automatically deployed to KieRepository
-						// if successfully built.
-
-		if (kb.getResults().hasMessages(Level.ERROR)) {
-			throw new RuntimeException("Build Errors:\n"
-					+ kb.getResults().toString());
-		}
-
-		KieContainer kContainer = kieServices.newKieContainer(kieRepository.getDefaultReleaseId());
-		return kContainer.newKieSession();
+	public int getLastestNumberOfAlerts() {
+		return lastestNumberOfAlerts;
 	}
 
-	private void loadData(KieSession kieSession) {
-		// pass reference to the kieSession into the bulk data exporter
-		System.out.println("Required objects " + this.requiredObjects.size());
-		DataLoader.execute(kieSession, this.getRequiredObjects());
+	public void setLastestNumberOfAlerts(int lastestNumberOfAlerts) {
+		this.lastestNumberOfAlerts = lastestNumberOfAlerts;
+	}
+
+	public int getLastestNumberOfRulesFired() {
+		return lastestNumberOfRulesFired;
+	}
+
+	public void setLastestNumberOfRulesFired(int lastestNumberOfRulesFired) {
+		this.lastestNumberOfRulesFired = lastestNumberOfRulesFired;
 	}
 	
-	public Execution executeRules() {
-
-		incrementNumberOfExecutions();
-		List<Alert> alerts = new ArrayList<Alert>();
-
-		TrackingWorkingMemoryEventListener workingMemoryListener = new TrackingWorkingMemoryEventListener();
-		this.kieSession = createKieSession(rules);
-		kieSession.addEventListener(workingMemoryListener);
-
-		loadData(kieSession);
-		
-		for (Rule rule : rules) {
-			if (rule.getSetting() != null && rule.getGlobal() != null) {
-				kieSession.setGlobal(rule.getGlobal(), rule.getSetting());
-			}
-		}
-		
-		int numberOfRuleFired = kieSession.fireAllRules();
-		long factCount = kieSession.getFactCount();
-		incrementNumberOfRulesFired(numberOfRuleFired);
-
-		alerts = workingMemoryListener.getAlerts();
-		incrementNumberOfAlerts(alerts.size());
-
-		Execution execution = new Execution(alerts, rules, this.getId(),
-				numberOfRuleFired, factCount, alerts.size());
-		executions.add(execution);
-		this.setLastExecutionDate(new Timestamp(new Date().getTime()).toLocalDateTime().toString());
-		
-		// Cleaning up Session memory
-		kieSession.removeEventListener(workingMemoryListener);
-		kieSession.dispose();
-
-		return execution;
-	}
-	*/
-
 }

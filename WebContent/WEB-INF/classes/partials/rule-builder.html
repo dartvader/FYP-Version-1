@@ -1,0 +1,147 @@
+<div class="row">
+	<div class="col-lg-12">
+		<h1 class="page-header">Custom Build Rule</h1>
+		<ol class="breadcrumb">
+			<li class="active"><i class="fa fa-wrench"></i> Rule Building</li>
+		</ol>
+	</div>
+</div>
+<div>
+	<hr>
+	<!-- Name of rule -->
+	<div class="row">
+		<label class="medium blue">New Rule</label>
+	</div>
+	<div class="row">
+		<div class="col-xs-4 pull-left">
+			<div class="row">
+				<label class="medium" for="RuleName">Rule Name</label>
+			</div>
+			<div class="row">
+				<input type="text" class="form-control" id="RuleName"
+					placeholder="Enter Name" ng-model="newRule.name" ng-required />
+			</div>
+		</div>
+		<div class="col-xs-6 pull-right">
+			<div class="row">
+				<label class="medium" for="RuleName">Rule Description</label>
+			</div>
+			<div class="row">
+				<textarea type="text" class="form-control" id="RuleName"
+					placeholder="Enter Description" ng-model="newRule.description"
+					ng-required />
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<label class="medium green">When</label> <span
+			ng-click="openSobjectSelection(newRule)"
+			class="glyphicon glyphicon-plus-sign pull-right condition-glyphicon green cursor-pointer ">
+		</span>
+	</div>
+	<hr class="thinGreen">
+	<!-- Adding the panels for each of the Sobjects added to the rule -->
+	<div class="panel panel-success" ng-repeat="c in newRule.conditions">
+		<div class="panel-heading">
+			There is a {{c.object.sobLabel}}...
+			<!-- Single button -->
+			<div class="btn-group pull-right">
+				<button type="button" class="btn btn-success btn-xs dropdown-toggle"
+					data-toggle="dropdown" aria-expanded="false">
+					Add Constraint <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li><a ng-click="addPattern(c, c.object, 'Single')">Single
+							Field</a></li>
+					<li><a ng-click="addPattern(c, c.object, 'All')">Multi-Field
+							(And's)</a></li>
+					<li><a ng-click="addPattern(c, c.object, 'Any')">Multi-Field
+							(Or's)</a></li>
+				</ul>
+			</div>
+
+
+		</div>
+		<!-- adding conditions into the object section of the rule -->
+		<div class="constraint-body" ng-repeat="p in c.patterns">
+			<div class="row" ng-if="p.type == 'Single'">This is true...</div>
+			<div class="row" ng-if="p.type == 'Any'">
+				Any of the follwing are true... <span ng-click="addConstraint(p)"
+					class="glyphicon glyphicon-plus-sign condition-glyphicon green cursor-pointer ">
+				</span>
+			</div>
+			<div class="row" ng-if="p.type == 'All'">
+				All of the follwing are true... <span ng-click="addConstraint(p)"
+					class="glyphicon glyphicon-plus-sign condition-glyphicon green cursor-pointer ">
+			</div>
+
+			<div class="row" ng-repeat="constraint in p.constraints">
+
+				<div class="col-xs-5 min-padding">
+					<!-- loop over the fields that are in the current object -->
+					<select class="form-control mini" ng-model="constraint.field"
+						ng-options="field.label for field in p.object.sobFields">
+						<option value="">-- choose field --</option>
+					</select> </select>
+				</div>
+				<!-- Depending on what type is in the current c.selectedField -->
+
+				<div class="condition" ng-if="constraint.field.type == 'Integer'"
+					ng-include src="'partials/integer-template.html'"></div>
+
+				<div class="condition" ng-if="constraint.field.type == 'Double'"
+					ng-include src="'partials/double-template.html'"></div>
+
+				<div class="condition" ng-if="constraint.field.type == 'String'"
+					ng-include src="'partials/string-template.html'"></div>
+
+				<div class="condition" ng-if="constraint.field.type == 'Date'"
+					ng-include src="'partials/date-template.html'"></div>
+			</div>
+		</div>
+		<!-- End of conditions -->
+	</div>
+	<!-- Actions section of the rule-->
+	<div class="row">
+		<label class="medium red">Then</label>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-3">
+			<div class="panel panel-danger">
+				<div class="panel-heading">Claim Score</div>
+				<div class="panel-body">
+					<input type="number" class="form-control" id="RuleScore"
+						ng-model="newRule.consequence.score">
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-9">
+			<div class="panel panel-danger">
+				<div class="panel-heading">Next Step Investigation</div>
+				<div class="panel-body">
+					<textarea class="form-control" rows="3"
+						ng-model="newRule.consequence.recommendation"></textarea>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Add rule to the rule set -->
+<div class="row">
+	<div class="col-xs-6" id="btn-cancel-rule">
+		<div class="btn-group-justified" role="group"
+			aria-label="Justified button group">
+			<a class="btn btn-danger" role="button" ng-click="cancelNewRule()">Cancel</a>
+		</div>
+	</div>
+	<div class="col-xs-6" id="btn-add-rule">
+		<div class="btn-group-justified" role="group"
+			aria-label="Justified button group">
+			<a class="btn btn-primary" role="button" ng-click="saveRule()">Save
+				New Rule</a>
+		</div>
+	</div>
+</div>
+<br>
