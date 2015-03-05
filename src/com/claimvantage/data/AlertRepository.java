@@ -1,7 +1,11 @@
 package com.claimvantage.data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 import javax.persistence.Entity;
 
@@ -12,10 +16,10 @@ public class AlertRepository {
 	
 	private static AlertRepository instance = null;
 	
-	private List<Alert> alerts;
+	private NavigableMap<String, List<Alert>> alerts;
 	
 	public AlertRepository() {
-		alerts = new ArrayList<Alert>();
+		alerts = new TreeMap<String, List<Alert>>();
 	}
 
 	public static AlertRepository instance() {
@@ -25,19 +29,20 @@ public class AlertRepository {
 		return instance;
 	}
 	
-	public void addSession(Alert alert) {
-		alerts.add(alert);
+	public Entry<String, List<Alert>> getLastEntry() {
+		return alerts.lastEntry();
 	}
 	
-	public List<Alert> getSessions() {
+	public void addAlerts(String timeStamp, List<Alert> newAlerts) {
+		alerts.put(timeStamp, newAlerts);
+		System.out.println("<<adding>> alerts map size " + alerts.size());
+	}
+
+	public NavigableMap<String, List<Alert>> getAlerts() {
 		return alerts;
 	}
 
-	public void setSessions(List<Alert> alerts) {
-		this.alerts = alerts;
-	}
-	
-	public void getSession(List<Alert> alerts) {
+	public void setAlerts(NavigableMap<String, List<Alert>> alerts) {
 		this.alerts = alerts;
 	}
 }

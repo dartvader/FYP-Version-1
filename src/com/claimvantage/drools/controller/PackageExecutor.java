@@ -14,6 +14,8 @@ import org.kie.api.builder.Message.Level;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 
+import com.claimvantage.data.AlertRepository;
+import com.claimvantage.data.ExecutionRepository;
 import com.claimvantage.data.PackageRepository;
 import com.claimvantage.data.RulesRepository;
 import com.claimvantage.data.exporter.DataLoader;
@@ -29,6 +31,8 @@ public class PackageExecutor {
 	private com.claimvantage.model.Package selectedPackage;
 	private static PackageRepository packageRepo = PackageRepository.instance();
 	private static RulesRepository rulesRepo = RulesRepository.instance();
+	private static AlertRepository alertsRepo = AlertRepository.instance();
+	private static ExecutionRepository executionsRepo = ExecutionRepository.instance();
 	
 	private final String REPOSITORY_LOCATION = "src/main/resources/rules/";
 
@@ -39,26 +43,12 @@ public class PackageExecutor {
 	}
 	
 	public void execute() {
-		System.out.println(" Executing the rules in pacakge " + this.packageId);
-		
-		// Get the Package By the Id
 		selectedPackage = packageRepo.getPackagesById(this.packageId);
-
-		System.out.println("selectedPackage " + selectedPackage.toString());
-		System.out.println("selectedPackage Names" + selectedPackage.getRuleNames().size());
-		
 		ArrayList<Rule> realRules = rulesRepo.getRulesByNames(selectedPackage.getRuleNames());
 
-		System.out.println(" Real Rules " + realRules.size());
-		// Create a Kie Session and load the rules
 		KieSession session = createKieSession(realRules);
-
-		// load the data in to the session
 		loadData(session, selectedPackage.getRequiredObjects());
-		
-		// execute the rules
 		executeRules(session, selectedPackage, realRules);
-		
 	}
 	
 	
@@ -111,15 +101,17 @@ public class PackageExecutor {
 
 		alerts = workingMemoryListener.getAlerts();
 		selectedPacakge.incrementNumberOfAlerts(alerts.size());
-
 		Execution execution = new Execution(alerts, rules, selectedPacakge.getId(), numberOfRuleFired, factCount, alerts.size());
+		
+		alertsRepo.addAlerts(new Timestamp(new Date().getTime()).toLocalDateTime().toString(), alerts);
+		executionsRepo.addExecution(new Timestamp(new Date().getTime()).toLocalDateTime().toString(), execution);
+		
 		selectedPacakge.executions.add(execution);
 		selectedPacakge.setLastExecutionDate(new Timestamp(new Date().getTime()).toLocalDateTime().toString());
 		
 		// Cleaning up Session memory
 		kieSession.removeEventListener(workingMemoryListener);
 		kieSession.dispose();
-		
 
 		return execution;
 	}
