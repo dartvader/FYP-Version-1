@@ -68,7 +68,7 @@ public class DataLoader {
 		EnterpriseConnection connection = null;
 		// TODO put these in configuration file
    		String USERNAME = "leemcdonald@83demo.com";
-   		String PASSWORD = "mrgsLEbXZ5pHv0YBRTKjfF7uD01ropA0KZFEh";
+   		String PASSWORD = "0un7tijf1rLmEWCqLRQQtueEgjVd6DNRL7";
     	ConnectorConfig config = new ConnectorConfig();
     	
 		config.setUsername(USERNAME);

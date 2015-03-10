@@ -58,6 +58,7 @@ public class Package {
 	private int lastestNumberOfRulesFired;
 	private boolean isActive;
 	private String type;
+	private String packageName;
 
 	private UUID id;
 
@@ -222,5 +223,12 @@ public class Package {
 	public void setLastestNumberOfRulesFired(int lastestNumberOfRulesFired) {
 		this.lastestNumberOfRulesFired = lastestNumberOfRulesFired;
 	}
-	
+
+	public String getPackageName() {
+		return packageName;
+	}
+
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
+	}
 }

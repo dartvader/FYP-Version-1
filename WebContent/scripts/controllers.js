@@ -12,6 +12,8 @@ fraudControllers.controller('MainController', function($scope, $rootScope, $loca
 		corePacakgePromise.then(function(corePackage) {
 			$scope.corePackage = corePackage;
 		});
+		
+		
 	};
 
 	$scope.$watch("corePackage", function() {
@@ -19,6 +21,131 @@ fraudControllers.controller('MainController', function($scope, $rootScope, $loca
 	});
 	$scope.initLoadingApp();
 
+});
+
+//Controller for individual functionalities
+fraudControllers.controller('ClaimScoreBoardController', function($scope, $rootScope, $location, ngDialog, ExecutionServices, AlertServices) {
+	
+	$scope.executions;
+	$scope.loadingExecutions = true;
+	
+	$scope.executionCalculated;
+	$scope.calculatingScores = false;
+	
+	$scope.selectedClaim;
+	
+	$scope.init = function() {
+		console.log(" -----------   Loading Claims Score Board Controller --------------- ");
+		$scope.selectedClaim = [];
+		
+		$scope.loadingExecutions = true;
+		var executionsPromise = ExecutionServices.getExecutions();
+		executionsPromise.then(function(executions) {
+			$scope.executions = executions;
+		});
+	};
+	// Building the Calculated Score table
+	$scope.calculateClaimsScores = function(execution) {
+		var alerts = $scope.executions[execution].alerts;
+		$scope.calculatingScores = true;
+		var tempScoreMap = {};
+		for (var i = 0; alerts.length > i; i++) {
+			
+			var claimId = alerts[i].claimId,
+				claimName = alerts[i].claimName,
+				claimantName = alerts[i].claimantName,
+				claim = alerts[i].claim,
+				score = alerts[i].score,
+				rule = alerts[i].ruleName,
+				recommendation = alerts[i].recommendation;
+
+			console.log("score " + score);
+			if (tempScoreMap[claimId] === undefined) {
+				tempScoreMap[claimId] = {
+						claimId: claimId,
+						claimName : claimName,
+						claimantName : claimantName,
+						score : score,
+						recommendation : [],
+					    rules : [],
+						claim : {}
+				}
+				tempScoreMap[claimId].recommendation.push(recommendation);
+				tempScoreMap[claimId].rules.push([rule, score]);
+				tempScoreMap[claimId].claim = claim;
+
+			} else {
+				// Adding the Scores.... Might need to do some sort of weighted algorithm for totalling
+				var tempScore = tempScoreMap[claimId].score;
+				tempScoreMap[claimId].score = score + tempScore;
+				tempScoreMap[claimId].rules.push([rule, score]);
+				tempScoreMap[claimId].recommendation.push(recommendation);
+			}
+		}
+		
+		$scope.executionCalculated = [];
+		angular.forEach(tempScoreMap, function(list) {
+			
+            $scope.executionCalculated.push({
+                claimId: list.claimId,
+                claimName: list.claimName,
+                claimantName: list.claimantName,
+                claim : list.claim,
+                score: list.score,
+                NumberOfRulesFired: list.rules.length,
+				recommendation : list.recommendation,
+				rules : list.rules
+            })
+            
+        });
+		
+		console.log("executionCalculated   " + JSON.stringify($scope.executionCalculated));
+	};
+	
+	// Selected Claim Break down.
+	$scope.drawBarChart = function(id, rulesData) {
+		
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Rule Name');
+        data.addColumn('number', 'Score');
+        data.addRows(rulesData);
+        var options = {
+          title: 'Score Break Down'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById(id));
+        
+        function selectHandler() {
+          var selectedItem = chart.getSelection()[0];
+          if (selectedItem) {
+            var value = data.getValue(selectedItem.row, selectedItem.column);
+            alert('The user selected ' + value);
+          }
+        }
+
+        google.visualization.events.addListener(chart, 'select', selectHandler);
+        
+        chart.draw(data, options);
+	}
+	
+	$scope.$watch("executions", function() {
+		$scope.loadingExecutions = false;
+	});
+	
+	$scope.$watchCollection("selectedClaim", function() {
+
+		if ($scope.selectedClaim.length != 0) {
+			$scope.drawBarChart("barChart", $scope.selectedClaim[0].rules);
+		}
+	});
+	
+	$scope.$watch("executionCalculated", function() {
+		$scope.calculatingScores = false;
+		
+	});
+	
+	
+	$scope.init();
 });
 
 fraudControllers.controller('PackageManagerController', 
@@ -47,7 +174,6 @@ fraudControllers.controller('PackageManagerController',
 		$scope.loadingPackages = true;
 		var packagePromise = PackageServices.getPackages();
 		packagePromise.then(function(packages) {
-			console.log("Package loaded " + packages);
 			$scope.packages = packages;
 		});
 		
@@ -98,7 +224,6 @@ fraudControllers.controller('PackageManagerController',
 			$scope.selectedPackage = $scope.selectedPackages[0];
 			$scope.loadingExecution = false;
 
-			console.log("selectedPackage.id " + $scope.selectedPackage.id);
 			$scope.loadingRules = true;
 			var rulesPromise = PackageServices.getPackageRules($scope.selectedPackage.id);
 			
@@ -124,7 +249,6 @@ fraudControllers.controller('PackageManagerController',
 	
 	$scope.$watch("selectedPackageRules", function() {
 
-		console.log("Got package rules " + $scope.selectedPackageRules);
 		$scope.loadingRules = false;
 	});
 
@@ -138,11 +262,13 @@ fraudControllers.controller('PackageBuilderController', function($scope, $rootSc
 	$scope.availableRules;
 	$scope.newPackage;
 	$scope.selectedNewRules;
+	$scope.packageName;
 	
 	$scope.init = function() {
 		console.log(" -----------   Loading Package builder --------------- ");
 		$scope.newPackage = [];
 		$scope.selectedNewRules = [];
+		$scope.newPackage.packageName = "";
 		
 		$scope.getRules();
 	};
@@ -159,17 +285,14 @@ fraudControllers.controller('PackageBuilderController', function($scope, $rootSc
 	
 	$scope.saveNewPackage = function() {
 
-		console.log(" Strat New Package" + JSON.stringify($scope.newPackage));
 		var listOfRuleName = [], 
 			numberOfSelectedRules = $scope.selectedNewRules.length;
 		
 		$scope.newPackage.ruleNames = [];
 		for (var i = 0; i < numberOfSelectedRules; i++) {
-			console.log("rules in for loop " + JSON.stringify($scope.selectedNewRules[i]));
 			$scope.newPackage.push($scope.selectedNewRules[i].name);
 		};
 		
-		console.log("New Package" + JSON.stringify($scope.newPackage));
 		PackageServices.savePackage(angular.toJson($scope.newPackage));
 		
 		return false;
@@ -183,13 +306,11 @@ fraudControllers.controller('PackageBuilderController', function($scope, $rootSc
 		console.log("rules updated " + $scope.loading);
 		$scope.loading = false;
 		if(!$scope.$$phase) {
-			console.log("!$scope.$$phase");
 			//$digest or $apply
 			$scope.$apply();
 			$scope.digest();
 		}
 
-		console.log("rules updated " + JSON.stringify($scope.availableRules));
 	});
 	
 	$scope.init();
@@ -223,7 +344,6 @@ fraudControllers.controller('RuleManagerController', function($window, $route,
 	};
 	
 	$scope.saveChanges = function() {
-		console.log("saving changes " + JSON.stringify($scope.rules));
 		
 		$scope.loadingRules = true;
 		var rulesPromise = RulesServices.updateRuleConfiguration(angular.toJson($scope.rules));

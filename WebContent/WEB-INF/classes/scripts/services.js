@@ -99,6 +99,47 @@ fraudServices.factory('RulesServices', function($http, $q){
 });
 
 
+fraudServices.factory('ExecutionServices', function($http, $q){
+	var factory = {};
+	
+	factory.getExecutions = function() {
+		var getUrl = "http://localhost:8080/cvfraud-v1/rest/executions";
+		var deferred = $q.defer();
+		
+		var promise = $http.get(getUrl, configForGet).success(function(data) {
+			deferred.resolve(data);
+		}).error(function(data, status, headers, config) {
+			console.log("error " + status);
+			console.log("error config " + JSON.stringify(config));
+		});
+
+		return deferred.promise;
+	};
+	
+	return factory;
+});
+
+fraudServices.factory('AlertServices', function($http, $q){
+	var factory = {};
+	
+	factory.getAlerts = function() {
+		var getUrl = "http://localhost:8080/cvfraud-v1/rest/alerts";
+		var deferred = $q.defer();
+		
+		var promise = $http.get(getUrl, configForGet).success(function(data) {
+			deferred.resolve(data);
+		}).error(function(data, status, headers, config) {
+			console.log("error " + status);
+			console.log("error config " + JSON.stringify(config));
+		});
+
+		return deferred.promise;
+	};
+	
+	return factory;
+});
+
+
 fraudServices.factory('PackageServices', function($http, $q){
 	var factory = {};
 	
@@ -124,7 +165,6 @@ fraudServices.factory('PackageServices', function($http, $q){
 		var deferred = $q.defer();
 		
 		var promise = $http.get(getUrl, configForGet).success(function(data) {
-			console.log(">>>>> package rules " + data);
 			
 			deferred.resolve(data);
 		}).error(function(data, status, headers, config) {
@@ -142,7 +182,6 @@ fraudServices.factory('PackageServices', function($http, $q){
 		
 		var promise = $http.post(postUrl, newPackage, configForPost).success(function(data) {
 			
-			// console.log("success created " + JSON.stringify(data));
 			deferred.resolve(data);
 			
 		}).error(function(data, status, headers, config) {

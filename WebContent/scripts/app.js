@@ -9,11 +9,23 @@ var fraudApp = angular.module('fraudApp', [
 		'ui.bootstrap'
 		]);
 
+google.load('visualization', '1', {
+   packages: ['corechart']
+});
+ 
+google.setOnLoadCallback(function() {
+   angular.bootstrap(document.body, ['fraudApp']);
+});
+
 fraudApp.config(function ($routeProvider, ngDialogProvider) {
 	
 	$routeProvider.when('/dashboard', {
 		templateUrl:'partials/dashboard.html', 
 		controller:'MainController'
+	}).
+	when('/claims-score-board', {
+		templateUrl:'partials/claims-score-board.html', 
+		controller:'ClaimScoreBoardController'
 	}).
 	when('/rule-manager', {
 		templateUrl:'partials/rule-manager.html', 

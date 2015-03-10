@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="fraudApp">
+<html lang="en"  >
+<!-- ng-app="fraudApp" -->
 <head>
 
     <meta charset="utf-8">
@@ -55,6 +56,9 @@
                 <ul class="nav navbar-nav side-nav">
                     <li class="active">
                         <a href="#/dashboard" ng-click="setRoute('partials/dashboard')"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="#/claims-score-board" ng-click="setRoute('partials/claims-score-board')"><i class="fa fa-fw fa-wrench"></i> Claims Score Board</a>
                     </li>
                     <li>
                         <a href="#/package-manager" ng-click="setRoute('partials/package-manager')"><i class="fa fa-fw fa-wrench"></i> Package Manager</a>
@@ -125,11 +129,12 @@
     <script type="text/javascript" src="vendor/ui-bootstrap.min.js"></script>
     <script type="text/javascript" src="vendor/d3.min.js"></script>
     
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript" src="scripts/app.js"></script>
     <script type="text/javascript" src="scripts/services.js"></script>
     <script type="text/javascript" src="scripts/controllers.js"></script>
     <script type="text/javascript" src="scripts/DashBoard.js"></script>
-    <script type="text/javascript" src="scripts/calendar.js"></script>
+    <script type="text/javascript" src="scripts/CalculatedClaimBarChart.js"></script>
 </body>
 
 </html>
