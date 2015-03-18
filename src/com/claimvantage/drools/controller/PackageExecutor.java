@@ -106,6 +106,7 @@ public class PackageExecutor {
 		alertsRepo.addAlerts(new Timestamp(new Date().getTime()).toLocalDateTime().toString(), alerts);
 		executionsRepo.addExecution(new Timestamp(new Date().getTime()).toLocalDateTime().toString(), execution);
 		
+		selectedPackage.addNewAlerts(alerts);
 		selectedPacakge.executions.add(execution);
 		selectedPacakge.setLastExecutionDate(new Timestamp(new Date().getTime()).toLocalDateTime().toString());
 		

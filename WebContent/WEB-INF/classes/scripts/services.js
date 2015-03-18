@@ -28,6 +28,25 @@ fraudServices.factory('SobObjectsService', function($http, $q){
 	return factory;
 });
 
+fraudServices.factory('SalesForceOAuth', function($http, $q){
+	var factory = {};
+	var clientId = "1747942097792124078",
+		consumerKey = "3MVG9A_f29uWoVQsIyZBqPVXBbfWnLxr5_Z6f1.c779HpQk9KepRD.hSw8JSkcmD.vUsN1v1MXZOgCBf8mdCK",
+		redirectUri = "https://localhost:8080",
+		username = "leemcdonald@83demo.com",
+		password = "0un7tijf1rLmEWCqLRQQtueEgjVd6DNRL7";
+	
+	var objectsURL = "https://fraud-developer-edition.eu3.force.com/services/apexrest/v1/update";
+
+	factory.getSobObjectsDescription = function(){
+		return Objects;
+	};
+	
+	
+
+	return factory;
+});
+
 fraudServices.factory('ConditionService', function($http, $q){
 	var factory = {};
 	

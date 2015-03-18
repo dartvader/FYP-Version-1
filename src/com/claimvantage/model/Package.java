@@ -48,6 +48,7 @@ public class Package {
 	private ArrayList<String> ruleNames;
 	public HashSet<Sobject> requiredObjects;
 	public List<Execution> executions;
+	public List<Alert> newAlerts;
 	private String creationDateTime;
 	private String lastExecutionDate;
 	private int numberOfRules;
@@ -76,6 +77,7 @@ public class Package {
 		this.requiredObjects = requiredObjects;
 		this.type = type;
 		this.numberOfRules = ruleNames.size();
+		this.newAlerts = new ArrayList<Alert>();
 	}
 
 	public Package(ArrayList<String> ruleNames, String type) {
@@ -231,4 +233,20 @@ public class Package {
 	public void setPackageName(String packageName) {
 		this.packageName = packageName;
 	}
+
+	public List<Alert> getNewAlerts() {
+		return newAlerts;
+	}
+
+	public void setNewAlerts(List<Alert> newAlerts) {
+		this.newAlerts = newAlerts;
+	}
+
+	public void addNewAlerts(List<Alert> alerts) {
+		if (this.newAlerts.size() >=0 ) {
+			this.newAlerts.clear();
+			this.newAlerts.addAll(alerts);
+		}
+	}
+	
 }

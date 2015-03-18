@@ -12,8 +12,6 @@ fraudControllers.controller('MainController', function($scope, $rootScope, $loca
 		corePacakgePromise.then(function(corePackage) {
 			$scope.corePackage = corePackage;
 		});
-		
-		
 	};
 
 	$scope.$watch("corePackage", function() {
@@ -37,18 +35,20 @@ fraudControllers.controller('ClaimScoreBoardController', function($scope, $rootS
 	$scope.init = function() {
 		console.log(" -----------   Loading Claims Score Board Controller --------------- ");
 		$scope.selectedClaim = [];
-		
+		$scope.executions; 
 		$scope.loadingExecutions = true;
 		var executionsPromise = ExecutionServices.getExecutions();
 		executionsPromise.then(function(executions) {
 			$scope.executions = executions;
 		});
 	};
+	
 	// Building the Calculated Score table
 	$scope.calculateClaimsScores = function(execution) {
 		var alerts = $scope.executions[execution].alerts;
 		$scope.calculatingScores = true;
 		var tempScoreMap = {};
+		
 		for (var i = 0; alerts.length > i; i++) {
 			
 			var claimId = alerts[i].claimId,
@@ -103,30 +103,60 @@ fraudControllers.controller('ClaimScoreBoardController', function($scope, $rootS
 	};
 	
 	// Selected Claim Break down.
+	$scope.drawPieChart = function(id, rulesData) {
+		
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Rule Name');
+        data.addColumn('number', 'Score');
+        data.addRows(rulesData);
+        
+        var options = {
+            title: 'Score Break Down',
+        	colors: ['#64400A', '#96600F', '#C88014', '#faa019', '#FBB347', '#FCD08C'],
+        	is3D: true,
+            chartArea: {'width': '100%', 'height': '80%'},
+        };
+        
+        var chart = new google.visualization.PieChart(document.getElementById(id));
+        
+
+        google.visualization.events.addListener(chart, 'select');
+        
+        chart.draw(data, options);
+	}
+	
+	// Selected Claim Break down.
 	$scope.drawBarChart = function(id, rulesData) {
 		
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Rule Name');
         data.addColumn('number', 'Score');
         data.addRows(rulesData);
+        
         var options = {
-          title: 'Score Break Down'
+            title: 'Score Break Down',
+        	colors: ['#CC2900', '#FF3300', '#FF4719', '#FF5C33', '#FF704D', '#FF9980'],
+        	is3D: true,
+            chartArea: {'width': '100%', 'height': '80%'},
         };
-
+        
         var chart = new google.visualization.PieChart(document.getElementById(id));
         
-        function selectHandler() {
-          var selectedItem = chart.getSelection()[0];
-          if (selectedItem) {
-            var value = data.getValue(selectedItem.row, selectedItem.column);
-            alert('The user selected ' + value);
-          }
-        }
 
-        google.visualization.events.addListener(chart, 'select', selectHandler);
+        google.visualization.events.addListener(chart, 'select');
         
         chart.draw(data, options);
 	}
+	
+	$scope.objectExist = function(object) {
+		if (object === undefined || object === null
+				|| object == "") {
+			return false;
+		} else {
+			return true;
+		}
+	};
+
 	
 	$scope.$watch("executions", function() {
 		$scope.loadingExecutions = false;
@@ -136,6 +166,7 @@ fraudControllers.controller('ClaimScoreBoardController', function($scope, $rootS
 
 		if ($scope.selectedClaim.length != 0) {
 			$scope.drawBarChart("barChart", $scope.selectedClaim[0].rules);
+			console.log(" $scope.selectedClaim[0].rules " + JSON.stringify($scope.selectedClaim[0].rules));
 		}
 	});
 	
@@ -263,6 +294,7 @@ fraudControllers.controller('PackageBuilderController', function($scope, $rootSc
 	$scope.newPackage;
 	$scope.selectedNewRules;
 	$scope.packageName;
+	$scope.relatedRules;
 	
 	$scope.init = function() {
 		console.log(" -----------   Loading Package builder --------------- ");
@@ -275,7 +307,6 @@ fraudControllers.controller('PackageBuilderController', function($scope, $rootSc
 
 	$scope.getRules = function() {
 		var rulesPromise = RulesServices.getRules();
-		
 		$scope.loading = true;
 		
 		rulesPromise.then(function(rules) {
@@ -294,13 +325,34 @@ fraudControllers.controller('PackageBuilderController', function($scope, $rootSc
 		};
 		
 		PackageServices.savePackage(angular.toJson($scope.newPackage));
-		
+		alert("New Package saved");
 		return false;
 	};
 	
 	$scope.cancelNewPackage = function() {
 		return false;
 	};
+	
+	$scope.$watchCollection("selectedNewRules", function(newValue, oldValue) {
+		var newValueIndex = newValue.length - 1;
+		$scope.relatedRules = [];
+		
+		if ($scope.selectedNewRules.length != 0 && newValue[newValueIndex].relatedRules != null) {
+			var tempRelatedRules = newValue[newValueIndex].relatedRules;
+			var tempAvailableRules = $scope.availableRules;
+
+			$scope.SuggestedRulesFor = newValue[newValueIndex].name;
+			
+			tempAvailableRules.forEach(function(rule) {
+				tempRelatedRules.forEach(function(relatedRule) {
+					if (relatedRule.ruleName == rule.name) {
+						$scope.relatedRules.push(rule);
+					}
+				});
+			});
+			
+		}
+	});
 	
 	$scope.$watch('availableRules', function() {
 		console.log("rules updated " + $scope.loading);
@@ -342,6 +394,12 @@ fraudControllers.controller('RuleManagerController', function($window, $route,
 			//$scope.oldRules = rules;
 		});
 	};
+	
+	$scope.isClaimant = function(category) {
+		
+		console.log("Rule Category " + category);
+		
+	}
 	
 	$scope.saveChanges = function() {
 		

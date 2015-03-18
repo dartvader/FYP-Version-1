@@ -1,46 +1,56 @@
 <div class="col-xs-12">
-	<form name="rules" role="form">
-		<div class="form-group">
-			<div class="row">
-				<br>
-				<table
-					class="table table-striped table-bordered table-hover dataTable no-footer"
-					tr-ng-grid="" items="packages" selection-mode="SingleRow" selected-items="selectedPackages" page-items="10">
-					<thead>
-						<tr>
-							<th field-name="type" display-name="Package Type"
-								enable-filtering="false"></th>
-							<th field-name="creationDateTime" display-name="Date Created"
-								enable-filtering="false"></th>
-							<th field-name="totalNumberOfAlerts" display-name="Total Alerts"
-								enable-filtering="false" display-align="center"></th>
-							<th field-name="totalNumberOfRulesFired"
-								display-name="Fired Rules" enable-filtering="false"
-								display-align="center"></th>
-							<th field-name="totalNumberOfExecutions"
-								display-name="Package Executions" enable-filtering="false"
-								display-align="center"></th>
-							<th field-name="lastExecution" display-name="Last Execution"
-								enable-filtering="false"></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td field-name="creationDateTime">
-								<div>{{gridDisplayItem.creationDateTime | date:'EEEE, MMMM
-									d, y'}}</div>
-							</td>
-						</tr>
-						<tr>
-							<td field-name="creationDateTime">
-								<div>{{ gridDisplayItem.lastExecution | date:'EEEE, MMMM
-									d, y'}}</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<br>
+	<div class="panel panel-default">
+		<div class="panel-heading-custom-green">
+			<h1 class="panel-title">
+				<span class="default-badge">{{packages.length}}</span>
+				Packages
+			</h1>
 		</div>
-	</form>
+		<div class="panel-body">
+			<table
+				class="table table-striped table-bordered table-hover dataTable no-footer"
+				tr-ng-grid="" items="packages" selection-mode="SingleRow" selected-items="selectedPackages" page-items="10">
+				<thead>
+					<tr>
+						<th display-align="center" cell-width="2em">
+			                <div class="tr-ng-title">Selected</div>
+			            </th>
+						<th field-name="type" display-name="Package Type"
+							enable-filtering="false"></th>
+						<th field-name="creationDateTime" display-name="Date Created"
+							enable-filtering="false"></th>
+						<th field-name="totalNumberOfAlerts" display-name="Total Rule Triggers"
+							enable-filtering="false" display-align="center"></th>
+						<th field-name="totalNumberOfRulesFired"
+							display-name="Fired Rules" enable-filtering="false"
+							display-align="center"></th>
+						<th field-name="totalNumberOfExecutions"
+							display-name="Package Executions" enable-filtering="false"
+							display-align="center"></th>
+						<th field-name="lastExecution" display-name="Last Execution"
+							enable-filtering="false"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+				        <td>
+				            <input type="checkbox" ng-model="isSelected" ng-checked="selectedPackages.indexOf(gridItem)>=0" ng-change="isSelected?selectedPackages.push(gridItem):selectedPackages.splice(selectedPackages.indexOf(gridItem),1)">
+				        </td>
+				    </tr>
+					<tr>
+						<td field-name="creationDateTime">
+							<div>{{gridDisplayItem.creationDateTime | date:'EEEE, MMMM
+								d, y'}}</div>
+						</td>
+					</tr>
+					<tr>
+						<td field-name="creationDateTime">
+							<div>{{ gridDisplayItem.lastExecution | date:'EEEE, MMMM
+								d, y'}}</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 </div>

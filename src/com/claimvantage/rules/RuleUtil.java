@@ -2,9 +2,9 @@ package com.claimvantage.rules;
 
 import java.util.Date;
 import java.util.Calendar;
+
 import org.joda.time.DateTime;
 import org.joda.time.Days;
-
 import org.joda.time.Days;
 
 public class RuleUtil {
@@ -15,11 +15,13 @@ public class RuleUtil {
 
 	public static Boolean isClaimOpen(String claimStatus) {
 
+		System.out.println(" Claim Status " + claimStatus);
 		if (claimStatus == null)
 			return true;
 		for (OpenStatus status : OpenStatus.values()) {
 			if (status.toString() == claimStatus
 					|| status.toString().contains(claimStatus)) {
+				System.out.println(" Claim Status " + claimStatus);
 				return true;
 			}
 		}
@@ -28,11 +30,14 @@ public class RuleUtil {
 
 	public static Boolean isClaimOpen(String claimStatus, Boolean f) {
 
+		System.out.println(" Claim Status " + claimStatus + " fraudster " + f);
 		if (claimStatus == null)
 			return true;
 		for (OpenStatus status : OpenStatus.values()) {
 			if (status.toString() == claimStatus
 					|| status.toString().contains(claimStatus)) {
+				// System.out.println(" Claim Status " + claimStatus +
+				// " fraudster " + f);
 				return true;
 			}
 		}
@@ -44,6 +49,7 @@ public class RuleUtil {
 	}
 
 	public static Boolean isJobSuspect(String jobTitle) {
+		System.out.println("jobTitle " + jobTitle);
 		if (jobTitle == null)
 			return true;
 		for (SuspicouisJobType title : SuspicouisJobType.values()) {
@@ -77,7 +83,7 @@ public class RuleUtil {
 		},
 		HEAD_ACHE {
 			public String toString() {
-				return "Head Ache";
+				return "Headache";
 			}
 		}
 	}
@@ -91,6 +97,10 @@ public class RuleUtil {
 
 			if (injuires.toString() == injuryDescription
 					|| injuryDescription.contains(injuires.toString())) {
+				System.out.println(" injuryDescription "
+						+ injuryDescription.contains(injuires.toString()));
+				System.out.println(" injuryDescription " + injuryDescription
+						+ " injuires " + injuires.toString());
 				return true;
 			}
 
@@ -103,14 +113,13 @@ public class RuleUtil {
 	}
 
 	public static Boolean isLargeNumberOfAttachmentsAndNotes(int notes,
-			int attachments, int documents) {
-		int largeNumber = 3;
+			int attachments, int documents, int largeNumber) {
+		
+		System.out.println("numbers notes " + notes);
+		System.out.println("numbers attachments " + attachments);
+		System.out.println("numbers documents " + documents);
+		System.out.println(" total " + documents);
 		return (largeNumber < notes + attachments + documents) ? true : false;
-	}
-	
-	public static Boolean isLargeNumberOfAttachmentsAndNotes(int notes,
-			int attachments, int documents, int tooMany) {
-		return (tooMany < notes + attachments + documents) ? true : false;
 	}
 
 	public static Boolean dayAfterStartDate(Calendar calendar1, Calendar calendar2, int daysAllowedAfter) {
@@ -125,5 +134,16 @@ public class RuleUtil {
 		
 		System.out.println("Days Between " + days);
 		return daysBetween <= daysAllowedAfter ? true: false;
+	}
+	
+	public static Boolean firstNotificationAfterRetirementOr(Calendar claimReceived, Calendar claimantFired) {
+		
+		if (claimReceived == null || claimantFired == null) {
+			return false;
+		}
+		System.out.println(" claimReceived " + claimReceived.toString());
+		System.out.println(" claimantFired " + claimantFired.toString());
+		System.out.println(" claimReceived.after(claimantFired) " + claimReceived.after(claimantFired));
+		return claimReceived.after(claimantFired) ? true: false;
 	}
 }

@@ -17,72 +17,573 @@
 	</div>
 </div>
 
- <accordion close-others="oneAtATime">
-    <accordion-group heading="{{rule.name}}" ng-repeat="rule in rules">
-        <div class="row">
-			<div class="col-xs-6">
-				<div class="row">
-					<label class="medium" for="RuleName">Fraud Score</label>
-				</div>
-				<div class="row">
-					<input type="text" class="form-control" id="RuleName"
-						placeholder="Enter Name" ng-model="rule.setting.score" ng-required />
-				</div>
-				<div class="row">
-					<label class="medium" for="RuleName">Next Step Recommendation</label>
-				</div>
-				<div class="row">
-					<textarea type="text" class="form-control"
-					 	ng-model="rule.setting.recommendation"
-						ng-required />
-				</div>
-				<div class="row" ng-if=" !isEmpty(rule.setting.numberOfClaims) ">
-					<div class="row" >
-						<label class="small" for="Configuration">{{rule.setting.configHint}}</label>
-					</div>
-					<div class="row">
-						<input type="text" class="form-control" id="Configuration"
-							ng-model="rule.setting.numberOfClaims" ng-required />
-					</div>
-				</div>
-				<div class="row" ng-if=" !isEmpty(rule.setting.numberOfDays) ">
-					<div class="row" >
-						<label class="small" for="Configuration">{{rule.setting.configHint}}</label>
-					</div>
-					<div class="row">
-						<input type="text" class="form-control" id="Configuration"
-							ng-model="rule.setting.numberOfDays" ng-required />
-					</div>
-				</div>
-				<div class="row" ng-if=" !isEmpty( rule.setting.numberOfCorrespondence ) ">
-					<div class="row">
-						<label class="small" for="Configuration">{{rule.setting.configHint}}</label>
-					</div>
-					<div class="row">
-						<input type="text" class="form-control" id="Configuration"
-							 ng-model="rule.setting.numberOfCorrespondence" ng-required />
-					</div>
-				</div>
-			</div>
-			<div class="col-xs-6 pull-right">
-				chart for rule, Maybe. JSON for now
-				{{rule.setting}}
-			</div>
+<!-- Claimant Rules -->
+<div class="col-lg-12">
+	<div class="panel panel-default">
+				
+		<div class="panel-heading-custom-green" data-toggle="collapse" data-target="#collapseClaimant" aria-expanded="false" aria-controls="collapseExample">
+			<h1 class="panel-title">
+				Claimant Rules
+			</h1>
 		</div>
-    </accordion-group>
-</accordion>
-
-<div class="row">
-	<div class="col-xs-6" id="btn-cancel-rule">
-		<div class="btn-group-justified" role="group"
-			aria-label="Justified button group">
-			<a class="btn btn-danger" role="button" ng-click="undoChanges()">Cancel Rule Updates</a>
+		
+		<div class="panel-body">
+			<div id="collapseClaimant" class="panel-collapse collapse">
+				<br>
+				<div class="col-md-12">
+					<div class="panel panel-default" ng-repeat="rule in rules" ng-if="rule.setting.category == 'Claimant'">
+						<div class="panel-heading-custom-grey" data-toggle="collapse" data-target="#collapse{{ $index + 1 }}" aria-expanded="false" aria-controls="collapseExample">
+							<h3 class="panel-title">
+								{{rule.name}}
+							</h3>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<div id="collapse{{ $index + 1 }}" class="panel-collapse collapse">
+									<div class="col-md-12">
+										<div class="col-xs-4">
+											<div class="row">
+												<label class="medium" for="RuleName">Fraud Score</label>
+											</div>
+											<div class="row">
+												<input type="number" class="form-control" id="RuleName"
+													placeholder="Enter Name" ng-model="rule.setting.score" ng-required />
+											</div>
+											<div class="row">
+												<label class="medium" for="RuleName">Next Step Recommendation</label>
+											</div>
+											<div class="row">
+												<textarea type="text" class="form-control"
+												 	ng-model="rule.setting.recommendation"
+													ng-required />
+											</div>
+										</div>
+										
+										<div class="col-xs-7 pull-right">
+											<div class="row" ng-if=" !isEmpty(rule.setting.numberOfClaims) ">
+												<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+												<input type="text" class="form-control" id="Configuration"
+													ng-model="rule.setting.numberOfClaims" ng-required />
+											</div>
+											<div class="row" ng-if=" !isEmpty(rule.setting.numberOfDays) ">
+												<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+												<input type="text" class="form-control" id="Configuration"
+													ng-model="rule.setting.numberOfDays" ng-required />
+											</div>
+											<div class="row" ng-if=" !isEmpty( rule.setting.numberOfCorrespondence ) ">
+												<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+												<input type="text" class="form-control" id="Configuration"
+													 ng-model="rule.setting.numberOfCorrespondence" ng-required />
+											</div>
+										</div>
+									</div>
+									<!--End of Executions Table -->
+									<!-- End of Rule info -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
-	<div class="col-xs-6" id="btn-add-rule">
-		<div class="btn-group-justified" role="group"
-			aria-label="Justified button group">
-			<a class="btn btn-primary" role="button" ng-click="saveChanges()">Save Rule Updates</a>
+</div>
+
+<!-- Physician Executions -->
+<div class="col-lg-12">
+	<div class="panel panel-default">
+				
+		<div class="panel-heading-custom-green" data-toggle="collapse" data-target="#collapsePhysician" aria-expanded="false" aria-controls="collapseExample">
+			<h1 class="panel-title">
+				Physician Rules
+			</h1>
 		</div>
+		
+		<div class="panel-body">
+			<div id="collapsePhysician" class="panel-collapse collapse">
+				<br>	
+				<div class="col-md-12">
+					<div class="panel panel-default" ng-repeat="rule in rules" ng-if="rule.setting.category == 'Physician'">
+						<div class="panel-heading-custom-grey" data-toggle="collapse" data-target="#collapse{{ $index + 1 }}" aria-expanded="false" aria-controls="collapseExample">
+							<h3 class="panel-title">
+								{{rule.name}}
+							</h3>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<div id="collapse{{ $index + 1 }}" class="panel-collapse collapse">
+									<div class="col-md-12">
+										<div class="col-xs-4">
+											<div class="row">
+												<label class="medium" for="RuleName">Fraud Score</label>
+											</div>
+											<div class="row">
+												<input type="number" class="form-control" id="RuleName"
+													placeholder="Enter Name" ng-model="rule.setting.score" ng-required />
+											</div>
+											<div class="row">
+												<label class="medium" for="RuleName">Next Step Recommendation</label>
+											</div>
+											<div class="row">
+												<textarea type="text" class="form-control"
+												 	ng-model="rule.setting.recommendation"
+													ng-required />
+											</div>
+										</div>
+										
+										<div class="col-xs-7 pull-right">
+											<div class="row" ng-if=" !isEmpty(rule.setting.numberOfClaims) ">
+												<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+												<input type="text" class="form-control" id="Configuration"
+													ng-model="rule.setting.numberOfClaims" ng-required />
+											</div>
+											<div class="row" ng-if=" !isEmpty(rule.setting.numberOfDays) ">
+												<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+												<input type="text" class="form-control" id="Configuration"
+													ng-model="rule.setting.numberOfDays" ng-required />
+											</div>
+											<div class="row" ng-if=" !isEmpty( rule.setting.numberOfCorrespondence ) ">
+												<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+												<input type="text" class="form-control" id="Configuration"
+													 ng-model="rule.setting.numberOfCorrespondence" ng-required />
+											</div>
+										</div>
+									</div>
+									<!--End of Executions Table -->
+									<!-- End of Rule info -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Diagnosis Executions -->
+<div class="col-lg-12">
+	<div class="panel panel-default">
+				
+		<div class="panel-heading-custom-green" data-toggle="collapse" data-target="#collapseDiagnosis" aria-expanded="false" aria-controls="collapseExample">
+			<h1 class="panel-title">
+				Diagnosis Rules
+			</h1>
+		</div>
+		
+		<div class="panel-body">
+			<div id="collapseDiagnosis" class="panel-collapse collapse">
+				<br>
+				<div class="col-md-12">
+					<div class="panel panel-default" ng-repeat="rule in rules" ng-if="rule.setting.category == 'Diagnosis'">
+						<div class="panel-heading-custom-grey" data-toggle="collapse" data-target="#collapse{{ $index + 1 }}" aria-expanded="false" aria-controls="collapseExample">
+							<h3 class="panel-title">
+								{{rule.name}}
+							</h3>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<div id="collapse{{ $index + 1 }}" class="panel-collapse collapse">
+									<div class="col-md-12">
+										<div class="col-xs-4">
+											<div class="row">
+												<label class="medium" for="RuleName">Fraud Score</label>
+											</div>
+											<div class="row">
+												<input type="number" class="form-control" id="RuleName"
+													placeholder="Enter Name" ng-model="rule.setting.score" ng-required />
+											</div>
+											<div class="row">
+												<label class="medium" for="RuleName">Next Step Recommendation</label>
+											</div>
+											<div class="row">
+												<textarea type="text" class="form-control"
+												 	ng-model="rule.setting.recommendation"
+													ng-required />
+											</div>
+										</div>
+										
+										<div class="col-xs-7 pull-right">
+											<div class="row" ng-if=" !isEmpty(rule.setting.numberOfClaims) ">
+												<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+												<input type="text" class="form-control" id="Configuration"
+													ng-model="rule.setting.numberOfClaims" ng-required />
+											</div>
+											<div class="row" ng-if=" !isEmpty(rule.setting.numberOfDays) ">
+												<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+												<input type="text" class="form-control" id="Configuration"
+													ng-model="rule.setting.numberOfDays" ng-required />
+											</div>
+											<div class="row" ng-if=" !isEmpty( rule.setting.numberOfCorrespondence ) ">
+												<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+												<input type="text" class="form-control" id="Configuration"
+													 ng-model="rule.setting.numberOfCorrespondence" ng-required />
+											</div>
+										</div>
+									</div>
+									<!--End of Executions Table -->
+									<!-- End of Rule info -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Policy Executions -->
+<div class="col-lg-12">
+	<div class="panel panel-default">
+				
+		<div class="panel-heading-custom-green" data-toggle="collapse" data-target="#collapsePolicy" aria-expanded="false" aria-controls="collapseExample">
+			<h1 class="panel-title">
+				Policy Rules
+			</h1>
+		</div>
+		
+		<div class="panel-body">
+			<div id="collapsePolicy" class="panel-collapse collapse">
+				<br>
+				<div class="col-md-12">
+					<div class="panel panel-default" ng-repeat="rule in rules" ng-if="rule.setting.category == 'Policy'">
+						<div class="panel-heading-custom-grey" data-toggle="collapse" data-target="#collapse{{ $index + 1 }}" aria-expanded="false" aria-controls="collapseExample">
+							<h3 class="panel-title">
+								{{rule.name}}
+							</h3>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<div id="collapse{{ $index + 1 }}" class="panel-collapse collapse">
+									<div class="col-md-12">
+										<div class="col-xs-4">
+											<div class="row">
+												<label class="medium" for="RuleName">Fraud Score</label>
+											</div>
+											<div class="row">
+												<input type="number" class="form-control" id="RuleName"
+													placeholder="Enter Name" ng-model="rule.setting.score" ng-required />
+											</div>
+											<div class="row">
+												<label class="medium" for="RuleName">Next Step Recommendation</label>
+											</div>
+											<div class="row">
+												<textarea type="text" class="form-control"
+												 	ng-model="rule.setting.recommendation"
+													ng-required />
+											</div>
+										</div>
+										
+										<div class="col-xs-7 pull-right">
+											<div class="row" ng-if=" !isEmpty(rule.setting.numberOfClaims) ">
+												<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+												<input type="text" class="form-control" id="Configuration"
+													ng-model="rule.setting.numberOfClaims" ng-required />
+											</div>
+											<div class="row" ng-if=" !isEmpty(rule.setting.numberOfDays) ">
+												<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+												<input type="text" class="form-control" id="Configuration"
+													ng-model="rule.setting.numberOfDays" ng-required />
+											</div>
+											<div class="row" ng-if=" !isEmpty( rule.setting.numberOfCorrespondence ) ">
+												<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+												<input type="text" class="form-control" id="Configuration"
+													 ng-model="rule.setting.numberOfCorrespondence" ng-required />
+											</div>
+										</div>
+									</div>
+									<!--End of Executions Table -->
+									<!-- End of Rule info -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Documentation Executions -->
+<div class="col-lg-12">
+	<div class="panel panel-default">
+		<div class="panel-heading-custom-green" data-toggle="collapse" data-target="#collapseDocumentation" aria-expanded="false" aria-controls="collapseExample">
+			<h1 class="panel-title">
+				Documentation Rules
+			</h1>
+		</div>
+		<div class="panel-body">
+			<div id="collapseDocumentation" class="panel-collapse collapse">
+				<br>
+				<div class="col-md-12">
+					<div class="panel panel-default" ng-repeat="rule in rules" ng-if="rule.setting.category == 'Documentation'">
+						<div class="panel-heading-custom-grey" data-toggle="collapse" data-target="#collapse{{ $index + 1 }}" aria-expanded="false" aria-controls="collapseExample">
+							<h3 class="panel-title">
+								{{rule.name}}
+							</h3>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<div id="collapse{{ $index + 1 }}" class="panel-collapse collapse">
+									<div class="col-md-12">
+										<div class="col-xs-4">
+											<div class="row">
+												<label class="medium" for="RuleName">Fraud Score</label>
+											</div>
+											<div class="row">
+												<input type="number" class="form-control" id="RuleName"
+													placeholder="Enter Name" ng-model="rule.setting.score" ng-required />
+											</div>
+											<div class="row">
+												<label class="medium" for="RuleName">Next Step Recommendation</label>
+											</div>
+											<div class="row">
+												<textarea type="text" class="form-control"
+												 	ng-model="rule.setting.recommendation"
+													ng-required />
+											</div>
+										</div>
+										
+										<div class="col-xs-7 pull-right">
+											<div class="row" ng-if=" !isEmpty(rule.setting.numberOfClaims) ">
+												<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+												<input type="text" class="form-control" id="Configuration"
+													ng-model="rule.setting.numberOfClaims" ng-required />
+											</div>
+											<div class="row" ng-if=" !isEmpty(rule.setting.numberOfDays) ">
+												<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+												<input type="text" class="form-control" id="Configuration"
+													ng-model="rule.setting.numberOfDays" ng-required />
+											</div>
+											<div class="row" ng-if=" !isEmpty( rule.setting.numberOfCorrespondence ) ">
+												<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+												<input type="text" class="form-control" id="Configuration"
+													 ng-model="rule.setting.numberOfCorrespondence" ng-required />
+											</div>
+										</div>
+									</div>
+									<!--End of Executions Table -->
+									<!-- End of Rule info -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Legal Executions -->
+<div class="col-lg-12">
+	<div class="panel panel-default">
+		<div class="panel-heading-custom-green" data-toggle="collapse" data-target="#collapseLegal" aria-expanded="false" aria-controls="collapseExample">
+			<h1 class="panel-title">
+				Legal Rules
+			</h1> 
+		</div>
+		<div class="panel-body">
+			<div id="collapseLegal" class="panel-collapse collapse">
+				<br>
+				<div class="col-md-12">
+					<div class="panel panel-default" ng-repeat="rule in rules" ng-if="rule.setting.category == 'Legal'">
+						<div class="panel-heading-custom-grey" data-toggle="collapse" data-target="#collapse{{ $index + 1 }}" aria-expanded="false" aria-controls="collapseExample">
+							<h3 class="panel-title">
+								{{rule.name}}
+							</h3>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<div id="collapse{{ $index + 1 }}" class="panel-collapse collapse">
+									<div class="col-md-12">
+										<div class="col-xs-4">
+											<div class="row">
+												<label class="medium" for="RuleName">Fraud Score</label>
+											</div>
+											<div class="row">
+												<input type="number" class="form-control" id="RuleName"
+													placeholder="Enter Name" ng-model="rule.setting.score" ng-required />
+											</div>
+											<div class="row">
+												<label class="medium" for="RuleName">Next Step Recommendation</label>
+											</div>
+											<div class="row">
+												<textarea type="text" class="form-control"
+												 	ng-model="rule.setting.recommendation"
+													ng-required />
+											</div>
+										</div>
+										
+										<div class="col-xs-7 pull-right">
+											<div class="row" ng-if=" !isEmpty(rule.setting.numberOfClaims) ">
+												<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+												<input type="text" class="form-control" id="Configuration"
+													ng-model="rule.setting.numberOfClaims" ng-required />
+											</div>
+											<div class="row" ng-if=" !isEmpty(rule.setting.numberOfDays) ">
+												<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+												<input type="text" class="form-control" id="Configuration"
+													ng-model="rule.setting.numberOfDays" ng-required />
+											</div>
+											<div class="row" ng-if=" !isEmpty( rule.setting.numberOfCorrespondence ) ">
+												<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+												<input type="text" class="form-control" id="Configuration"
+													 ng-model="rule.setting.numberOfCorrespondence" ng-required />
+											</div>
+										</div>
+									</div>
+									<!--End of Executions Table -->
+									<!-- End of Rule info -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Timing Executions -->
+<div class="col-lg-12">
+	<div class="panel panel-default">
+		<div class="panel-heading-custom-green" data-toggle="collapse" data-target="#collapseTiming" aria-expanded="false" aria-controls="collapseExample">
+			<h1 class="panel-title">
+				Timing Rules
+			</h1> 
+		</div>
+		<div class="panel-body">
+			<div id="collapseTiming" class="panel-collapse collapse">
+				<br>
+				<div class="col-md-12">
+					<div class="panel panel-default" ng-repeat="rule in rules" ng-if="rule.setting.category == 'Timing'">
+						<div class="panel-heading-custom-grey" data-toggle="collapse" data-target="#collapse{{ $index + 1 }}" aria-expanded="false" aria-controls="collapseExample">
+							<h3 class="panel-title">
+								{{rule.name}}
+							</h3>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<div id="collapse{{ $index + 1 }}" class="panel-collapse collapse">
+									<div class="col-md-12">
+										<div class="col-xs-4">
+											<div class="row">
+												<label class="medium" for="RuleName">Fraud Score</label>
+											</div>
+											<div class="row">
+												<input type="number" class="form-control" id="RuleName"
+													placeholder="Enter Name" ng-model="rule.setting.score" ng-required />
+											</div>
+											<div class="row">
+												<label class="medium" for="RuleName">Next Step Recommendation</label>
+											</div>
+											<div class="row">
+												<textarea type="text" class="form-control"
+												 	ng-model="rule.setting.recommendation"
+													ng-required />
+											</div>
+										</div>
+										
+										<div class="col-xs-7 pull-right">
+											<div class="row" ng-if=" !isEmpty(rule.setting.numberOfClaims) ">
+												<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+												<input type="text" class="form-control" id="Configuration"
+													ng-model="rule.setting.numberOfClaims" ng-required />
+											</div>
+											<div class="row" ng-if=" !isEmpty(rule.setting.numberOfDays) ">
+												<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+												<input type="text" class="form-control" id="Configuration"
+													ng-model="rule.setting.numberOfDays" ng-required />
+											</div>
+											<div class="row" ng-if=" !isEmpty( rule.setting.numberOfCorrespondence ) ">
+												<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+												<input type="text" class="form-control" id="Configuration"
+													 ng-model="rule.setting.numberOfCorrespondence" ng-required />
+											</div>
+										</div>
+									</div>
+									<!--End of Executions Table -->
+									<!-- End of Rule info -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Organization Executions -->
+<div class="col-lg-12">
+	<div class="panel panel-default" ng-repeat="rule in rules" ng-if="rule.setting.category == 'Organization'">
+		<div class="panel-heading-custom-grey" data-toggle="collapse" data-target="#collapseOrganization" aria-expanded="false" aria-controls="collapseExample">
+			<h1 class="panel-title">
+				Organization Rules
+			</h1>
+		</div>
+		<div class="panel-body">
+			<div class="row">
+				<div id="collapseOrganization" class="panel-collapse collapse">
+					<br>
+					<div class="col-md-12">
+						<div class="col-xs-4">
+							<div class="row">
+								<label class="medium" for="RuleName">Fraud Score</label>
+							</div>
+							<div class="row">
+								<input type="number" class="form-control" id="RuleName"
+									placeholder="Enter Name" ng-model="rule.setting.score" ng-required />
+							</div>
+							<div class="row">
+								<label class="medium" for="RuleName">Next Step Recommendation</label>
+							</div>
+							<div class="row">
+								<textarea type="text" class="form-control"
+								 	ng-model="rule.setting.recommendation"
+									ng-required />
+							</div>
+						</div>
+						
+						<div class="col-xs-7 pull-right">
+							<div class="row" ng-if=" !isEmpty(rule.setting.numberOfClaims) ">
+								<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+								<input type="text" class="form-control" id="Configuration"
+									ng-model="rule.setting.numberOfClaims" ng-required />
+							</div>
+							<div class="row" ng-if=" !isEmpty(rule.setting.numberOfDays) ">
+								<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+								<input type="text" class="form-control" id="Configuration"
+									ng-model="rule.setting.numberOfDays" ng-required />
+							</div>
+							<div class="row" ng-if=" !isEmpty( rule.setting.numberOfCorrespondence ) ">
+								<label class="medium" for="Configuration">{{rule.setting.configHint}}</label>
+								<input type="text" class="form-control" id="Configuration"
+									 ng-model="rule.setting.numberOfCorrespondence" ng-required />
+							</div>
+						</div>
+					</div>
+					<!--End of Executions Table -->
+					<!-- End of Rule info -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="col-xs-6" id="btn-custom-orange">
+	<div class="btn-group-justified" role="group"
+		aria-label="Justified button group">
+		<a class="btn btn-custom-red" role="button" ng-click="undoChanges()">Cancel Rule Updates</a>
+	</div>
+</div>
+<div class="col-xs-6" id="btn-custom-orange">
+	<div class="btn-group-justified" role="group"
+		aria-label="Justified button group">
+		<a class="btn btn-custom-orange" role="button" ng-click="saveChanges()">Save Rule Updates</a>
 	</div>
 </div>

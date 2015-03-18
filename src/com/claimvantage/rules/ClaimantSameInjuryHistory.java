@@ -6,12 +6,19 @@ public class ClaimantSameInjuryHistory {
 	String closedClaimId;
 	String openClaimId;
 	String medicalCode;
+	Boolean subjective;
 
-	public ClaimantSameInjuryHistory(String contactId, String closedClaimId, String medicalCode) {
+	public ClaimantSameInjuryHistory(String contactId, String closedClaimId, String medicalCode, Boolean subjective) {
 		super();
 		this.contactId = contactId;
 		this.closedClaimId = closedClaimId;
 		this.medicalCode = medicalCode;
+		this.subjective = subjective;
+		System.out.println("subjective " + subjective);
+	}
+	
+	public ClaimantSameInjuryHistory(String contactId, String closedClaimId, String medicalCode) {
+		this(contactId, closedClaimId, medicalCode, false);
 	}
 	
 
@@ -46,4 +53,13 @@ public class ClaimantSameInjuryHistory {
 	public void setMedicalCode(String medicalCode) {
 		this.medicalCode = medicalCode;
 	}
+
+	public Boolean getSubjective() {
+		return subjective;
+	}
+
+	public void setSubjective(Boolean subjective) {
+		this.subjective = subjective;
+	}
+	
 }
