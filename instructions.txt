@@ -1,0 +1,16 @@
+Requirements:
+
+Tomcat 6 https://tomcat.apache.org/download-60.cgi
+JBoss Developer Studio http://www.jboss.org/products/devstudio/download/
+
+
+Run Tomcat 6 on localhost://8080
+
+* Add server Runtime Environments to JBoss developer and point it at Tomcat 6 in file system
+* Upzip project and import as project in JBoss developer.
+* Run Application On server.
+
+Github Repo:
+https://github.com/dartvader/FYP-Version-1.git
+
+
