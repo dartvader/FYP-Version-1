@@ -26,13 +26,14 @@
 								</div>
 							</div>
 						</div>
-						<a href="#">
-							<div class="panel-footer">
-								<span class="pull-left">Package Rules</span> <span
+						<div class="panel-footer" data-toggle="collapse" data-target="#collapsePackageRules" 
+								aria-expanded="false" aria-controls="collapseExample">
+							<a>
+								<span class="pull-left" >Package Rules</span> <span
 									class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 								<div class="clearfix"></div>
-							</div>
-						</a>
+							</a>
+						</div>
 					</div>
 				</div>
 		
@@ -50,7 +51,7 @@
 								</div>
 							</div>
 						</div>
-						<a href="#">
+            			<a href="#/claims-score-board" ng-click="setRoute('partials/claims-score-board')">
 							<div class="panel-footer">
 								<span class="pull-left">Claim Alerts</span> <span
 									class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -78,8 +79,9 @@
 								</div>
 							</div>
 						</div>
-						<a href="#">
-							<div class="panel-footer">
+						<a>
+							<div class="panel-footer" data-toggle="collapse" data-target="#collapseExecutions" 
+								aria-expanded="false" aria-controls="collapseExample">
 								<span class="pull-left">Package Executions</span> <span
 									class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 								<div class="clearfix"></div>

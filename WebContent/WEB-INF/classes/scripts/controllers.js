@@ -228,8 +228,7 @@ fraudControllers.controller('PackageManagerController',
 	};
 
 	$scope.objectExist = function(object) {
-		if (object === undefined || object === null
-				|| object == "") {
+		if (object === undefined || object === null || object == "") {
 			return false;
 		} else {
 			return true;
@@ -462,26 +461,28 @@ fraudControllers.controller('RuleBuilderController', function($scope, $rootScope
 		for (var i = returnedObjects.length - 1; i >= 0; i--) {
 			$scope.describedObjects[i] = returnedObjects[i];
 		};
+		$scope.addRule();
 	};
 
 	$scope.addRule = function() {
-		var ruleName = null, rule = {
+		var ruleName = null, 
+			rule = {
 			name : ruleName
-		}, object = {
-			sobApi : null,
-			sobVar : null,
-			sobLabel : null,
-			sobType : null,
-			sobFields : []
-		};
-
+			}, 
+			object = {
+				sobApi : null,
+				sobVar : null,
+				sobLabel : null,
+				sobType : null,
+				sobFields : []
+			};
+		
 		rule.consequence = {
 			score : 0,
 			recommendation : ""
 		};
 		rule.conditions = [];
 		$scope.newRuleMode = true;
-
 		$scope.newRule = rule;
 
 		return false;

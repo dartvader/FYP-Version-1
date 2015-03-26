@@ -135,8 +135,6 @@ public final class BuilderUtil {
     		
 			pattern += c.getField().getType().contains("String") ? addStringConstraint(c.getField().getApi(), c.getOperator().getValue(), c.getValue()):
 					addNumericConstraint(c.getField().getApi(), c.getOperator().getValue(), c.getValue());
-			
-			// Using flag to tag on the pattern binder to front of the constraint if there are more the one constraints in the list
 			needsPatternBinder = true;
 		}
     	pattern +=");\n";
@@ -153,19 +151,15 @@ public final class BuilderUtil {
     }
     
     private static String addStringConstraint(String field, String operator, String value) {
-		// String javaField = toJavaCodingConvention(field); The Enterprise.sobjects dont use camel case fields
     	return field + operator + "'" + value + "'";
     }
     
     private static String addNumericConstraint(String field, String operator, String value) {
-		//String javaField = toJavaCodingConvention(field);
     	return field + operator + value;
     }
     
-    // TODO Refactor this logic.
     static String toJavaCodingConvention(String input) {
     	String firstCharUpper = firstToUpper(input);
-    	//String lastCharUpper = lastToUpper(firstCharUpper);
     	return firstCharUpper;
     }
     

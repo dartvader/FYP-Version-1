@@ -48,24 +48,8 @@ public class ExecutionRESTResourceService {
 	
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
-	public HashMap<String, Execution> getPackages() {
-		
-		System.out.println("Getting packages ");
+	public HashMap<String, Execution> getExecutions() {
 		return executionRepo.getExecutions();
 	}
-	
-	/*
-	@GET
-	@Path("/{timestamp}")
-    @Produces(MediaType.APPLICATION_JSON)
-	public Package executePacakgeRules(@PathParam("timestamp") String packageId) {
-		
-		PackageExecutor packageExecution = new PackageExecutor(packageId);
-		packageExecution.execute();
-		
-		Package packageUpdate = alertRepo(packageId);
-		return packageUpdate;
-	}
-	*/
 }
 

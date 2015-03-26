@@ -47,24 +47,10 @@ public class AlertRESTResourceService {
 	
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
-	public NavigableMap<String, List<Alert>> getPackages() {
+	public NavigableMap<String, List<Alert>> getAlerts() {
+		// Code needs to be extended and send back true rest response
 		
-		System.out.println("Getting packages ");
 		return alertRepo.getAlerts();
 	}
-	
-	/*
-	@GET
-	@Path("/{timestamp}")
-    @Produces(MediaType.APPLICATION_JSON)
-	public Package executePacakgeRules(@PathParam("timestamp") String packageId) {
-		
-		PackageExecutor packageExecution = new PackageExecutor(packageId);
-		packageExecution.execute();
-		
-		Package packageUpdate = alertRepo(packageId);
-		return packageUpdate;
-	}
-	*/
 }
 

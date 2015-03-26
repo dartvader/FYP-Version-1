@@ -35,7 +35,6 @@ public class AlertRepository {
 	
 	public void addAlerts(String timeStamp, List<Alert> newAlerts) {
 		alerts.put(timeStamp, newAlerts);
-		System.out.println("<<adding>> alerts map size " + alerts.size());
 	}
 
 	public NavigableMap<String, List<Alert>> getAlerts() {

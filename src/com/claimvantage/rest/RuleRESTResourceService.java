@@ -51,9 +51,7 @@ public class RuleRESTResourceService {
 		
 		ArrayList<Rule> updatedRules = null;
 		try {
-			
 			updatedRules = new ArrayList<Rule>(rulesRepository.updateRules(rules));
-			
         } catch (Exception e) {
             System.out.println("Error updating the rules");
             System.out.println("Error " +  e.getMessage());
@@ -66,9 +64,8 @@ public class RuleRESTResourceService {
 	
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Rule> listAllRules() {
+    public List<Rule> getRules() {
     	if (rulesRepository.getRules() == null) {
-    		System.out.println(" rules null ");
     		return null;
     	}
         return rulesRepository.getRules();

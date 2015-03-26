@@ -37,7 +37,4 @@ public class ExecutionRepository {
 		this.executions = executions;
 	}
 	
-	public HashMap<String, Execution> getExecution() {
-		return this.executions;
-	}
 }

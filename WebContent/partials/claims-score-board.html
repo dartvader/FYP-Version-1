@@ -2,12 +2,13 @@
 	<div class="col-lg-12">
 		<h1>Scored Claims</h1>
 		<ol class="breadcrumb">
-			<li class="active"><i class="fa fa-flag"></i> Scored Claims</li>
+			<li class="active"><i class="fa fa-clipboard"></i> Scored Claims</li>
 		</ol>
 	</div>
 </div>
+
 <div class="col-lg-12">
-	<div class="panel panel-default">
+	<div class="panel panel-default" >
 		<div class="panel-heading-custom-green">
 			<div class="medium">
 				Execution Time Line
@@ -55,44 +56,49 @@
 		</div>
 	</div>
 </div>
-<div class="col-lg-12">
-	<div class="col-md-6" data-ng-show="objectExist(selectedClaim[0])">
-		<div class="panel panel-default">
-			<div class="panel-heading-custom-green">
-				<h1 class="panel-title">
-					Score Breakdown of 
-					<span class="" ng-if="selectedClaim[0].claimName">{{selectedClaim[0].claimName}}, {{selectedClaim[0].claimantName}}</span>
-				</h1>
-			</div>
-			<div class="panel-body">
-				<!-- Calculated table -->
-				<div id="barChart"></div>
-				<!-- List of Recommendations -->
-				<div></div>
+
+
+<div class="row">
+	<div class="col-lg-12">
+		<div class="col-md-6" data-ng-show="objectExist(selectedClaim[0])">
+			<div class="panel panel-default">
+				<div class="panel-heading-custom-green">
+					<h1 class="panel-title">
+						Score Breakdown of 
+						<span class="" ng-if="selectedClaim[0].claimName">{{selectedClaim[0].claimName}}, {{selectedClaim[0].claimantName}}</span>
+					</h1>
+				</div>
+				<div class="panel-body">
+					<!-- Calculated table -->
+					<div id="barChart"></div>
+					<!-- List of Recommendations -->
+					<div></div>
+				</div>
 			</div>
 		</div>
-	</div>
-	<div class="col-md-6" data-ng-show="objectExist(selectedClaim[0])">
-		<div class="panel panel-default">
-			<div class="panel-heading-custom-green">
-				<h1 class="panel-title">
-					<span ng-if="selectedClaim[0].claimName">{{selectedClaim[0].claimName}} Recommendations</span>
-				</h1>
-			</div>
-			<div class="panel-body">
-				<!-- Calculated table -->
-				<br>
-				<ul class="custom-list">
-					<li ng-repeat="recommendation in selectedClaim[0].recommendation">
-					
-						{{recommendation}}
+		<div class="col-md-6" data-ng-show="objectExist(selectedClaim[0])">
+			<div class="panel panel-default">
+				<div class="panel-heading-custom-green">
+					<h1 class="panel-title">
+						<span ng-if="selectedClaim[0].claimName">{{selectedClaim[0].claimName}} Recommendations</span>
+					</h1>
+				</div>
+				<div class="panel-body">
+					<!-- Calculated table -->
+					<br>
+					<ul class="custom-list">
+						<li ng-repeat="recommendation in selectedClaim[0].recommendation">
 						
-					</li>
-				</ul>
+							{{recommendation}}
+							
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
 <div class="col-lg-12" data-ng-show="objectExist(executionCalculated)">
 	<div class="panel panel-default">
 		<div class="panel-heading-custom-green">
@@ -134,4 +140,3 @@
 		</div>
 	</div>
 </div>
-{{executionCalculated}}

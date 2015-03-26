@@ -40,7 +40,6 @@ public class PacakgeRESTResourceService {
 	
 	private static PackageRepository packageRepo = PackageRepository.instance();
 	private static RulesRepository rulesRepo = RulesRepository.instance();
-	private Package corePackageSession = null;
 	
 	@javax.ws.rs.core.Context 
 	ServletContext context;
@@ -48,11 +47,9 @@ public class PacakgeRESTResourceService {
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-	public Response saveSession(ArrayList<String> newPackageRules) {
+	public Response savePackage(ArrayList<String> newPackageRules) {
 		
-		System.out.println(">>> create new Package <<< " + newPackageRules.size());
     	Response.ResponseBuilder builder = null;	
-    	
 		try {
 			/*
 			 * This is going to be a problem Because Rules that are custom built need to build there own required objects.
@@ -64,7 +61,6 @@ public class PacakgeRESTResourceService {
 			HashSet<Sobject> requiredObjects = (HashSet<Sobject>) mapper.readValue(new File(webInfPath +"/RequiredObjects.json"), new TypeReference<HashSet<Sobject>>(){});
 			
 			Package newPackage = new Package(newPackageRules, "Custom Package", requiredObjects);
-			
 			packageRepo.addPackage(newPackage);
             builder = Response.ok();
             
@@ -110,8 +106,7 @@ public class PacakgeRESTResourceService {
 					rulesForPackage.add(rule.getName());
 				}
 				
-				HashSet<Sobject> requiredObjects = (HashSet<Sobject>) mapper.readValue(new File(webInfPath +"/RequiredObjects.json"), new TypeReference<HashSet<Sobject>>(){});
-				
+				HashSet<Sobject> requiredObjects = (HashSet<Sobject>) mapper.readValue(new File(webInfPath +"/RequiredObjects.json"), new TypeReference<HashSet<Sobject>>(){});	
 				Package corePackage = new Package(rulesForPackage, "Core Package", requiredObjects);
 				
 				packageRepo.setCorePackage(corePackage);
@@ -131,7 +126,7 @@ public class PacakgeRESTResourceService {
 	@GET
 	@Path("/execute/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-	public Package executePacakgeRules(@PathParam("id") String packageId) {
+	public Package executePacakge(@PathParam("id") String packageId) {
 		
 		PackageExecutor packageExecution = new PackageExecutor(packageId);
 		packageExecution.execute();

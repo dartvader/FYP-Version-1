@@ -6,38 +6,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.kie.api.KieBase;
-import org.kie.api.KieBaseConfiguration;
-import org.kie.api.KieServices;
-import org.kie.api.builder.KieBuilder;
-import org.kie.api.builder.KieFileSystem;
-import org.kie.api.builder.KieModule;
-import org.kie.api.builder.KieRepository;
-import org.kie.api.builder.ReleaseId;
-import org.kie.api.builder.Message.Level;
-import org.kie.api.io.ResourceType;
-import org.kie.api.runtime.KieContainer;
-import org.kie.api.runtime.KieSession;
-import org.kie.api.runtime.KieSessionConfiguration;
-import org.kie.api.runtime.rule.FactHandle;
-import org.kie.internal.builder.KnowledgeBuilder;
-import org.kie.internal.builder.KnowledgeBuilderFactory;
-import org.kie.internal.io.ResourceFactory;
-
 import com.claimvantage.data.RulesRepository;
-import com.claimvantage.data.exporter.DataLoader;
-import com.claimvantage.drools.listeners.TrackingAgendaEventListener;
-import com.claimvantage.drools.listeners.TrackingWorkingMemoryEventListener;
-import com.claimvantage.drools.util.HardCodedRules;
-
-// TODO TIDY up the class
 
 @JsonSerialize
 @XmlRootElement
@@ -123,7 +98,7 @@ public class Package {
 	public void incrementNumberOfExecutions() {
 		this.totalNumberOfExecutions++;
 	}
-	/*  No Need for this as the custom rule builder is not working 
+	/*  used for the free form rule builder
 	 
 	public HashSet<Sobject> createRequiredObjects(ArrayList<Rule> rules) {
 		HashSet<Sobject> objects = new HashSet<Sobject>();

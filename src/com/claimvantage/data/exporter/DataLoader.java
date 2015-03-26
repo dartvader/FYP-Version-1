@@ -18,11 +18,11 @@ import com.sforce.ws.ConnectorConfig;
 
 public class DataLoader {
 	
-	public static void execute(KieSession kieSession, HashSet<Sobject> objects) {
-		System.out.println(">>> in execute " + objects.size());
+	public static void execute(KieSession droolsSession, HashSet<Sobject> objects) {
+		
 		ArrayList<String> queries = buildQueries(objects);
 		ArrayList<QueryResult> exportResults = exportData(queries);
-		loadData(kieSession, exportResults);
+		loadData(droolsSession, exportResults);
 	}
 	
 	private static ArrayList<String> buildQueries(HashSet<Sobject> objects) {
@@ -41,7 +41,6 @@ public class DataLoader {
 
 		EnterpriseConnection connection = createConnection();
 		ArrayList<QueryResult> results = new ArrayList<QueryResult>();
-		
 		try {
 			for (String query : queries) {
 				results.add(connection.query(query));
@@ -52,12 +51,12 @@ public class DataLoader {
 		return results;
 	}
 	
-	public static void loadData(KieSession kieSession, ArrayList<QueryResult> results) {
+	public static void loadData(KieSession droolsSession, ArrayList<QueryResult> results) {
 		
 		for (QueryResult result : results) {
 			if (result.getSize() > 0) {
 				for (int i = 0; i < result.getRecords().length; i++) {
-					kieSession.insert(result.getRecords()[i]);
+					droolsSession.insert(result.getRecords()[i]);
 				}
 			}
 		}
@@ -66,6 +65,7 @@ public class DataLoader {
 	public static EnterpriseConnection createConnection() {
 
 		EnterpriseConnection connection = null;
+		
 		// TODO put these in configuration file
    		String USERNAME = "leemcdonald@83demo.com";
    		String PASSWORD = "0un7tijf1rLmEWCqLRQQtueEgjVd6DNRL7";
@@ -79,6 +79,5 @@ public class DataLoader {
 			e1.printStackTrace();
 		}
     	return connection;
-    }
-	
+    }	
 }

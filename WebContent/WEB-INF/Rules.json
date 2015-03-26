@@ -1,146 +1,146 @@
 [{
-    "description": "This rule is designed to detect individual who could be financially unstable",
-    "name": "Claimant Earnings Rule",
-    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.* import com.claimvantage.rules.Setting global com.claimvantage.rules.Setting claimantEarningSettings  rule 'Contact Earnings Rule' when Contact($ContactId : id, $ClaimantName : Name, cve__Earnings__c == null); $Claim : Cve__Claim__c($ClaimId : id, $ClaimName : Name, cve__ClaimantInsured__c == $ContactId, $status : cve__Status__c ); then insert(new Alert(drools.getRule().getName(), claimantEarningSettings.getScore(), claimantEarningSettings.getRecommendation() , $ClaimId , $ClaimantName, $ClaimName, $Claim) ); end",
-	"consequence":{"score":100, "recommendation":"Contact Claimant to ensure financial stability"},
+    "description": "The Claimant Earnings Rule will flag claimants who could be struggling financially, which gives the claimant motivation for committing fraud",
+    "name": "Claimant Earnings",
+    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.* import com.claimvantage.rules.Setting global com.claimvantage.rules.Setting claimantEarningSettings  rule 'Claimant Earnings' when Contact($ContactId : id, $ClaimantName : Name, cve__Earnings__c == null); $Claim : Cve__Claim__c($ClaimId : id, $ClaimName : Name, cve__ClaimantInsured__c == $ContactId, $status : cve__Status__c ); then insert(new Alert(claimantEarningSettings.getName(), claimantEarningSettings.getScore(), claimantEarningSettings.getRecommendation() , $ClaimId , $ClaimName, $ClaimantName, $Claim) ); end",
+	"consequence":{"score":96, "recommendation":"Contact Claimant to ensure financial stability"},
 	"setting":{
-		"score":100, 
-		"recommendation":"Contact Claimant to ensure financial stability", 
+		"score": 96, 
+		"recommendation":"Review Claimant financial Background to try detect motive for attempting fraud", 
 		"configHint": "",
 		"category": "Claimant",
-		"name": "Claimant Earnings Rule"
+		"name": "Claimant Earnings"
 	},
 	"relatedRules": [
-		{"parentRule": "Claimant Earnings Rule", "ruleName" : "Claimant Missing Address Rule", "correlationWeight":0.481},
-		{"parentRule": "Claimant Earnings Rule", "ruleName" : "Missing Multiple Documents Rule", "correlationWeight":0.378}
+		{"parentRule": "Claimant Earnings", "ruleName" : "Claimant Missing Address", "correlationWeight":0.481},
+		{"parentRule": "Claimant Earnings", "ruleName" : "Missing Multiple Documents", "correlationWeight":0.378}
 	],
 	"global": "claimantEarningSettings"
 },
 {
-    "description": "The Missing Address Rule should detect claimants who are acting shady and supplying little personal information",
-    "name": "Claimant Missing Address Rule",
-    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.* import com.claimvantage.rules.Setting global com.claimvantage.rules.Setting claimantMissingAddressSettings rule 'Contact Missing Address Rule' when Contact($ContactId : id, $ClaimantName : Name, cve__MailingAddress__c == null, OtherAddress == null); $Claim : Cve__Claim__c($ClaimId : id,  $ClaimName : Name, cve__ClaimantInsured__c == $ContactId); then insert(new Alert(drools.getRule().getName(), claimantMissingAddressSettings.getScore(), claimantMissingAddressSettings.getRecommendation(), $ClaimId, $ClaimantName, $ClaimName, $Claim)); end",
-	"consequence":{"score":100, "recommendation":"Check Claimant details and get an address on record"},
+    "description": "The Missing Address Rule will flag claimants that have not supplied an address, Claimants with no address on file in order to ensure it is a legitimate claim",
+    "name": "Claimant Missing Address",
+    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.* import com.claimvantage.rules.Setting global com.claimvantage.rules.Setting claimantMissingAddressSettings rule 'Claimant Missing Address Rule' when Contact($ContactId : id, $ClaimantName : Name, cve__MailingAddress__c == null, OtherAddress == null); $Claim : Cve__Claim__c($ClaimId : id,  $ClaimName : Name, cve__ClaimantInsured__c == $ContactId); then insert(new Alert(claimantMissingAddressSettings.getName(), claimantMissingAddressSettings.getScore(), claimantMissingAddressSettings.getRecommendation(), $ClaimId, $ClaimName,$ClaimantName, $Claim)); end",
+	"consequence":{"score":130, "recommendation":"Check Claimant details and get an address on record"},
 	"setting":{
-		"score":100, 
+		"score":130, 
 		"recommendation":"Check Claimant details and get an address on record",
 		"configHint": "",
 		"category": "Claimant",
-		"name": "Claimant Missing Address Rule"
+		"name": "Claimant Missing Address"
 	},
 	"relatedRules": [
-		{"parentRule": "Claimant Missing Address Rule", "ruleName": "Claimant Earnings Rule", "correlationWeight" : 0.481},
-		{"parentRule": "Claimant Missing Address Rule", "ruleName": "Claimant Multiple Addresses", "correlationWeight" : 0.467},
-		{"parentRule": "Claimant Missing Address Rule", "ruleName": "Claimant Invalid Address", "correlationWeight" : 0.431},
-		{"parentRule": "Claimant Missing Address Rule", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.406},
-		{"parentRule": "Claimant Missing Address Rule", "ruleName": "Missing Physician Rule", "correlationWeight" : 0.389},
-		{"parentRule": "Claimant Missing Address Rule", "ruleName": "Missing Multiple Documents Rule", "correlationWeight" : 0.363},
-		{"parentRule": "Claimant Missing Address Rule", "ruleName": "Subjective Injury Rule", "correlationWeight" : 0.345},
-		{"parentRule": "Claimant Missing Address Rule", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times", "correlationWeight" : 0.344},
-		{"parentRule": "Claimant Missing Address Rule", "ruleName": "Physician Invalid Address Rule", "correlationWeight"  : 0.337},
-		{"parentRule": "Claimant Missing Address Rule", "ruleName": "Sales Office with same Diagnosis Multiple times Rule", "correlationWeight" : 0.329},
-		{"parentRule": "Claimant Missing Address Rule", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.310}
+		{"parentRule": "Claimant Missing Address", "ruleName": "Claimant Earnings", "correlationWeight" : 0.481},
+		{"parentRule": "Claimant Missing Address", "ruleName": "Claimant Multiple Addresses", "correlationWeight" : 0.467},
+		{"parentRule": "Claimant Missing Address", "ruleName": "Claimant Invalid Address", "correlationWeight" : 0.431},
+		{"parentRule": "Claimant Missing Address", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.406},
+		{"parentRule": "Claimant Missing Address", "ruleName": "Missing Physician Rule", "correlationWeight" : 0.389},
+		{"parentRule": "Claimant Missing Address", "ruleName": "Missing Multiple Documents", "correlationWeight" : 0.363},
+		{"parentRule": "Claimant Missing Address", "ruleName": "Subjective Injury", "correlationWeight" : 0.345},
+		{"parentRule": "Claimant Missing Address", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times", "correlationWeight" : 0.344},
+		{"parentRule": "Claimant Missing Address", "ruleName": "Physician Invalid Address", "correlationWeight"  : 0.337},
+		{"parentRule": "Claimant Missing Address", "ruleName": "Sales Office with same Diagnosis Multiple Times", "correlationWeight" : 0.329},
+		{"parentRule": "Claimant Missing Address", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.310}
 	],
 	"global": "claimantMissingAddressSettings"
 },
 {
-    "description": "The Claimant does not have a valid address on file, this could indicate that the Claimant could be suspicious",
+    "description": "The Claimant does not have a valid address on file, this could indicate that the Claimant has intentionally provided an invalid address and is part of a fraud scheme",
     "name": "Claimant Invalid Address",
     "script": "package com.rules  import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting claimantInvalidAddressSettings rule 'Claimant Invalid Address' when $Claimant : Contact($ClaimantName : Name, $ContactId : id, InvalidAddress__c == true) $Claim : Cve__Claim__c($ClaimName : Name, $ClaimId : id) Cve__ClaimRelationship__c( cve__Claim__c == $ClaimId, cve__Contact__c == $ContactId, cve__Type__c == 'Attending Physician') then insert( new Alert(claimantInvalidAddressSettings.getName(), claimantInvalidAddressSettings.getScore(), claimantInvalidAddressSettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end ",
-	"consequence": {"score":100, "recommendation":"Investigate the Claimant Address issue on record "},
+	"consequence": {"score":191, "recommendation":"Contact the claimant and get a valid address on record for this individual."},
 	"setting":{
-		"score":100, 
-		"recommendation":"Investigate the Claimant on record",
+		"score":191, 
+		"recommendation":"Contact the claimant and get a valid address on record for this individual.",
 		"configHint": "",
 		"category": "Claimant",
 		"name": "Claimant Invalid Address"
 		},
 	"relatedRules": [
 		{"parentRule": "Claimant Invalid Address", "ruleName": "Claimant Multiple Addresses", "correlationWeight" : 0.537},
-		{"parentRule": "Claimant Invalid Address", "ruleName": "Claimant Missing Address Rule", "correlationWeight" : 0.431},
-		{"parentRule": "Claimant Invalid Address", "ruleName": "Physician Invalid Address Rule", "correlationWeight" : 0.380}
+		{"parentRule": "Claimant Invalid Address", "ruleName": "Claimant Missing Address", "correlationWeight" : 0.431},
+		{"parentRule": "Claimant Invalid Address", "ruleName": "Physician Invalid Address", "correlationWeight" : 0.380}
 	],
 	"global": "claimantInvalidAddressSettings"
 },
 {
     "description": "The Claimant has been flagged in the system for having history of fraudulent activity",
-    "name": "Claimant Has Fraudulent History Rule",
-    "script": "package com.rules  import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting claimantBadHistorySettings rule 'Claimant Has Fraudulent History Rule' when Contact($ContactId : id, $ClaimantName : Name, ConvictedFraudster__c == true); $Claim : Cve__Claim__c ($ClaimId : id, $ClaimName : Name, cve__ClaimantInsured__c == $ContactId , RuleUtil.isClaimOpen(cve__Status__c)) then insert( new Alert(drools.getRule().getName(), claimantBadHistorySettings.getScore(), claimantBadHistorySettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end",
-	"consequence": {"score":100, "recommendation":"Investigate the claimant on record "},
+    "name": "Claimant Has Fraudulent History",
+    "script": "package com.rules  import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting claimantBadHistorySettings rule 'Claimant Has Fraudulent History' when Contact($ContactId : id, $ClaimantName : Name, ConvictedFraudster__c == true); $Claim : Cve__Claim__c ($ClaimId : id, $ClaimName : Name, cve__ClaimantInsured__c == $ContactId , RuleUtil.isClaimOpen(cve__Status__c)) then insert( new Alert(claimantBadHistorySettings.getName(), claimantBadHistorySettings.getScore(), claimantBadHistorySettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end",
+	"consequence": {"score":285, "recommendation":"Assign this claim to fraud examiner to be examined"},
 	"setting":{
-		"score":100, 
-		"recommendation":"Investigate the claimant on record",
+		"score":285, 
+		"recommendation":"Assign this claim to fraud examiner to be examined",
 		"configHint": "",
 		"category": "Claimant",
-		"name": "Claimant Has Fraudulent History Rule"
+		"name": "Claimant Has Fraudulent History"
 		},
 	"relatedRules": [
-		{"parentRule": "Claimant Has Fraudulent History Rule" ,"ruleName": "Claimants Previous Claims Rule", "correlationWeight" : 0.353},
-		{"parentRule": "Claimant Has Fraudulent History Rule" ,"ruleName": "Physician Invalid Address Rule", "correlationWeight" : 0.345},
-		{"parentRule": "Claimant Has Fraudulent History Rule" ,"ruleName": "Physician Fraudulent History Rule" , "correlationWeight" : 0.355},
-		{"parentRule": "Claimant Has Fraudulent History Rule" ,"ruleName": "Sales Office with same Diagnosis Multiple times Rule" , "correlationWeight" : 0.368},
-		{"parentRule": "Claimant Has Fraudulent History Rule" ,"ruleName": "Claimant Claiming Same Injury Number Of Times Rule" , "correlationWeight" : 0.325}
+		{"parentRule": "Claimant Has Fraudulent History" ,"ruleName": "Claimants has made Previous Claims", "correlationWeight" : 0.353},
+		{"parentRule": "Claimant Has Fraudulent History" ,"ruleName": "Physician Invalid Address", "correlationWeight" : 0.345},
+		{"parentRule": "Claimant Has Fraudulent History" ,"ruleName": "Physician Fraudulent History" , "correlationWeight" : 0.355},
+		{"parentRule": "Claimant Has Fraudulent History" ,"ruleName": "Sales Office with same Diagnosis Multiple Times" , "correlationWeight" : 0.368},
+		{"parentRule": "Claimant Has Fraudulent History" ,"ruleName": "Claimant Claiming Same Injury Number Of Times" , "correlationWeight" : 0.325}
 	],
 	"global": "claimantBadHistorySettings"
 },
 {
-    "description": "This rule searches for the amount of previous claims the Claimant has already made",
-    "name": "Claimants Previous Claims Rule",
-    "script": " package com.rules  import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting previousClaimsSettings rule 'Claimants Previous Claims Rule' when Contact($ContactId : id, $ClaimantName: Name); $Claim : Cve__Claim__c ($ClaimId : id, $ClaimName: Name, cve__ClaimantInsured__c == $ContactId , RuleUtil.isClaimOpen(cve__Status__c)) ArrayList($total : size > previousClaimsSettings.getNumberOfClaims()) from collect(Cve__Claim__c(cve__ClaimantInsured__c == $ContactId, cve__Status__c == 'Closed') ) then insert( new Alert(drools.getRule().getName(), previousClaimsSettings.getScore(), previousClaimsSettings.getRecommendation() , $ClaimId, $ClaimName, $ClaimantName, $Claim)); end ",
+    "description": "The Claimants has made Previous Claims Rule detects claimants who have already made a number of claims in the past.",
+    "name": "Claimants has made Previous Claims",
+    "script": " package com.rules  import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting previousClaimsSettings rule 'Claimants has made Previous Claims' when Contact($ContactId : id, $ClaimantName: Name); $Claim : Cve__Claim__c ($ClaimId : id, $ClaimName: Name, cve__ClaimantInsured__c == $ContactId , RuleUtil.isClaimOpen(cve__Status__c)) ArrayList($total : size > previousClaimsSettings.getNumberOfClaims()) from collect(Cve__Claim__c(cve__ClaimantInsured__c == $ContactId, cve__Status__c == 'Closed') ) then insert( new Alert(previousClaimsSettings.getName(), previousClaimsSettings.getScore(), previousClaimsSettings.getRecommendation() , $ClaimId, $ClaimName, $ClaimantName, $Claim)); end ",
 	"consequence": {"score":110, "recommendation" : "Review Previous claims for patterns"},
 	"setting":{
-		"score":100, 
+		"score":110, 
 		"recommendation": "Review Previous claims for patterns", 
 		"numberOfClaims": 4,
 		"configHint": "Please specify the number of previous claims the claimant would have to have claimed before be deemed suspicious",
 		"category": "Claimant",
-		"name": "Claimants Previous Claims Rule"
+		"name": "Claimants has made Previous Claims"
 		},
 	"relatedRules": [
-		{"parentRule": "Claimants Previous Claims Rule", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight":0.439},
-		{"parentRule": "Claimants Previous Claims Rule", "ruleName": "Claimant Claiming Same Injury Number Of Times Rule", "correlationWeight":0.424},
-		{"parentRule": "Claimants Previous Claims Rule", "ruleName": "Claimant Has Fraudulent History Rule", "correlationWeight":0.353},
-		{"parentRule": "Claimants Previous Claims Rule", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times Rule" , "correlationWeight":0.320},
-		{"parentRule": "Claimants Previous Claims Rule", "ruleName": "History Of Subjective Injury Claims" , "correlationWeight":0.307}
+		{"parentRule": "Claimants has made Previous Claims", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight":0.439},
+		{"parentRule": "Claimants has made Previous Claims", "ruleName": "Claimant Claiming Same Injury Number Of Times", "correlationWeight":0.424},
+		{"parentRule": "Claimants has made Previous Claims", "ruleName": "Claimant Has Fraudulent History", "correlationWeight":0.353},
+		{"parentRule": "Claimants has made Previous Claims", "ruleName": "Physician and Sales Office with same Diagnosis Multiple Times" , "correlationWeight":0.320},
+		{"parentRule": "Claimants has made Previous Claims", "ruleName": "History Of Subjective Injury Claims" , "correlationWeight":0.307}
 	],
 	"global": "previousClaimsSettings"
 },
 {
     "description": "The Multiple Address Rule should detect claimants who are acting shady and supplying a number of addresses",
     "name": "Claimant Multiple Addresses",
-    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.* import com.claimvantage.rules.*import java.io.PrintStream global com.claimvantage.rules.Setting claimantMultipleAddressSettings rule 'Claimant Multiple Addresses' when $con : Contact($ClaimantName : Name, $ContactId : id, (cve__MailingAddress__c != null || cve__MailingAddress__c != '<br>'), OtherAddress != null) $Claim : Cve__Claim__c($ClaimId : id, $ClaimName : Name , cve__ClaimantInsured__c == $ContactId) then insert( new Alert(drools.getRule().getName(), claimantMultipleAddressSettings.getScore(), claimantMultipleAddressSettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim) ); end",
-	"consequence":{"score":100, "recommendation":"Check Claimant address details"},
+    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.* import com.claimvantage.rules.*import java.io.PrintStream global com.claimvantage.rules.Setting claimantMultipleAddressSettings rule 'Claimant Multiple Addresses' when $con : Contact($ClaimantName : Name, $ContactId : id, (cve__MailingAddress__c != null || cve__MailingAddress__c != '<br>'), OtherAddress != null) $Claim : Cve__Claim__c($ClaimId : id, $ClaimName : Name , cve__ClaimantInsured__c == $ContactId) then insert( new Alert(claimantMultipleAddressSettings.getName(), claimantMultipleAddressSettings.getScore(), claimantMultipleAddressSettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim) ); end",
+	"consequence":{"score":172, "recommendation":"Review claimant as there seems to be some complication with the addresses on record"},
 	"setting":{
-		"score":100, 
-		"recommendation":"Check Claimant details and review multiple addresses",
+		"score":172, 
+		"recommendation":"Review claimant as there seems to be some complication with the addresses on record",
 		"configHint": "",
 		"category": "Claimant",
 		"name": "Claimant Multiple Addresses"
 	},
 	"relatedRules": [
 		{"parentRule": "Claimant Multiple Addresses", "ruleName": "Claimant Invalid Address", "correlationWeight" : 0.537},
-		{"parentRule": "Claimant Multiple Addresses", "ruleName": "Claimant Missing Address Rule", "correlationWeight" : 0.467},
-		{"parentRule": "Claimant Multiple Addresses", "ruleName": "Physician Invalid Address Rule", "correlationWeight" : 0.377},
-		{"parentRule": "Claimant Multiple Addresses" ,"ruleName": "Sales Office with same Diagnosis Multiple times Rule" , "correlationWeight" : 0.368},
-		{"parentRule": "Claimant Multiple Addresses" ,"ruleName": "Physician Fraudulent History Rule" , "correlationWeight" : 0.355},
-		{"parentRule": "Claimant Multiple Addresses" ,"ruleName": "Sales Office with same Diagnosis Multiple times Rule" , "correlationWeight" : 0.354},
-		{"parentRule": "Claimant Multiple Addresses" ,"ruleName": "Claimants Previous Claims Rule" , "correlationWeight" : 0.353},
+		{"parentRule": "Claimant Multiple Addresses", "ruleName": "Claimant Missing Address", "correlationWeight" : 0.467},
+		{"parentRule": "Claimant Multiple Addresses", "ruleName": "Physician Invalid Address", "correlationWeight" : 0.377},
+		{"parentRule": "Claimant Multiple Addresses" ,"ruleName": "Sales Office with same Diagnosis Multiple Times" , "correlationWeight" : 0.368},
+		{"parentRule": "Claimant Multiple Addresses" ,"ruleName": "Physician Fraudulent History" , "correlationWeight" : 0.355},
+		{"parentRule": "Claimant Multiple Addresses" ,"ruleName": "Sales Office with same Diagnosis Multiple Times" , "correlationWeight" : 0.354},
+		{"parentRule": "Claimant Multiple Addresses" ,"ruleName": "Claimants has made Previous Claims" , "correlationWeight" : 0.353},
 		{"parentRule": "Claimant Multiple Addresses", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times", "correlationWeight" : 0.329},
-		{"parentRule": "Claimant Multiple Addresses", "ruleName": "Claimant Claiming Same Injury Number Of Times Rule", "correlationWeight" : 0.325}
+		{"parentRule": "Claimant Multiple Addresses", "ruleName": "Claimant Claiming Same Injury Number Of Times", "correlationWeight" : 0.325}
 	],
 	"global": "claimantMultipleAddressSettings"
 },
 {
     "description": "The Claimant Job type looks at claimants job titles and raises and alert if the claimant may have a job that would allow them to have the knowledge to commit fraud",
-    "name": "Claimant Job Type Rule",
-    "script": " package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting claimantJobTypeSettings rule 'Claimant Job Type Rule' when Contact($ContactId : id,  $ClaimantName : Name, RuleUtil.isJobSuspect(Title)); $Claim : Cve__Claim__c($ClaimId : id, $ClaimName : Name,  cve__ClaimantInsured__c == $ContactId, RuleUtil.isClaimOpen(cve__Status__c)); then insert( new Alert(drools.getRule().getName(), claimantJobTypeSettings.getScore(), claimantJobTypeSettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName , $Claim)); end",
-	"consequence": {"score":100, "recommendation":"Investigate the Claimants Knowledge of the industry"},
+    "name": "Claimant Job Type",
+    "script": " package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting claimantJobTypeSettings rule 'Claimant Job Type' when Contact($ContactId : id,  $ClaimantName : Name, RuleUtil.isJobSuspect(Title)); $Claim : Cve__Claim__c($ClaimId : id, $ClaimName : Name,  cve__ClaimantInsured__c == $ContactId, RuleUtil.isClaimOpen(cve__Status__c)); then insert( new Alert(claimantJobTypeSettings.getName(), claimantJobTypeSettings.getScore(), claimantJobTypeSettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName , $Claim)); end",
+	"consequence": {"score":50, "recommendation":"Review claimant and ensure the claimant has valid claim as they are in a position of understanding and could easily commit fraud."},
 	"setting":{
-		"score":100, 
-		"recommendation":"Investigate the Claimants Knowledge of the industry",
+		"score":50, 
+		"recommendation":"Review claimant and ensure the claimant has valid claim as they are in a position of understanding and could easily commit fraud.",
 		"configHint": "",
 		"category": "Claimant",
-		"name": "Claimant Job Type Rule"
+		"name": "Claimant Job Type"
 		},
 	"global": "claimantJobTypeSettings"
 },
@@ -149,78 +149,76 @@
 
 {
     "description": "The Missing Documents Rule should detect any claim that is missing any kind of required correspondence",
-    "name": "Missing Multiple Documents Rule",
-    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.Setting global com.claimvantage.rules.Setting missingDocumentSettings rule 'Missing Multiple Documents Rule' when  Contact($ContactId : id, $ClaimantName : Name); $Claim :Cve__Claim__c($ClaimId : id, $ClaimName : Name, cve__ClaimantInsured__c == $ContactId ); Cve__Document__c(cve__Claim__c == $ClaimId, cve__Required__c == true, cve__Received__c == null, cve__Accepted__c == false, cve__Type__c == 'Medical'); then insert(new Alert(drools.getRule().getName(), missingDocumentSettings.getScore() , missingDocumentSettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim )); end",
-	"consequence": {"score":100, "recommendation":"Contact Claim to follow up on missing documents"},
+    "name": "Missing Multiple Documents",
+    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.Setting global com.claimvantage.rules.Setting missingDocumentSettings rule 'Missing Multiple Documents' when  Contact($ContactId : id, $ClaimantName : Name); $Claim :Cve__Claim__c($ClaimId : id, $ClaimName : Name, cve__ClaimantInsured__c == $ContactId ); Cve__Document__c(cve__Claim__c == $ClaimId, cve__Required__c == true, cve__Received__c == null, cve__Accepted__c == false, cve__Type__c == 'Medical'); then insert(new Alert(missingDocumentSettings.getName(), missingDocumentSettings.getScore() , missingDocumentSettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim )); end",
+	"consequence": {"score":90, "recommendation":"Send the Claimant an email to follow up on missing documents"},
 	"setting":{
-		"score":100, 
-		"recommendation":"Contact Claim to follow up on missing documents",
+		"score":90, 
+		"recommendation":"Send the Claimant an email to follow up on missing documents",
 		"configHint": "",
 		"category": "Documentation",
-		"name": "Missing Multiple Documents Rule"
+		"name": "Missing Multiple Documents"
 		},
 	"relatedRules": [
-		{"parentRule": "Missing Multiple Documents Rule", "ruleName": "Missing Medical Documents Rule", "correlationWeight" : 0.712},
-		{"parentRule": "Missing Multiple Documents Rule", "ruleName": "Missing Accident Report Rule", "correlationWeight" : 0.455},
-		{"parentRule": "Missing Multiple Documents Rule", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.430},
-		{"parentRule": "Missing Multiple Documents Rule", "ruleName": "Claimant Earnings Rule", "correlationWeight" : 0.378},
-		{"parentRule": "Missing Multiple Documents Rule", "ruleName": "Missing Physician", "correlationWeight" : 0.377},
-		{"parentRule": "Missing Multiple Documents Rule", "ruleName": "Claimant Missing Address Rule", "correlationWeight" : 0.363},
-		{"parentRule": "Missing Multiple Documents Rule", "ruleName": "Subjective Injury Rule", "correlationWeight" : 0.361},
-		{"parentRule": "Missing Multiple Documents Rule", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times", "correlationWeight" : 0.300}
+		{"parentRule": "Missing Multiple Documents", "ruleName": "Missing Medical Documents", "correlationWeight" : 0.712},
+		{"parentRule": "Missing Multiple Documents", "ruleName": "Missing Accident Report", "correlationWeight" : 0.455},
+		{"parentRule": "Missing Multiple Documents", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.430},
+		{"parentRule": "Missing Multiple Documents", "ruleName": "Claimant Earnings", "correlationWeight" : 0.378},
+		{"parentRule": "Missing Multiple Documents", "ruleName": "Missing Physician", "correlationWeight" : 0.377},
+		{"parentRule": "Missing Multiple Documents", "ruleName": "Claimant Missing Address", "correlationWeight" : 0.363},
+		{"parentRule": "Missing Multiple Documents", "ruleName": "Subjective Injury", "correlationWeight" : 0.361},
+		{"parentRule": "Missing Multiple Documents", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times", "correlationWeight" : 0.300}
 	],
 	"global": "missingDocumentSettings"
 },
 {
-    "description": "The Missing Medical Documents Rule should detect any claim that is missing any kind of medical correspondence",
-    "name": "Missing Medical Documents Rule",
-    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.* import com.claimvantage.rules.Setting global com.claimvantage.rules.Setting missingMedicalDocumentsSettings rule 'Missing Medical Documents Rule' when Contact($ContactId : id, $ClaimantName : Name); $Claim : Cve__Claim__c($ClaimId : id, $ClaimName : Name, cve__ClaimantInsured__c == $ContactId); Cve__Document__c(cve__Claim__c == $ClaimId, cve__Required__c == true, cve__Received__c == null, cve__Accepted__c == false, cve__Type__c == 'Medical'); then insert(new Alert(drools.getRule().getName(), missingMedicalDocumentsSettings.getScore(), missingMedicalDocumentsSettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end",
-	"consequence": {"score":50, "recommendation":"Contact Claim to follow up on missing documents"},
+    "description": "The Missing Medical Documents should detect any claim that is missing any kind of medical correspondence",
+    "name": "Missing Medical Documents",
+    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.* import com.claimvantage.rules.Setting global com.claimvantage.rules.Setting missingMedicalDocumentsSettings rule 'Missing Medical Documents' when Contact($ContactId : id, $ClaimantName : Name); $Claim : Cve__Claim__c($ClaimId : id, $ClaimName : Name, cve__ClaimantInsured__c == $ContactId); Cve__Document__c(cve__Claim__c == $ClaimId, cve__Required__c == true, cve__Received__c == null, cve__Accepted__c == false, cve__Type__c == 'Medical'); then insert(new Alert(missingMedicalDocumentsSettings.getName(), missingMedicalDocumentsSettings.getScore(), missingMedicalDocumentsSettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end",
+	"consequence": {"score":87, "recommendation":"Send the Claimant an email to follow up on missing medical documents"},
 	"setting":{
-		"score":50, 
-		"recommendation":"Contact Claim to follow up on missing documents",
+		"score":87, 
+		"recommendation":"Send the Claimant an email to follow up on missing medical documents",
 		"configHint": "",
 		"category": "Documentation",
-		"name": "Missing Medical Documents Rule"
+		"name": "Missing Medical Documents"
 		},
 	"relatedRules": [
-		{"parentRule": "Missing Medical Documents Rule", "ruleName": "Missing Multiple Documents Rule", "correlationWeight" : 0.712},
-		{"parentRule": "Missing Medical Documents Rule", "ruleName": "Missing Physician", "correlationWeight" : 0.552},
-		{"parentRule": "Missing Medical Documents Rule", "ruleName": "Missing Accident Report Rule", "correlationWeight" : 0.546},
-		{"parentRule": "Missing Medical Documents Rule", "ruleName": "Claimant Missing Address Rule", "correlationWeight" : 0.458},
-		{"parentRule": "Missing Medical Documents Rule", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.430},
-		{"parentRule": "Missing Medical Documents Rule", "ruleName": "Physician Missing Address Rule", "correlationWeight" : 0.407},
-		{"parentRule": "Missing Medical Documents Rule", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times", "correlationWeight" : 0.400},
-		{"parentRule": "Missing Medical Documents Rule", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.347},
-		{"parentRule": "Missing Medical Documents Rule", "ruleName": "Subjective Injury Rule", "correlationWeight" : 0.339},
-		{"parentRule": "Missing Medical Documents Rule", "ruleName": "Sales Office with same Diagnosis Multiple times Rule", "correlationWeight" : 0.326}
+		{"parentRule": "Missing Medical Documents", "ruleName": "Missing Multiple Documents", "correlationWeight" : 0.712},
+		{"parentRule": "Missing Medical Documents", "ruleName": "Missing Physician", "correlationWeight" : 0.552},
+		{"parentRule": "Missing Medical Documents", "ruleName": "Missing Accident Report", "correlationWeight" : 0.546},
+		{"parentRule": "Missing Medical Documents", "ruleName": "Claimant Missing Address", "correlationWeight" : 0.458},
+		{"parentRule": "Missing Medical Documents", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.430},
+		{"parentRule": "Missing Medical Documents", "ruleName": "Physician Missing Address", "correlationWeight" : 0.407},
+		{"parentRule": "Missing Medical Documents", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times", "correlationWeight" : 0.400},
+		{"parentRule": "Missing Medical Documents", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.347},
+		{"parentRule": "Missing Medical Documents", "ruleName": "Subjective Injury", "correlationWeight" : 0.339},
+		{"parentRule": "Missing Medical Documents", "ruleName": "Sales Office with same Diagnosis Multiple Times", "correlationWeight" : 0.326}
 	],
 	"global": "missingMedicalDocumentsSettings"
 },
 {
     "description": "The Missing Accident Report looks for accident claims and ensures that there is a accident report on the claim",
-    "name": "Missing Accident Report Rule",
-    "script": " package com.rules  import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting missingAccidentReportSettings rule 'Missing Accident Report Rule' when  Contact($ContactId : id, $ClaimantName : Name); $Claim : Cve__Claim__c($ClaimId : id, $ClaimName : Name, cve__ClaimantInsured__c == $ContactId); Cve__BenefitClaimed__c(cve__Claim__c == $ClaimId, cve__Cause__c == 'Accident'); Cve__Document__c(cve__Claim__c == $ClaimId, cve__Accepted__c == false, cve__Type__c == 'Accident Report') then insert( new Alert(drools.getRule().getName(), missingAccidentReportSettings.getScore(), missingAccidentReportSettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim )); end",
-	"consequence": {"score":100, "recommendation":" Contact Claimant to gather Accident Report "},
+    "name": "Missing Accident Report",
+    "script": " package com.rules  import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting missingAccidentReportSettings rule 'Missing Accident Report' when  Contact($ContactId : id, $ClaimantName : Name); $Claim : Cve__Claim__c($ClaimId : id, $ClaimName : Name, cve__ClaimantInsured__c == $ContactId); Cve__BenefitClaimed__c(cve__Claim__c == $ClaimId, cve__Cause__c == 'Accident'); Cve__Document__c(cve__Claim__c == $ClaimId, cve__Accepted__c == false, cve__Type__c == 'Accident Report') then insert( new Alert(missingAccidentReportSettings.getName(), missingAccidentReportSettings.getScore(), missingAccidentReportSettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim )); end",
+	"consequence": {"score":114, "recommendation":"Send the Claimant an email to follow up on missing accident report"},
 	"setting":{
-		"score":100, 
-		"recommendation":" Contact Claimant to gather Accident Report",
+		"score":114, 
+		"recommendation":"Send the Claimant an email to follow up on missing accident report",
 		"configHint": "",
 		"category": "Documentation",
-		"name": "Missing Accident Report Rule"
+		"name": "Missing Accident Report"
 		},
 	"relatedRules": [
-		
-		{"parentRule": "Missing Accident Report Rule", "ruleName": "Missing Medical Documents Rule", "correlationWeight" : 0.546},
-		{"parentRule": "Missing Accident Report Rule", "ruleName": "Missing Multiple Documents Rule", "correlationWeight" : 0.455},
-		{"parentRule": "Missing Accident Report Rule", "ruleName": "First Notification of Claim after Claimant has left job", "correlationWeight" : 0.418},
-		{"parentRule": "Missing Accident Report Rule", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.412},
-		{"parentRule": "Missing Accident Report Rule", "ruleName": "Subjective Injury Rule", "correlationWeight" : 0.380},
-		{"parentRule": "Missing Accident Report Rule", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.378},
-		{"parentRule": "Missing Accident Report Rule", "ruleName": "Claimant Claiming Same Injury Number Of Times Rule", "correlationWeight" : 0.367},
-		{"parentRule": "Missing Accident Report Rule", "ruleName": "Missing Physician", "correlationWeight" : 0.355}
+		{"parentRule": "Missing Accident Report", "ruleName": "Missing Medical Documents", "correlationWeight" : 0.546},
+		{"parentRule": "Missing Accident Report", "ruleName": "Missing Multiple Documents", "correlationWeight" : 0.455},
+		{"parentRule": "Missing Accident Report", "ruleName": "First Notification of Claim after Claimant has left job", "correlationWeight" : 0.418},
+		{"parentRule": "Missing Accident Report", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.412},
+		{"parentRule": "Missing Accident Report", "ruleName": "Subjective Injury", "correlationWeight" : 0.380},
+		{"parentRule": "Missing Accident Report", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.378},
+		{"parentRule": "Missing Accident Report", "ruleName": "Claimant Claiming Same Injury Number Of Times", "correlationWeight" : 0.367},
+		{"parentRule": "Missing Accident Report", "ruleName": "Missing Physician", "correlationWeight" : 0.355}
 	],	
-	
 	"global": "missingAccidentReportSettings"
 },
 
@@ -229,130 +227,130 @@
 {
     "description": "The Missing Address Rule should detect claimants who are acting shady and supplying little personal information",
     "name": "Physician Multiple Addresses",
-    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting physicianMultipleAddressSettings rule 'Physician Multiple Addresses' when $con : Contact($ClaimantName : Name, $PhysicianId : id, (cve__MailingAddress__c != null || cve__MailingAddress__c != '<br>'), OtherAddress != null) $Claim : Cve__Claim__c($ClaimName : Name, $ClaimId : id, cve__ClaimantInsured__c == $PhysicianId) Cve__ClaimRelationship__c( cve__Claim__c == $ClaimId, cve__Type__c == 'Attending Physician', cve__Contact__c == $PhysicianId ) then insert( new Alert(drools.getRule().getName(), physicianMultipleAddressSettings.getScore(), physicianMultipleAddressSettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end",
-	"consequence":{"score":100, "recommendation":"Check Claimant address details"},
+    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting physicianMultipleAddressSettings rule 'Physician Multiple Addresses' when $con : Contact($ClaimantName : Name, $PhysicianId : id, (cve__MailingAddress__c != null || cve__MailingAddress__c != '<br>'), OtherAddress != null) $Claim : Cve__Claim__c($ClaimName : Name, $ClaimId : id, cve__ClaimantInsured__c == $PhysicianId) Cve__ClaimRelationship__c( cve__Claim__c == $ClaimId, cve__Type__c == 'Attending Physician', cve__Contact__c == $PhysicianId ) then insert( new Alert(physicianMultipleAddressSettings.getName(), physicianMultipleAddressSettings.getScore(), physicianMultipleAddressSettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end",
+	"consequence":{"score":116, "recommendation":"Check Claimant details and review multiple addresses for any patterns of intentional misdirection"},
 	"setting":{
-		"score":100, 
-		"recommendation":"Check Claimant details and review multiple addresses",
+		"score":116, 
+		"recommendation":"Check Claimant details and review multiple addresses for any patterns of intentional misdirection",
 		"configHint": "",
 		"category": "Physician",
 		"name": "Physician Multiple Addresses"
 	},
 	"relatedRules": [
-		{"parentRule": "Claimant Missing Address Rule", "ruleName": "Claimant Earnings Rule", "correlationWeight" : 0.481}
+		{"parentRule": "Physician Multiple Addresses", "ruleName": "Claimant Earnings", "correlationWeight" : 0.481}
 	],
 	"global": "physicianMultipleAddressSettings"
 },
 {
-    "description": "The Missing Physician rule detects if there is a claim that has no attending Physician ",
+    "description": "The Missing Physician Rule detects if the claim does not have a physician assigned. ",
     "name": "Missing Physician",
-    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.* import java.util.ArrayList import com.claimvantage.rules.Setting global com.claimvantage.rules.Setting missingPhysicianSettings rule 'Missing Physician' when Contact($ContactId : id, $ClaimantName : Name); $Claim : Cve__Claim__c($ClaimId : id,  $ClaimName : Name, cve__ClaimantInsured__c == $ContactId); $AttendingPhysicans : ArrayList(size == 0)  from collect( Cve__ClaimRelationship__c( cve__Claim__c == $ClaimId, cve__Type__c == 'Attending Physician'))then insert(new Alert(drools.getRule().getName(), missingPhysicianSettings.getScore(), missingPhysicianSettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim )); end",
-	"consequence": {"score":100, "recommendation":"Investigate the Claimants Medical Claim"},
+    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.* import java.util.ArrayList import com.claimvantage.rules.Setting global com.claimvantage.rules.Setting missingPhysicianSettings rule 'Missing Physician' when Contact($ContactId : id, $ClaimantName : Name); $Claim : Cve__Claim__c($ClaimId : id,  $ClaimName : Name, cve__ClaimantInsured__c == $ContactId); $AttendingPhysicans : ArrayList(size == 0)  from collect( Cve__ClaimRelationship__c( cve__Claim__c == $ClaimId, cve__Type__c == 'Attending Physician'))then insert(new Alert(missingPhysicianSettings.getName(), missingPhysicianSettings.getScore(), missingPhysicianSettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim )); end",
+	"consequence": {"score":66, "recommendation":"Investigate the Claimants Medical Claim and refer any of there patients to the specialist physician"},
 	"setting":{
-		"score":100, 
-		"recommendation":"Investigate the Claimants Medical Claim",
+		"score":66, 
+		"recommendation":"Investigate the Claimants Medical Claim and refer any of there patients to the specialist physician",
 		"configHint": "",
 		"category": "Physician",
 		"name": "Missing Physician"
 		},
 	"relatedRules": [
-		{"parentRule": "Missing Physician", "ruleName": "Physician Invalid Address Rule", "correlationWeight" : 0.693},
-		{"parentRule": "Missing Physician", "ruleName": "Missing Medical Documents Rule", "correlationWeight" : 0.552},
-		{"parentRule": "Missing Physician", "ruleName": "Physician Invalid Address Rule", "correlationWeight" : 0.546},
+		{"parentRule": "Missing Physician", "ruleName": "Physician Invalid Address", "correlationWeight" : 0.693},
+		{"parentRule": "Missing Physician", "ruleName": "Missing Medical Documents", "correlationWeight" : 0.552},
+		{"parentRule": "Missing Physician", "ruleName": "Physician Invalid Address", "correlationWeight" : 0.546},
 		{"parentRule": "Missing Physician", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times", "correlationWeight" : 0.397},
 		{"parentRule": "Missing Physician", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.404},
-		{"parentRule": "Missing Physician", "ruleName": "Subjective Injury Rule", "correlationWeight" : 0.402},
-		{"parentRule": "Missing Physician", "ruleName": "Claimant Missing Address Rule", "correlationWeight" : 0.389},
-		{"parentRule": "Missing Physician", "ruleName": "Missing Multiple Documents Rule", "correlationWeight" : 0.377},
-		{"parentRule": "Missing Physician", "ruleName": "Sales Office with same Diagnosis Multiple times Rule", "correlationWeight" : 0.363},
-		{"parentRule": "Missing Physician", "ruleName": "Missing Accident Report Rule", "correlationWeight" : 0.355},
+		{"parentRule": "Missing Physician", "ruleName": "Subjective Injury", "correlationWeight" : 0.402},
+		{"parentRule": "Missing Physician", "ruleName": "Claimant Missing Address", "correlationWeight" : 0.389},
+		{"parentRule": "Missing Physician", "ruleName": "Missing Multiple Documents", "correlationWeight" : 0.377},
+		{"parentRule": "Missing Physician", "ruleName": "Sales Office with same Diagnosis Multiple Times", "correlationWeight" : 0.363},
+		{"parentRule": "Missing Physician", "ruleName": "Missing Accident Report", "correlationWeight" : 0.355},
 		{"parentRule": "Missing Physician", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.309},
-		{"parentRule": "Missing Physician", "ruleName": "Physician Diagnosing Same Injury Rule", "correlationWeight" : 0.308}
+		{"parentRule": "Missing Physician", "ruleName": "Physician Diagnosing Same Injury", "correlationWeight" : 0.308}
 	],
 	"global": "missingPhysicianSettings"
 },
 {
     "description": "The Physician does not have an address on file, this could indicate that the Physician could be suspicious",
-    "name": "Physician Missing Address Rule",
-    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting missingPhysicianAddressSettings rule 'Physician Missing Address Rule' when Contact($ContactId : id, $ClaimantName : Name , cve__MailingAddress__c == null, OtherAddress == null) $Claim : Cve__Claim__c($ClaimId : id,  $ClaimName : Name, cve__ClaimantInsured__c == $ContactId) Cve__ClaimRelationship__c(cve__Claim__c == $ClaimId, cve__Type__c == 'Attending Physician', cve__Contact__c == $ContactId) then insert( new Alert(drools.getRule().getName(), missingPhysicianAddressSettings.getScore(),missingPhysicianAddressSettings.getRecommendation() ,$ClaimId, $ClaimName, $ClaimantName, $Claim)); end ",
-	"consequence": {"score":100, "recommendation":"Investigate the physician on record "},
+    "name": "Physician Missing Address",
+    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting missingPhysicianAddressSettings rule 'Physician Missing Address' when Contact($ContactId : id, $ClaimantName : Name , cve__MailingAddress__c == null, OtherAddress == null) $Claim : Cve__Claim__c($ClaimId : id,  $ClaimName : Name, cve__ClaimantInsured__c == $ContactId) Cve__ClaimRelationship__c(cve__Claim__c == $ClaimId, cve__Type__c == 'Attending Physician', cve__Contact__c == $ContactId) then insert( new Alert(missingPhysicianAddressSettings.getName(), missingPhysicianAddressSettings.getScore(),missingPhysicianAddressSettings.getRecommendation() ,$ClaimId, $ClaimName, $ClaimantName, $Claim)); end ",
+	"consequence": {"score":120, "recommendation":"Contact physician and compile a report to deem if the physician is legitimate"},
 	"setting":{
-		"score":100, "recommendation":"Investigate the physician on record",
+		"score":120, "recommendation":"Contact physician and compile a report to deem if the physician is legitimate",
 		"configHint": "",
 		"category": "Physician",
-		"name": "Physician Missing Address Rule"
+		"name": "Physician Missing Address"
 		},
 	"relatedRules": [
 	
-		{"parentRule": "Physician Missing Address Rule", "ruleName": "Physician Invalid Address Rule", "correlationWeight" : 0.718},
-		{"parentRule": "Physician Missing Address Rule", "ruleName": "Missing Physician Rule", "correlationWeight" : 0.693},
-		{"parentRule": "Physician Missing Address Rule", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.470},
-		{"parentRule": "Physician Missing Address Rule", "ruleName": "Missing Multiple Documents Rule", "correlationWeight" : 0.407},
-		{"parentRule": "Physician Missing Address Rule", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.402},
-		{"parentRule": "Physician Missing Address Rule", "ruleName": "Sales Office with same Diagnosis Multiple times Rule", "correlationWeight" : 0.390},
-		{"parentRule": "Physician Missing Address Rule", "ruleName": "Physician Multiple Addresses", "correlationWeight" : 0.382},
-		{"parentRule": "Physician Missing Address Rule", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times", "correlationWeight" : 0.360},
-		{"parentRule": "Physician Missing Address Rule", "ruleName": "Physician Fraudulent History Rule", "correlationWeight" : 0.326},
-		{"parentRule": "Physician Missing Address Rule", "ruleName": "Subjective Injury Rule", "correlationWeight" : 0.320},
-		{"parentRule": "Physician Missing Address Rule", "ruleName": "New Policy Rule", "correlationWeight" : 0.309}
+		{"parentRule": "Physician Missing Address", "ruleName": "Physician Invalid Address", "correlationWeight" : 0.718},
+		{"parentRule": "Physician Missing Address", "ruleName": "Missing Physician Rule", "correlationWeight" : 0.693},
+		{"parentRule": "Physician Missing Address", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.470},
+		{"parentRule": "Physician Missing Address", "ruleName": "Missing Multiple Documents", "correlationWeight" : 0.407},
+		{"parentRule": "Physician Missing Address", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.402},
+		{"parentRule": "Physician Missing Address", "ruleName": "Sales Office with same Diagnosis Multiple Times", "correlationWeight" : 0.390},
+		{"parentRule": "Physician Missing Address", "ruleName": "Physician Multiple Addresses", "correlationWeight" : 0.382},
+		{"parentRule": "Physician Missing Address", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times", "correlationWeight" : 0.360},
+		{"parentRule": "Physician Missing Address", "ruleName": "Physician Fraudulent History", "correlationWeight" : 0.326},
+		{"parentRule": "Physician Missing Address", "ruleName": "Subjective Injury", "correlationWeight" : 0.320},
+		{"parentRule": "Physician Missing Address", "ruleName": "New Policy", "correlationWeight" : 0.309}
 	],
 	"global": "missingPhysicianAddressSettings"
 },
 {
-    "description": "The Physician does not have a valid address on file, this could indicate that the Physician could be suspicious",
-    "name": "Physician Invalid Address Rule",
-    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting invalidPhysicianAddressSettings rule 'Physician Invalid Address Rule' when Contact($ContactId : id, $ClaimantName : Name, InvalidAddress__c == true) $Claim : Cve__Claim__c($ClaimId : id, $ClaimName : Name,  cve__ClaimantInsured__c == $ContactId) Cve__ClaimRelationship__c( cve__Claim__c == $ClaimId, cve__Contact__c == $ContactId, cve__Type__c == 'Attending Physician') then insert( new Alert(drools.getRule().getName(), invalidPhysicianAddressSettings.getScore() , invalidPhysicianAddressSettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end",
-	"consequence": {"score":100, "recommendation":"Investigate the physician on record "},
+    "description": "The Physician does not have a valid address on file, this could indicate that the Physician could be suspicious or there could be a mistake in the system.",
+    "name": "Physician Invalid Address",
+    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting invalidPhysicianAddressSettings rule 'Physician Invalid Address' when Contact($ContactId : id, $ClaimantName : Name, InvalidAddress__c == true) $Claim : Cve__Claim__c($ClaimId : id, $ClaimName : Name,  cve__ClaimantInsured__c == $ContactId) Cve__ClaimRelationship__c( cve__Claim__c == $ClaimId, cve__Contact__c == $ContactId, cve__Type__c == 'Attending Physician') then insert( new Alert(invalidPhysicianAddressSettings.getName(), invalidPhysicianAddressSettings.getScore() , invalidPhysicianAddressSettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end",
+	"consequence": {"score":173, "recommendation":"Make contact physician and compile a report to deem if the physician is legitimate"},
 	"setting":{
-		"score":100, 
-		"recommendation":"Investigate the physician on record",
+		"score":173, 
+		"recommendation":"Make contact physician and compile a report to deem if the physician is legitimate",
 		"configHint": "",
 		"category": "Physician",
-		"name": "Physician Invalid Address Rule"
+		"name": "Physician Invalid Address"
 		},
 	"relatedRules": [
 	
-		{"parentRule": "Physician Invalid Address Rule", "ruleName": "Physician Missing Address Rule", "correlationWeight" : 0.718},
-		{"parentRule": "Physician Invalid Address Rule", "ruleName": "Missing Physician", "correlationWeight" : 0.546},
-		{"parentRule": "Physician Invalid Address Rule", "ruleName": "Physician Diagnosing Same Injury Rule", "correlationWeight" : 0.538},
-		{"parentRule": "Physician Invalid Address Rule", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times", "correlationWeight" : 0.436},
-		{"parentRule": "Physician Invalid Address Rule", "ruleName": "Sales Office with same Diagnosis Multiple times Rule", "correlationWeight" : 0.488},
-		{"parentRule": "Physician Invalid Address Rule", "ruleName": "Physician Fraudulent History Rule", "correlationWeight" : 0.458},
-		{"parentRule": "Physician Invalid Address Rule", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.422},
-		{"parentRule": "Physician Invalid Address Rule", "ruleName": "Claimant Invalid Address", "correlationWeight" : 0.380},
-		{"parentRule": "Physician Invalid Address Rule", "ruleName": "Claimant Multiple Addresses", "correlationWeight" : 0.377},
-		{"parentRule": "Physician Invalid Address Rule", "ruleName": "Claimant Has Fraudulent History Rule", "correlationWeight" : 0.345},
-		{"parentRule": "Physician Invalid Address Rule", "ruleName": "Claimant Claiming Same Injury Number Of Times Rule", "correlationWeight" : 0.345},
-		{"parentRule": "Physician Invalid Address Rule", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.340},
-		{"parentRule": "Physician Invalid Address Rule", "ruleName": "Claimant Missing Address Rule", "correlationWeight" : 0.337},
-		{"parentRule": "Physician Invalid Address Rule", "ruleName": "New Policy Rule", "correlationWeight" : 0.331}
+		{"parentRule": "Physician Invalid Address", "ruleName": "Physician Missing Address", "correlationWeight" : 0.718},
+		{"parentRule": "Physician Invalid Address", "ruleName": "Missing Physician", "correlationWeight" : 0.546},
+		{"parentRule": "Physician Invalid Address", "ruleName": "Physician Diagnosing Same Injury", "correlationWeight" : 0.538},
+		{"parentRule": "Physician Invalid Address", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times", "correlationWeight" : 0.436},
+		{"parentRule": "Physician Invalid Address", "ruleName": "Sales Office with same Diagnosis Multiple Times", "correlationWeight" : 0.488},
+		{"parentRule": "Physician Invalid Address", "ruleName": "Physician Fraudulent History", "correlationWeight" : 0.458},
+		{"parentRule": "Physician Invalid Address", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.422},
+		{"parentRule": "Physician Invalid Address", "ruleName": "Claimant Invalid Address", "correlationWeight" : 0.380},
+		{"parentRule": "Physician Invalid Address", "ruleName": "Claimant Multiple Addresses", "correlationWeight" : 0.377},
+		{"parentRule": "Physician Invalid Address", "ruleName": "Claimant Has Fraudulent History", "correlationWeight" : 0.345},
+		{"parentRule": "Physician Invalid Address", "ruleName": "Claimant Claiming Same Injury Number Of Times", "correlationWeight" : 0.345},
+		{"parentRule": "Physician Invalid Address", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.340},
+		{"parentRule": "Physician Invalid Address", "ruleName": "Claimant Missing Address", "correlationWeight" : 0.337},
+		{"parentRule": "Physician Invalid Address", "ruleName": "New Policy", "correlationWeight" : 0.331}
 	],
 	"global": "invalidPhysicianAddressSettings"
 },
 {
     "description": "The Physician has been flagged in the system for having history of fraudulent activity",
-    "name": "Physician Fraudulent History Rule",
-    "script": " package com.rules  import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting physicanBadHistorySettings rule 'Physician Fraudulent History Rule' when Contact($ContactId : id, $ClaimantName : Name, ConvictedFraudster__c == true); $Claim : Cve__Claim__c ($ClaimId : id,  $ClaimName : Name, RuleUtil.isClaimOpen(cve__Status__c), cve__ClaimantInsured__c == $ContactId) Cve__ClaimRelationship__c( cve__Claim__c == $ClaimId, cve__Contact__c == $ContactId, cve__Type__c == 'Attending Physician', cve__Contact__c == $ContactId ) then  insert( new Alert(drools.getRule().getName(), physicanBadHistorySettings.getScore(), physicanBadHistorySettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end ",
-	"consequence": {"score":100, "recommendation":"Investigate the physician on record "},
+    "name": "Physician Fraudulent History",
+    "script": " package com.rules  import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting physicanBadHistorySettings rule 'Physician Fraudulent History' when Contact($ContactId : id, $ClaimantName : Name, ConvictedFraudster__c == true); $Claim : Cve__Claim__c ($ClaimId : id,  $ClaimName : Name, RuleUtil.isClaimOpen(cve__Status__c), cve__ClaimantInsured__c == $ContactId) Cve__ClaimRelationship__c( cve__Claim__c == $ClaimId, cve__Contact__c == $ContactId, cve__Type__c == 'Attending Physician', cve__Contact__c == $ContactId ) then  insert( new Alert(physicanBadHistorySettings.getName(), physicanBadHistorySettings.getScore(), physicanBadHistorySettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end ",
+	"consequence": {"score":263, "recommendation":"Refer the claimant to the specialist physician and investigate compile a report on the current physician"},
 	"setting":{
-		"score":100, "recommendation":"Investigate the physician on record",
+		"score":263, "recommendation":"Refer the claimant to the specialist physician and investigate compile a report on the current physician",
 		"configHint": "",
 		"category": "Physician",
-		"name": "Physician Fraudulent History Rule"
+		"name": "Physician Fraudulent History"
 		},
 	"relatedRules": [
 	
-		{"parentRule": "Physician Fraudulent History Rule", "ruleName": "Physician Diagnosing Same Injury Rule", "correlationWeight" : 0.692},
-		{"parentRule": "Physician Fraudulent History Rule", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times", "correlationWeight" : 0.651},
-		{"parentRule": "Physician Fraudulent History Rule", "ruleName": "Sales Office with same Diagnosis Multiple times Rule", "correlationWeight" : 0.538},
-		{"parentRule": "Physician Fraudulent History Rule", "ruleName": "Physician Invalid Address Rule", "correlationWeight" : 0.485},
-		{"parentRule": "Physician Fraudulent History Rule", "ruleName": "Claimant Claiming Same Injury Number Of Times Rule", "correlationWeight" : 0.432},
-		{"parentRule": "Physician Fraudulent History Rule", "ruleName": "Physician Missing Address Rule", "correlationWeight" : 0.392},
-		{"parentRule": "Physician Fraudulent History Rule", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.391},
-		{"parentRule": "Physician Fraudulent History Rule", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.385},
-		{"parentRule": "Physician Fraudulent History Rule", "ruleName": "Claimant Has Fraudulent History Rule", "correlationWeight" : 0.355},
-		{"parentRule": "Physician Fraudulent History Rule", "ruleName": "Physician Missing Address Rule", "correlationWeight" : 0.326},
-		{"parentRule": "Physician Fraudulent History Rule", "ruleName": "First Notification of Claim after Claimant has left job", "correlationWeight" : 0.317}
+		{"parentRule": "Physician Fraudulent History", "ruleName": "Physician Diagnosing Same Injury", "correlationWeight" : 0.692},
+		{"parentRule": "Physician Fraudulent History", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times", "correlationWeight" : 0.651},
+		{"parentRule": "Physician Fraudulent History", "ruleName": "Sales Office with same Diagnosis Multiple Times", "correlationWeight" : 0.538},
+		{"parentRule": "Physician Fraudulent History", "ruleName": "Physician Invalid Address", "correlationWeight" : 0.485},
+		{"parentRule": "Physician Fraudulent History", "ruleName": "Claimant Claiming Same Injury Number Of Times", "correlationWeight" : 0.432},
+		{"parentRule": "Physician Fraudulent History", "ruleName": "Physician Missing Address", "correlationWeight" : 0.392},
+		{"parentRule": "Physician Fraudulent History", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.391},
+		{"parentRule": "Physician Fraudulent History", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.385},
+		{"parentRule": "Physician Fraudulent History", "ruleName": "Claimant Has Fraudulent History", "correlationWeight" : 0.355},
+		{"parentRule": "Physician Fraudulent History", "ruleName": "Physician Missing Address", "correlationWeight" : 0.326},
+		{"parentRule": "Physician Fraudulent History", "ruleName": "First Notification of Claim after Claimant has left job", "correlationWeight" : 0.317}
 	],
 	"global": "invalidPhysicianAddressSettings"
 },
@@ -362,10 +360,10 @@
 {
     "description": "This rule searches for patterns in Diagnosis, Physician and SalesOffice to try uncover patterns of fraud",
     "name": "Physician and Sales Office with same Diagnosis Multiple times",
-    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting sameDiagnosisForPhysicianSalesOfficeSettings rule 'Physician and Sales Office with same Diagnosis Multiple times' when Contact($PhysicianId : id); $Claim : Cve__Claim__c($ClaimNumber : name ,$ClaimId : id, $PolicyId : cve__Policy__c, $ClaimantId : Cve__ClaimantInsured__c); Cve__ClaimRelationship__c( cve__Claim__c == $ClaimId, cve__Type__c == 'Attending Physician', cve__Contact__c == $PhysicianId  ) Contact(id == $ClaimantId);  Cve__Journal__c( $JournalId : id, cve__Claim__c == $ClaimId) Cve__Diagnosis__c(cve__Journal__c == $JournalId, $medicalCode : cve__MedicalCode__c, cve__MedicalCode__c != null) Cve__PolicyRelationship__c(cve__Contact__c == $ClaimantId, cve__Policy__c == $PolicyId);  Cve__Policy__c(id == $PolicyId, $salesOffice : cve__SalesOffice__c); not PhysicanDiagnosis(claimId == $ClaimId); then insert( new PhysicanDiagnosis($PhysicianId, $medicalCode, $ClaimId, $salesOffice)); end rule 'count Physician Diagnosis and Sales Office Rule' when  Contact($ContactId : id, $ClaimantName : Name); $Claim : Cve__Claim__c($ClaimId : id, $ClaimName : Name, cve__ClaimantInsured__c == $ContactId); PhysicanDiagnosis($PhysicianId : physicanId, $mediCode : medicalCode, claimId == $ClaimId, $salesOffice : salesOffice); ArrayList(size > sameDiagnosisForPhysicianSalesOfficeSettings.getNumberOfClaims()) from collect(  PhysicanDiagnosis(physicanId == $PhysicianId, medicalCode == $mediCode, salesOffice == $salesOffice) ) then  insert( new Alert('physician And Sales Office with same Diagnosis Multiple times', sameDiagnosisForPhysicianSalesOfficeSettings.getScore(), sameDiagnosisForPhysicianSalesOfficeSettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end",
-	"consequence": {"score":110, "recommendation" : "Investigate the pattern and association between the Physician and SalesOffice"},
+    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting sameDiagnosisForPhysicianSalesOfficeSettings rule 'Physician and Sales Office with same Diagnosis Multiple times' when Contact($PhysicianId : id); $Claim : Cve__Claim__c($ClaimNumber : name ,$ClaimId : id, $PolicyId : cve__Policy__c, $ClaimantId : Cve__ClaimantInsured__c); Cve__ClaimRelationship__c( cve__Claim__c == $ClaimId, cve__Type__c == 'Attending Physician', cve__Contact__c == $PhysicianId  ) Contact(id == $ClaimantId);  Cve__Journal__c( $JournalId : id, cve__Claim__c == $ClaimId) Cve__Diagnosis__c(cve__Journal__c == $JournalId, $medicalCode : cve__MedicalCode__c, cve__MedicalCode__c != null) Cve__PolicyRelationship__c(cve__Contact__c == $ClaimantId, cve__Policy__c == $PolicyId);  Cve__Policy__c(id == $PolicyId, $salesOffice : cve__SalesOffice__c); not PhysicanDiagnosis(claimId == $ClaimId); then insert( new PhysicanDiagnosis($PhysicianId, $medicalCode, $ClaimId, $salesOffice)); end rule 'count Physician Diagnosis and Sales Office Rule' when  Contact($ContactId : id, $ClaimantName : Name); $Claim : Cve__Claim__c($ClaimId : id, $ClaimName : Name, cve__ClaimantInsured__c == $ContactId); PhysicanDiagnosis($PhysicianId : physicanId, $mediCode : medicalCode, claimId == $ClaimId, $salesOffice : salesOffice); ArrayList(size > sameDiagnosisForPhysicianSalesOfficeSettings.getNumberOfClaims()) from collect(  PhysicanDiagnosis(physicanId == $PhysicianId, medicalCode == $mediCode, salesOffice == $salesOffice) ) then  insert( new Alert(sameDiagnosisForPhysicianSalesOfficeSettings.getName(), sameDiagnosisForPhysicianSalesOfficeSettings.getScore(), sameDiagnosisForPhysicianSalesOfficeSettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end",
+	"consequence": {"score":208, "recommendation" : "Investigate the pattern and association between the Physician and SalesOffice"},
 	"setting":{
-		"score":100, 
+		"score":208, 
 		"recommendation": "Investigate the pattern and association between the Physician and SalesOffice", 
 		"numberOfClaims": 4,
 		"configHint": "Please specify the number of claims that would be deemed suspicious if the claims where purchased in the same sales office and given the same diagnosis by the same Physician",
@@ -374,149 +372,149 @@
 		},
 	"relatedRules": [
 	
-		{"parentRule": "Physician and Sales Office with same Diagnosis Multiple times", "ruleName": "Sales Office with same Diagnosis Multiple times Rule", "correlationWeight" : 0.663},
-		{"parentRule": "Physician and Sales Office with same Diagnosis Multiple times", "ruleName": "Physician Diagnosing Same Injury Rule", "correlationWeight" : 0.651},
-		{"parentRule": "Physician and Sales Office with same Diagnosis Multiple times", "ruleName": "Physician Fraudulent History Rule", "correlationWeight" : 0.531},
-		{"parentRule": "Physician and Sales Office with same Diagnosis Multiple times", "ruleName": "Claimant Claiming Same Injury Number Of Times Rule", "correlationWeight" : 0.498},
-		{"parentRule": "Physician and Sales Office with same Diagnosis Multiple times", "ruleName": "Physician Invalid Address Rule", "correlationWeight" : 0.436},
+		{"parentRule": "Physician and Sales Office with same Diagnosis Multiple times", "ruleName": "Sales Office with same Diagnosis Multiple Times", "correlationWeight" : 0.663},
+		{"parentRule": "Physician and Sales Office with same Diagnosis Multiple times", "ruleName": "Physician Diagnosing Same Injury", "correlationWeight" : 0.651},
+		{"parentRule": "Physician and Sales Office with same Diagnosis Multiple times", "ruleName": "Physician Fraudulent History", "correlationWeight" : 0.531},
+		{"parentRule": "Physician and Sales Office with same Diagnosis Multiple times", "ruleName": "Claimant Claiming Same Injury Number Of Times", "correlationWeight" : 0.498},
+		{"parentRule": "Physician and Sales Office with same Diagnosis Multiple times", "ruleName": "Physician Invalid Address", "correlationWeight" : 0.436},
 		{"parentRule": "Physician and Sales Office with same Diagnosis Multiple times", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.431},
 		{"parentRule": "Physician and Sales Office with same Diagnosis Multiple times", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.407},
-		{"parentRule": "Physician and Sales Office with same Diagnosis Multiple times", "ruleName": "Missing Medical Documents Rule", "correlationWeight" : 0.400},
+		{"parentRule": "Physician and Sales Office with same Diagnosis Multiple times", "ruleName": "Missing Medical Documents", "correlationWeight" : 0.400},
 		{"parentRule": "Physician and Sales Office with same Diagnosis Multiple times", "ruleName": "Missing Physician", "correlationWeight" : 0.397},
-		{"parentRule": "Physician and Sales Office with same Diagnosis Multiple times", "ruleName": "Physician Missing Address Rule", "correlationWeight" : 0.360},
-		{"parentRule": "Physician and Sales Office with same Diagnosis Multiple times", "ruleName": "Claimants Previous Claims Rule", "correlationWeight" : 0.320},
-		{"parentRule": "Physician and Sales Office with same Diagnosis Multiple times", "ruleName": "Claimant Missing Address Rule", "correlationWeight" : 0.309}
+		{"parentRule": "Physician and Sales Office with same Diagnosis Multiple times", "ruleName": "Physician Missing Address", "correlationWeight" : 0.360},
+		{"parentRule": "Physician and Sales Office with same Diagnosis Multiple times", "ruleName": "Claimants has made Previous Claims", "correlationWeight" : 0.320},
+		{"parentRule": "Physician and Sales Office with same Diagnosis Multiple times", "ruleName": "Claimant Missing Address", "correlationWeight" : 0.309}
 	],
 	"global": "sameDiagnosisForPhysicianSalesOfficeSettings"
 },
 {
-    "description": "This rule searches for patterns in Diagnosis and SalesOffice to try uncover patterns of fraud",
-    "name": "Sales Office with same Diagnosis Multiple times Rule",
-    "script": "package com.rules  import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting sameDiagnosisForSalesOfficeSettings rule 'Sales Office with same Diagnosis Multiple times Rule' when $Claim : Cve__Claim__c($ClaimNumber : name ,$ClaimId : id, $PolicyId : cve__Policy__c, $ClaimantId : Cve__ClaimantInsured__c); Contact(id == $ClaimantId); Cve__Journal__c( $JournalId : id, cve__Claim__c == $ClaimId)  Cve__Diagnosis__c(cve__Journal__c == $JournalId, $medicalCode : cve__MedicalCode__c, cve__MedicalCode__c != null)  Cve__PolicyRelationship__c(cve__Contact__c == $ClaimantId, cve__Policy__c == $PolicyId); Cve__Policy__c(id == $PolicyId, $salesOffice : cve__SalesOffice__c); not PhysicanDiagnosis(claimId == $ClaimId); then insert( new PhysicanDiagnosis(null, $medicalCode, $ClaimId, $salesOffice)); end rule 'count Diagnosis and Sales Office Rule' when Contact($ContactId : id, $ClaimantName : Name); $Claim : Cve__Claim__c($ClaimId : id, $ClaimName : Name, cve__ClaimantInsured__c == $ContactId); PhysicanDiagnosis($mediCode : medicalCode, claimId == $ClaimId, $salesOffice : salesOffice); ArrayList(size > sameDiagnosisForSalesOfficeSettings.getNumberOfClaims()) from collect(  PhysicanDiagnosis(medicalCode == $mediCode, salesOffice == $salesOffice) ) then insert( new Alert('Sales Office Multiple Claims with the same Diagnosis', sameDiagnosisForSalesOfficeSettings.getScore() ,sameDiagnosisForSalesOfficeSettings.getRecommendation() , $ClaimId, $ClaimName, $ClaimantName, $Claim)); end",
-	"consequence": {"score":110, "recommendation" : "Investigate the pattern and associated with the Sales Office"},
+    "description": "This rule searches for claims with the same Diagnosis and that have been sold in the same sales office to uncover patterns of fraud",
+    "name": "Sales Office with same Diagnosis Multiple Times",
+    "script": "package com.rules  import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting sameDiagnosisForSalesOfficeSettings rule 'Sales Office with same Diagnosis Multiple Times' when $Claim : Cve__Claim__c($ClaimNumber : name ,$ClaimId : id, $PolicyId : cve__Policy__c, $ClaimantId : Cve__ClaimantInsured__c); Contact(id == $ClaimantId); Cve__Journal__c( $JournalId : id, cve__Claim__c == $ClaimId)  Cve__Diagnosis__c(cve__Journal__c == $JournalId, $medicalCode : cve__MedicalCode__c, cve__MedicalCode__c != null)  Cve__PolicyRelationship__c(cve__Contact__c == $ClaimantId, cve__Policy__c == $PolicyId); Cve__Policy__c(id == $PolicyId, $salesOffice : cve__SalesOffice__c); not PhysicanDiagnosis(claimId == $ClaimId); then insert( new PhysicanDiagnosis(null, $medicalCode, $ClaimId, $salesOffice)); end rule 'count Diagnosis and Sales Office Rule' when Contact($ContactId : id, $ClaimantName : Name); $Claim : Cve__Claim__c($ClaimId : id, $ClaimName : Name, cve__ClaimantInsured__c == $ContactId); PhysicanDiagnosis($mediCode : medicalCode, claimId == $ClaimId, $salesOffice : salesOffice); ArrayList(size > sameDiagnosisForSalesOfficeSettings.getNumberOfClaims()) from collect(  PhysicanDiagnosis(medicalCode == $mediCode, salesOffice == $salesOffice) ) then insert( new Alert(sameDiagnosisForSalesOfficeSettings.getName(), sameDiagnosisForSalesOfficeSettings.getScore() ,sameDiagnosisForSalesOfficeSettings.getRecommendation() , $ClaimId, $ClaimName, $ClaimantName, $Claim)); end",
+	"consequence": {"score":174, "recommendation" : "Refer the claimant to the specialist physician and investigate the link between the physician and the sales office"},
 	"setting":{
-		"score":100, 
-		"recommendation": "Investigate the pattern and associated with the Sales Office", 
+		"score":174, 
+		"recommendation": "Refer the claimant to the specialist physician and investigate the link between the physician and the sales office", 
 		"numberOfClaims": 4,
 		"configHint": "Please specify the number of claims that would be deemed suspicious if the claims where purchased in the same sales office and diagnosed by the same Physician",
 		"category": "Diagnosis",
-		"name": "Sales Office with same Diagnosis Multiple times Rule"
+		"name": "Sales Office with same Diagnosis Multiple Times"
 		},
 	"relatedRules": [
 	
-		{"parentRule": "Sales Office with same Diagnosis Multiple times Rule", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times", "correlationWeight" : 0.663},
-		{"parentRule": "Sales Office with same Diagnosis Multiple times Rule", "ruleName": "Claimant Claiming Same Injury Number Of Times Rule", "correlationWeight" : 0.656},
-		{"parentRule": "Sales Office with same Diagnosis Multiple times Rule", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.557},
-		{"parentRule": "Sales Office with same Diagnosis Multiple times Rule", "ruleName": "Physician Diagnosing Same Injury Rule", "correlationWeight" : 0.538},
-		{"parentRule": "Sales Office with same Diagnosis Multiple times Rule", "ruleName": "Physician Fraudulent History Rule", "correlationWeight" : 0.510},
-		{"parentRule": "Sales Office with same Diagnosis Multiple times Rule", "ruleName": "Physician Invalid Address Rule", "correlationWeight" : 0.488},
-		{"parentRule": "Sales Office with same Diagnosis Multiple times Rule", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.468},
-		{"parentRule": "Sales Office with same Diagnosis Multiple times Rule", "ruleName": "Subjective Injury Rule", "correlationWeight" : 0.439},
-		{"parentRule": "Sales Office with same Diagnosis Multiple times Rule", "ruleName": "Physician Missing Address Rule", "correlationWeight" : 0.390},
-		{"parentRule": "Sales Office with same Diagnosis Multiple times Rule", "ruleName": "Claimant Has Fraudulent History Rule", "correlationWeight" : 0.368},
-		{"parentRule": "Sales Office with same Diagnosis Multiple times Rule", "ruleName": "Missing Physician", "correlationWeight" : 0.363},
-		{"parentRule": "Sales Office with same Diagnosis Multiple times Rule", "ruleName": "Claimant Multiple Addresses", "correlationWeight" : 0.354},
-		{"parentRule": "Sales Office with same Diagnosis Multiple times Rule", "ruleName": "First Notification of Claim after Claimant has left job", "correlationWeight" : 0.350},
-		{"parentRule": "Sales Office with same Diagnosis Multiple times Rule", "ruleName": "Claimant Invalid Address", "correlationWeight" : 0.329},
-		{"parentRule": "Sales Office with same Diagnosis Multiple times Rule", "ruleName": "Missing Medical Documents Rule", "correlationWeight" : 0.329},
-		{"parentRule": "Sales Office with same Diagnosis Multiple times Rule", "ruleName": "Claimant Missing Address Rule", "correlationWeight" : 0.325}
+		{"parentRule": "Sales Office with same Diagnosis Multiple Times", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times", "correlationWeight" : 0.663},
+		{"parentRule": "Sales Office with same Diagnosis Multiple Times", "ruleName": "Claimant Claiming Same Injury Number Of Times", "correlationWeight" : 0.656},
+		{"parentRule": "Sales Office with same Diagnosis Multiple Times", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.557},
+		{"parentRule": "Sales Office with same Diagnosis Multiple Times", "ruleName": "Physician Diagnosing Same Injury", "correlationWeight" : 0.538},
+		{"parentRule": "Sales Office with same Diagnosis Multiple Times", "ruleName": "Physician Fraudulent History", "correlationWeight" : 0.510},
+		{"parentRule": "Sales Office with same Diagnosis Multiple Times", "ruleName": "Physician Invalid Address", "correlationWeight" : 0.488},
+		{"parentRule": "Sales Office with same Diagnosis Multiple Times", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.468},
+		{"parentRule": "Sales Office with same Diagnosis Multiple Times", "ruleName": "Subjective Injury", "correlationWeight" : 0.439},
+		{"parentRule": "Sales Office with same Diagnosis Multiple Times", "ruleName": "Physician Missing Address", "correlationWeight" : 0.390},
+		{"parentRule": "Sales Office with same Diagnosis Multiple Times", "ruleName": "Claimant Has Fraudulent History", "correlationWeight" : 0.368},
+		{"parentRule": "Sales Office with same Diagnosis Multiple Times", "ruleName": "Missing Physician", "correlationWeight" : 0.363},
+		{"parentRule": "Sales Office with same Diagnosis Multiple Times", "ruleName": "Claimant Multiple Addresses", "correlationWeight" : 0.354},
+		{"parentRule": "Sales Office with same Diagnosis Multiple Times", "ruleName": "First Notification of Claim after Claimant has left job", "correlationWeight" : 0.350},
+		{"parentRule": "Sales Office with same Diagnosis Multiple Times", "ruleName": "Claimant Invalid Address", "correlationWeight" : 0.329},
+		{"parentRule": "Sales Office with same Diagnosis Multiple Times", "ruleName": "Missing Medical Documents", "correlationWeight" : 0.329},
+		{"parentRule": "Sales Office with same Diagnosis Multiple Times", "ruleName": "Claimant Missing Address", "correlationWeight" : 0.325}
 	],
 	"global": "sameDiagnosisForSalesOfficeSettings"
 },
 {
-    "description": "The Subjective injury rule assesses the claimants medical condition to see if it is a subjective injury",
-    "name": "Subjective Injury Rule",
-    "script": "package com.rules  import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.* import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting subjectiveInjurySettings rule 'Subjective Injury Rule' when   Contact($ContactId : id, $ClaimantName : Name); $Claim : Cve__Claim__c($ClaimId : id, $ClaimName : Name, cve__ClaimantInsured__c == $ContactId);  Cve__Journal__c( $JournalId : id, cve__Claim__c == $ClaimId) Cve__Diagnosis__c(cve__Journal__c == $JournalId, $cve__MedicalCodeDescription__c : cve__MedicalCodeDescription__c) eval( RuleUtil.isSubjectiveInjury($cve__MedicalCodeDescription__c) ) then insert( new Alert(drools.getRule().getName(), subjectiveInjurySettings.getScore() , subjectiveInjurySettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end;",
-	"consequence": {"score":100, "recommendation":" Get Local Physicians opinion on this injury "},
+    "description": "The Subjective Injury RUle assesses the claimants medical condition to see if it is a subjective injury, if deemed to be subjective the rule is fired.",
+    "name": "Subjective Injury",
+    "script": "package com.rules  import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.* import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting subjectiveInjurySettings rule 'Subjective Injury' when   Contact($ContactId : id, $ClaimantName : Name); $Claim : Cve__Claim__c($ClaimId : id, $ClaimName : Name, cve__ClaimantInsured__c == $ContactId);  Cve__Journal__c( $JournalId : id, cve__Claim__c == $ClaimId) Cve__Diagnosis__c(cve__Journal__c == $JournalId, $cve__MedicalCodeDescription__c : cve__MedicalCodeDescription__c) eval( RuleUtil.isSubjectiveInjury($cve__MedicalCodeDescription__c) ) then insert( new Alert(subjectiveInjurySettings.getName(), subjectiveInjurySettings.getScore() , subjectiveInjurySettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end;",
+	"consequence": {"score":118, "recommendation":" Refer the claimant to the specialist physician "},
 	"setting":{
-		"score":100, 
-		"recommendation":" Get Local Physicians opinion on this injury ",
+		"score":118, 
+		"recommendation":" Refer the claimant to the specialist physician  ",
 		"configHint": "",
 		"category": "Diagnosis",
-		"name": "Subjective Injury Rule"
+		"name": "Subjective Injury"
 		},
 	"relatedRules": [
 	
-		{"parentRule": "Subjective Injury Rule", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.690},
-		{"parentRule": "Subjective Injury Rule", "ruleName": "First Notification of Claim after Claimant has left job", "correlationWeight" : 0.444},
-		{"parentRule": "Subjective Injury Rule", "ruleName": "Sales Office with same Diagnosis Multiple times Rule", "correlationWeight" : 0.439},
-		{"parentRule": "Subjective Injury Rule", "ruleName": "Missing Physician", "correlationWeight" : 0.402},
-		{"parentRule": "Subjective Injury Rule", "ruleName": "Missing Accident Report Rule", "correlationWeight" : 0.380},
-		{"parentRule": "Subjective Injury Rule", "ruleName": "Missing Multiple Documents Rule", "correlationWeight" : 0.361},
-		{"parentRule": "Subjective Injury Rule", "ruleName": "New Policy Rule", "correlationWeight" : 0.357},
-		{"parentRule": "Subjective Injury Rule", "ruleName": "Claimant Missing Address Rule", "correlationWeight" : 0.345},
-		{"parentRule": "Subjective Injury Rule", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.340},
-		{"parentRule": "Subjective Injury Rule", "ruleName": "Missing Medical Documents Rule", "correlationWeight" : 0.339},
-		{"parentRule": "Subjective Injury Rule", "ruleName": "Physician Missing Address Rule", "correlationWeight" : 0.320},
-		{"parentRule": "Subjective Injury Rule", "ruleName": "Claimant Claiming Same Injury Number Of Times Rule", "correlationWeight" : 0.312}
+		{"parentRule": "Subjective Injury", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.690},
+		{"parentRule": "Subjective Injury", "ruleName": "First Notification of Claim after Claimant has left job", "correlationWeight" : 0.444},
+		{"parentRule": "Subjective Injury", "ruleName": "Sales Office with same Diagnosis Multiple Times", "correlationWeight" : 0.439},
+		{"parentRule": "Subjective Injury", "ruleName": "Missing Physician", "correlationWeight" : 0.402},
+		{"parentRule": "Subjective Injury", "ruleName": "Missing Accident Report", "correlationWeight" : 0.380},
+		{"parentRule": "Subjective Injury", "ruleName": "Missing Multiple Documents", "correlationWeight" : 0.361},
+		{"parentRule": "Subjective Injury", "ruleName": "New Policy", "correlationWeight" : 0.357},
+		{"parentRule": "Subjective Injury", "ruleName": "Claimant Missing Address", "correlationWeight" : 0.345},
+		{"parentRule": "Subjective Injury", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.340},
+		{"parentRule": "Subjective Injury", "ruleName": "Missing Medical Documents", "correlationWeight" : 0.339},
+		{"parentRule": "Subjective Injury", "ruleName": "Physician Missing Address", "correlationWeight" : 0.320},
+		{"parentRule": "Subjective Injury", "ruleName": "Claimant Claiming Same Injury Number Of Times", "correlationWeight" : 0.312}
 	],
 	"global": "subjectiveInjurySettings"
 },
 {
     "description": "This rule searches for the amount of previous claims the Claimant has already made and checks if they have claimed the for the same injury",
-    "name": "Claimant Claiming Same Injury Number Of Times Rule",
-    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting previousClaimsWithSameInjurySettings rule 'Claimant Claiming Same Injury Number Of Times Rule' salience 100 when  $Claim : Cve__Claim__c($closedClaimName : name, $ClosedClaimId : id, $ContactId : cve__ClaimantInsured__c, cve__Status__c == 'Closed'); Cve__Journal__c( $ClosedJournalId : id, cve__Claim__c == $ClosedClaimId)  Cve__Diagnosis__c(cve__Journal__c == $ClosedJournalId, $MedicalCode : cve__MedicalCode__c, cve__MedicalCode__c != null) not ClaimantSameInjuryHistory(closedClaimId == $ClosedClaimId); then insert( new ClaimantSameInjuryHistory($ContactId, $ClosedClaimId , $MedicalCode)); end rule 'count Claimant Same Injury History' salience 0 when ClaimantSameInjuryHistory($ClaimantInsured : contactId , $medicalCode : medicalCode);  Contact(id == $ClaimantInsured, $ClaimantName : Name); $Claim : Cve__Claim__c($OpenClaimId : id, $ClaimName : Name, cve__ClaimantInsured__c == $ClaimantInsured , RuleUtil.isClaimOpen(cve__Status__c));   Cve__Journal__c( $JournalId : id, cve__Claim__c == $OpenClaimId) Cve__Diagnosis__c(cve__Journal__c == $JournalId, cve__MedicalCode__c == $medicalCode, cve__MedicalCode__c != null)  Number( $claimCount : intValue) from accumulate( $claims :  ClaimantSameInjuryHistory($ClaimantInsured == contactId, medicalCode == $medicalCode), count( $claims )) eval( $claimCount > previousClaimsWithSameInjurySettings.getNumberOfClaims()) not CountedSameInjury( claimantId == $ClaimantInsured) then insert( new Alert(drools.getRule().getName(), previousClaimsWithSameInjurySettings.getScore(), previousClaimsWithSameInjurySettings.getRecommendation(), $OpenClaimId, $ClaimName, $ClaimantName, $Claim)); insert( new CountedSameInjury($ClaimantInsured)); end",
-	"consequence": {"score":110, "recommendation" : "Review Previous claims for patterns"},
+    "name": "Claimant Claiming Same Injury Number Of Times",
+    "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting previousClaimsWithSameInjurySettings rule 'Claimant Claiming Same Injury Number Of Times' salience 100 when  $Claim : Cve__Claim__c($closedClaimName : name, $ClosedClaimId : id, $ContactId : cve__ClaimantInsured__c, cve__Status__c == 'Closed'); Cve__Journal__c( $ClosedJournalId : id, cve__Claim__c == $ClosedClaimId)  Cve__Diagnosis__c(cve__Journal__c == $ClosedJournalId, $MedicalCode : cve__MedicalCode__c, cve__MedicalCode__c != null) not ClaimantSameInjuryHistory(closedClaimId == $ClosedClaimId); then insert( new ClaimantSameInjuryHistory($ContactId, $ClosedClaimId , $MedicalCode)); end rule 'count Claimant Same Injury History' salience 0 when ClaimantSameInjuryHistory($ClaimantInsured : contactId , $medicalCode : medicalCode);  Contact(id == $ClaimantInsured, $ClaimantName : Name); $Claim : Cve__Claim__c($OpenClaimId : id, $ClaimName : Name, cve__ClaimantInsured__c == $ClaimantInsured , RuleUtil.isClaimOpen(cve__Status__c));   Cve__Journal__c( $JournalId : id, cve__Claim__c == $OpenClaimId) Cve__Diagnosis__c(cve__Journal__c == $JournalId, cve__MedicalCode__c == $medicalCode, cve__MedicalCode__c != null)  Number( $claimCount : intValue) from accumulate( $claims :  ClaimantSameInjuryHistory($ClaimantInsured == contactId, medicalCode == $medicalCode), count( $claims )) eval( $claimCount > previousClaimsWithSameInjurySettings.getNumberOfClaims()) not CountedSameInjury( claimantId == $ClaimantInsured) then insert( new Alert(previousClaimsWithSameInjurySettings.getName(), previousClaimsWithSameInjurySettings.getScore(), previousClaimsWithSameInjurySettings.getRecommendation(), $OpenClaimId, $ClaimName, $ClaimantName, $Claim)); insert( new CountedSameInjury($ClaimantInsured)); end",
+	"consequence": {"score":148, "recommendation" : "Refer the claimant to the specialist physician "},
 	"setting":{
-		"score":100, 
-		"recommendation": "Review Previous claims for patterns", 
+		"score":148, 
+		"recommendation": "Refer the claimant to the specialist physician ", 
 		"numberOfClaims": 3,
 		"configHint": "Please specify the number of previous claims the claimant with the same diagnosis would have to have claimed before be deemed suspicious",
 		"category": "Diagnosis",
-		"name": "Claimant Claiming Same Injury Number Of Times Rule"
+		"name": "Claimant Claiming Same Injury Number Of Times"
 		},
 	"relatedRules":[
 		
-		{"parentRule": "Claimant Claiming Same Injury Number Of Times Rule", "ruleName": "Physician Diagnosing Same Injury Rule", "correlationWeight" : 0.509},
-		{"parentRule": "Claimant Claiming Same Injury Number Of Times Rule", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.508},
-		{"parentRule": "Claimant Claiming Same Injury Number Of Times Rule", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.501},
-		{"parentRule": "Claimant Claiming Same Injury Number Of Times Rule", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times", "correlationWeight" : 0.498},
-		{"parentRule": "Claimant Claiming Same Injury Number Of Times Rule", "ruleName": "Physician Fraudulent History Rule", "correlationWeight" : 0.432},
-		{"parentRule": "Claimant Claiming Same Injury Number Of Times Rule", "ruleName": "Claimants Previous Claims Rule", "correlationWeight" : 0.424},
-		{"parentRule": "Claimant Claiming Same Injury Number Of Times Rule", "ruleName": "First Notification of Claim after Claimant has left job", "correlationWeight" : 0.378},
-		{"parentRule": "Claimant Claiming Same Injury Number Of Times Rule", "ruleName": "Missing Accident Report Rule", "correlationWeight" : 0.367},
-		{"parentRule": "Claimant Claiming Same Injury Number Of Times Rule", "ruleName": "Physician Invalid Address Rule", "correlationWeight" : 0.345},
-		{"parentRule": "Claimant Claiming Same Injury Number Of Times Rule", "ruleName": "Missing Medical Documents Rule", "correlationWeight" : 0.326},
-		{"parentRule": "Claimant Claiming Same Injury Number Of Times Rule", "ruleName": "Claimant Has Fraudulent History Rule", "correlationWeight" : 0.325},
-		{"parentRule": "Claimant Claiming Same Injury Number Of Times Rule", "ruleName": "Subjective Injury Rule", "correlationWeight" : 0.312}
+		{"parentRule": "Claimant Claiming Same Injury Number Of Times", "ruleName": "Physician Diagnosing Same Injury", "correlationWeight" : 0.509},
+		{"parentRule": "Claimant Claiming Same Injury Number Of Times", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.508},
+		{"parentRule": "Claimant Claiming Same Injury Number Of Times", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.501},
+		{"parentRule": "Claimant Claiming Same Injury Number Of Times", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times", "correlationWeight" : 0.498},
+		{"parentRule": "Claimant Claiming Same Injury Number Of Times", "ruleName": "Physician Fraudulent History", "correlationWeight" : 0.432},
+		{"parentRule": "Claimant Claiming Same Injury Number Of Times", "ruleName": "Claimants has made Previous Claims", "correlationWeight" : 0.424},
+		{"parentRule": "Claimant Claiming Same Injury Number Of Times", "ruleName": "First Notification of Claim after Claimant has left job", "correlationWeight" : 0.378},
+		{"parentRule": "Claimant Claiming Same Injury Number Of Times", "ruleName": "Missing Accident Report", "correlationWeight" : 0.367},
+		{"parentRule": "Claimant Claiming Same Injury Number Of Times", "ruleName": "Physician Invalid Address", "correlationWeight" : 0.345},
+		{"parentRule": "Claimant Claiming Same Injury Number Of Times", "ruleName": "Missing Medical Documents", "correlationWeight" : 0.326},
+		{"parentRule": "Claimant Claiming Same Injury Number Of Times", "ruleName": "Claimant Has Fraudulent History", "correlationWeight" : 0.325},
+		{"parentRule": "Claimant Claiming Same Injury Number Of Times", "ruleName": "Subjective Injury", "correlationWeight" : 0.312}
 	],
 	"global": "previousClaimsWithSameInjurySettings"
 },
 {
-    "description": "This rule searches for the amount of previous diagnosis made by a physicians and flags open claims that have been found in this pattern",
-    "name": "Physician Diagnosing Same Injury Rule",
-    "script": "package com.rules  import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting physicianDiagnosingSameInjurySettings rule 'Physician Diagnosing Same Injury Rule' salience 100 when Contact($PhysicianId : id); $Claim : Cve__Claim__c($ClaimId : id );  Cve__ClaimRelationship__c( cve__Claim__c == $ClaimId, cve__Type__c == 'Attending Physician', cve__Contact__c == $PhysicianId)Cve__Journal__c( $JournalId : id, cve__Claim__c == $ClaimId)  Cve__Diagnosis__c(cve__Journal__c == $JournalId, $medicalCode : cve__MedicalCode__c, cve__MedicalCode__c != null ) not PhysicanDiagnosis(claimId == $ClaimId); then insert( new PhysicanDiagnosis($PhysicianId, $medicalCode, $ClaimId)); end rule 'Count Physician Multiple Diagnosis' salience 0 when $Physician : PhysicanDiagnosis($PhysicianId : physicanId, $mediCode : medicalCode, $ClaimId : claimId); $Claim : Cve__Claim__c( id == $ClaimId, $ClaimName : Name, RuleUtil.isClaimOpen(cve__Status__c), $ClaimantInsured : cve__ClaimantInsured__c); Contact(id == $ClaimantInsured, $ClaimantName : Name); Number( $diagnosisCount : intValue) from accumulate( $claims :  PhysicanDiagnosis(physicanId == $PhysicianId, medicalCode == $mediCode),count( $claims )) eval( $diagnosisCount > physicianDiagnosingSameInjurySettings.getNumberOfClaims()) then insert( new Alert(drools.getRule().getName(), physicianDiagnosingSameInjurySettings.getScore(), physicianDiagnosingSameInjurySettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end",
-	"consequence": {"score":110, "recommendation" : "Review Physician for patterns"},
+    "description": "This rule is looking at physician diagnosis patterns. It searches the previous diagnosis made by physician and flags claims when the physician has made the same diagnosis a number of times",
+    "name": "Physician Diagnosing Same Injury",
+    "script": "package com.rules  import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting physicianDiagnosingSameInjurySettings rule 'Physician Diagnosing Same Injury' salience 100 when Contact($PhysicianId : id); $Claim : Cve__Claim__c($ClaimId : id );  Cve__ClaimRelationship__c( cve__Claim__c == $ClaimId, cve__Type__c == 'Attending Physician', cve__Contact__c == $PhysicianId)Cve__Journal__c( $JournalId : id, cve__Claim__c == $ClaimId)  Cve__Diagnosis__c(cve__Journal__c == $JournalId, $medicalCode : cve__MedicalCode__c, cve__MedicalCode__c != null ) not PhysicanDiagnosis(claimId == $ClaimId); then insert( new PhysicanDiagnosis($PhysicianId, $medicalCode, $ClaimId)); end rule 'Count Physician Multiple Diagnosis' salience 0 when $Physician : PhysicanDiagnosis($PhysicianId : physicanId, $mediCode : medicalCode, $ClaimId : claimId); $Claim : Cve__Claim__c( id == $ClaimId, $ClaimName : Name, RuleUtil.isClaimOpen(cve__Status__c), $ClaimantInsured : cve__ClaimantInsured__c); Contact(id == $ClaimantInsured, $ClaimantName : Name); Number( $diagnosisCount : intValue) from accumulate( $claims :  PhysicanDiagnosis(physicanId == $PhysicianId, medicalCode == $mediCode),count( $claims )) eval( $diagnosisCount > physicianDiagnosingSameInjurySettings.getNumberOfClaims()) then insert( new Alert(physicianDiagnosingSameInjurySettings.getName(), physicianDiagnosingSameInjurySettings.getScore(), physicianDiagnosingSameInjurySettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end",
+	"consequence": {"score":219, "recommendation" : "Refer the claimant to the specialist physician and compile a report of the physician"},
 	"setting":{
-		"score":100, 
-		"recommendation": "Review Physician for patterns", 
+		"score":219, 
+		"recommendation": "Refer the claimant to the specialist physician and compile a report of the physician", 
 		"numberOfClaims": 3,
 		"configHint": "Please specify the number of previous claims diagnosed by the same physician with the same diagnosis would have to have claimed before be deemed suspicious",
 		"category": "Diagnosis",
-		"name": "Physician Diagnosing Same Injury Rule"
+		"name": "Physician Diagnosing Same Injury"
 		},
 	"relatedRules": [
-		{"parentRule": "Physician Diagnosing Same Injury Rule", "ruleName": "Sales Office with same Diagnosis Multiple times Rule", "correlationWeight" : 0.538},
-		{"parentRule": "Physician Diagnosing Same Injury Rule", "ruleName": "Claimant Claiming Same Injury Number Of Times Rule", "correlationWeight" : 0.450},
-		{"parentRule": "Physician Diagnosing Same Injury Rule", "ruleName": "Physician Invalid Address Rule", "correlationWeight" : 0.538},
-		{"parentRule": "Physician Diagnosing Same Injury Rule", "ruleName": "Physician Missing Address Rule", "correlationWeight" : 0.382},
-		{"parentRule": "Physician Diagnosing Same Injury Rule", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.366},
-		{"parentRule": "Physician Diagnosing Same Injury Rule", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.350},
-		{"parentRule": "Physician Diagnosing Same Injury Rule", "ruleName": "First Notification of Claim after Claimant has left job", "correlationWeight" : 0.313},
-		{"parentRule": "Physician Diagnosing Same Injury Rule", "ruleName": "Missing Physician", "correlationWeight" : 0.308},
-		{"parentRule": "Physician Diagnosing Same Injury Rule", "ruleName": "Physician Fraudulent History Rule", "correlationWeight" : 0.692},
-		{"parentRule": "Physician Diagnosing Same Injury Rule", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times", "correlationWeight" : 0.651}
+		{"parentRule": "Physician Diagnosing Same Injury", "ruleName": "Sales Office with same Diagnosis Multiple Times", "correlationWeight" : 0.538},
+		{"parentRule": "Physician Diagnosing Same Injury", "ruleName": "Claimant Claiming Same Injury Number Of Times", "correlationWeight" : 0.450},
+		{"parentRule": "Physician Diagnosing Same Injury", "ruleName": "Physician Invalid Address", "correlationWeight" : 0.538},
+		{"parentRule": "Physician Diagnosing Same Injury", "ruleName": "Physician Missing Address", "correlationWeight" : 0.382},
+		{"parentRule": "Physician Diagnosing Same Injury", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.366},
+		{"parentRule": "Physician Diagnosing Same Injury", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.350},
+		{"parentRule": "Physician Diagnosing Same Injury", "ruleName": "First Notification of Claim after Claimant has left job", "correlationWeight" : 0.313},
+		{"parentRule": "Physician Diagnosing Same Injury", "ruleName": "Missing Physician", "correlationWeight" : 0.308},
+		{"parentRule": "Physician Diagnosing Same Injury", "ruleName": "Physician Fraudulent History", "correlationWeight" : 0.692},
+		{"parentRule": "Physician Diagnosing Same Injury", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times", "correlationWeight" : 0.651}
 	],
 	"global": "physicianDiagnosingSameInjurySettings"
 },
 {
-    "description": "TODO ",
+    "description": "This rule will look at all the claimants previous claims and raise a flag if this claims have all been associated with a subjective injury ",
     "name": "History Of Subjective Injury Claims",
     "script": "package com.rules  import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting historyOfSubjectiveInjurySettings rule 'History Of Subjective Injury Claims' salience 100 when $ClosedClaim : Cve__Claim__c($closedClaimName : name, $ClosedClaimId : id, $ContactId : cve__ClaimantInsured__c, cve__Status__c == 'Closed');  $journal : Cve__Journal__c( $ClosedJournalId : id, cve__Claim__c == $ClosedClaimId) Cve__Diagnosis__c(cve__Journal__c == $ClosedJournalId, $cve__MedicalCodeDescription__c : cve__MedicalCodeDescription__c, $MedicalCode : cve__MedicalCode__c, cve__MedicalCode__c != null) eval( RuleUtil.isSubjectiveInjury($cve__MedicalCodeDescription__c) )  not ClaimantSameInjuryHistory(closedClaimId == $ClosedClaimId); then insert( new ClaimantSameInjuryHistory($ContactId, $ClosedClaimId , $MedicalCode, true)); end; rule 'count Subjective History Rule' salience 0 when   $Claims : ClaimantSameInjuryHistory($ClaimantInsured : contactId, subjective == true); $claim : Cve__Claim__c($OpenClaimId : id, $claimName : Name, cve__ClaimantInsured__c == $ClaimantInsured , RuleUtil.isClaimOpen(cve__Status__c)); Contact( id == $ClaimantInsured, $claimantName : name) $journal : Cve__Journal__c( $JournalId : id, cve__Claim__c == $OpenClaimId) Cve__Diagnosis__c(cve__Journal__c == $JournalId, cve__MedicalCode__c != null)  Number( $claimCount : intValue) from accumulate(  $claims :  ClaimantSameInjuryHistory($ClaimantInsured == contactId, subjective == true), count( $claims )) eval( $claimCount > historyOfSubjectiveInjurySettings.getNumberOfClaims())  not CountedSameInjury( claimantId == $ClaimantInsured) then insert( new Alert(historyOfSubjectiveInjurySettings.getName(), historyOfSubjectiveInjurySettings.getScore(), historyOfSubjectiveInjurySettings.getRecommendation(), $OpenClaimId, $claimName, $claimantName, $claim)); insert( new CountedSameInjury($ClaimantInsured)); end;  ",
-	"consequence": {"score":110, "recommendation" : "Review Physician for patterns"},
+	"consequence": {"score":171, "recommendation" : "Refer the claimant to the specialist physician"},
 	"setting":{
-		"score":100, 
-		"recommendation": " TODO ", 
+		"score":171, 
+		"recommendation": " Refer the claimant to the specialist physician ", 
 		"numberOfClaims": 3,
 		"configHint": "Please specify the number of previous claims diagnosed by the same physician and handled by the same Attorney with the same diagnosis would have to have claimed before be deemed suspicious",
 		"category": "Diagnosis",
@@ -524,21 +522,21 @@
 		},
 	"relatedRules": [
 	
-		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Subjective Injury Rule", "correlationWeight" : 0.690},
-		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Sales Office with same Diagnosis Multiple times Rule", "correlationWeight" : 0.557},
-		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Claimant Claiming Same Injury Number Of Times Rule", "correlationWeight" : 0.508},
-		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Physician Missing Address Rule", "correlationWeight" : 0.470},
+		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Subjective Injury", "correlationWeight" : 0.690},
+		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Sales Office with same Diagnosis Multiple Times", "correlationWeight" : 0.557},
+		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Claimant Claiming Same Injury Number Of Times", "correlationWeight" : 0.508},
+		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Physician Missing Address", "correlationWeight" : 0.470},
 		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.459},
-		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Physician Invalid Address Rule", "correlationWeight" : 0.422},
-		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "New Policy Rule", "correlationWeight" : 0.446},
-		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Missing Accident Report Rule", "correlationWeight" : 0.412},
+		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Physician Invalid Address", "correlationWeight" : 0.422},
+		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "New Policy", "correlationWeight" : 0.446},
+		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Missing Accident Report", "correlationWeight" : 0.412},
 		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Physician and Sales Office with same Diagnosis Multiple time", "correlationWeight" : 0.407},
 		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Missing Physician", "correlationWeight" : 0.404},
-		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Physician Fraudulent History Rule", "correlationWeight" : 0.391},
-		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Physician Diagnosing Same Injury Rule", "correlationWeight" : 0.366},
-		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Missing Medical Documents Rule", "correlationWeight" : 0.347},
-		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Claimant Missing Address Rule", "correlationWeight" : 0.310},
-		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Claimants Previous Claims Rule", "correlationWeight" : 0.307}
+		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Physician Fraudulent History", "correlationWeight" : 0.391},
+		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Physician Diagnosing Same Injury", "correlationWeight" : 0.366},
+		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Missing Medical Documents", "correlationWeight" : 0.347},
+		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Claimant Missing Address", "correlationWeight" : 0.310},
+		{"parentRule": "History Of Subjective Injury Claims", "ruleName": "Claimants has made Previous Claims", "correlationWeight" : 0.307}
 		
 	],
 	"global": "historyOfSubjectiveInjurySettings"
@@ -546,43 +544,43 @@
 
 
 {
-    "description": "This Rule Counts the number of Notes, Attachments and Documents and evaluates if the claims is getting complicated due to the large amount of Correspondence",
-    "name": "Large Amount of Correspondence Rule",
-    "script": "package com.rules  import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting largeAmountOfCorrespondanceSettings rule 'Large Amount of Correspondence Rule' when Contact($ContactId : id, $ClaimantName : Name); $Claim : Cve__Claim__c($ClaimId : id,   $ClaimName : Name, cve__ClaimantInsured__c == $ContactId);  Number( $noteCount : intValue) from accumulate( $notes :  Note(ParentId == $ClaimId), count( $notes ) ) Number( $attachmentCount : intValue) from accumulate( $attachments :  Attachment(ParentId == $ClaimId), count( $attachments ) )  Number( $documentCount : intValue) from accumulate( $documents :  Cve__Document__c(cve__Claim__c == $ClaimId), count( $documents ) ) eval(RuleUtil.isLargeNumberOfAttachmentsAndNotes($noteCount, $attachmentCount, $documentCount, largeAmountOfCorrespondanceSettings.getNumberOfCorrespondence())) then insert( new Alert(drools.getRule().getName(), largeAmountOfCorrespondanceSettings.getScore(), largeAmountOfCorrespondanceSettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end;",
-	"consequence": {"score":100, "recommendation":" Review Claim notes, attachments and documents to ensure Claim is not fraudulent"},
+    "description": "This Rule Counts the number of Legal Notes, Attachments and Documents and evaluates if the claims is getting complicated due to the large amount of Correspondence",
+    "name": "Large Amount of Legal Correspondence",
+    "script": "package com.rules  import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting largeAmountOfCorrespondanceSettings rule 'Large Amount of Legal Correspondence' when Contact($ContactId : id, $ClaimantName : Name); $Claim : Cve__Claim__c($ClaimId : id,   $ClaimName : Name, cve__ClaimantInsured__c == $ContactId);  Number( $noteCount : intValue) from accumulate( $notes :  Note(ParentId == $ClaimId), count( $notes ) ) Number( $attachmentCount : intValue) from accumulate( $attachments :  Attachment(ParentId == $ClaimId), count( $attachments ) )  Number( $documentCount : intValue) from accumulate( $documents :  Cve__Document__c(cve__Claim__c == $ClaimId), count( $documents ) ) eval(RuleUtil.isLargeNumberOfAttachmentsAndNotes($noteCount, $attachmentCount, $documentCount, largeAmountOfCorrespondanceSettings.getNumberOfCorrespondence())) then insert( new Alert( largeAmountOfCorrespondanceSettings.getName(), largeAmountOfCorrespondanceSettings.getScore(), largeAmountOfCorrespondanceSettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end;",
+	"consequence": {"score":107, "recommendation":" Review the legal notes, attachments and documents to ensure and pass to legal department if any doubt in the legitimacy of the claim"},
 	"setting":{
-		"score":100, 
-		"recommendation": " Review Claim notes, attachments and documents to ensure Claim is not fraudulent", 
+		"score":107, 
+		"recommendation": "Review the legal notes, attachments and documents to ensure and pass to legal department if any doubt in the legitimacy of the claim", 
 		"numberOfCorrespondence": 5,
-		"configHint": "Please select the number of Correspondence documents you would consider to be suspicious",
-		"category": "Claimant",
-		"name": "Large Amount of Correspondence Rule"
+		"configHint": "Please select the number of legal correspondence documents you would consider to be suspicious",
+		"category": "Legal",
+		"name": "Large Amount of Legal Correspondence"
 		},
 	"global": "largeAmountOfCorrespondanceSettings"
 },
 
 {
-    "description": "TODO ",
+    "description": "This rule will flag any claim, where the claimant made a claim after leaving or losing the job. ",
     "name": "First Notification of Claim after Claimant has left job",
     "script": "package com.rules  import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting firstNotificationAfterLeftJobSetttings rule 'First Notification of Claim after Claimant has left job' when $Claimant : Contact($ClaimantName : Name, $ContactId : id, $EndOfHiringDate : EndDateOfHiring__c) $Claim : Cve__Claim__c($ClaimName : Name, $ClaimId : id, cve__ClaimantInsured__c == $ContactId) Cve__BenefitClaimed__c(cve__Claim__c == $ClaimId, $ClaimReceived : cve__DateReceived__c); eval(RuleUtil.firstNotificationAfterRetirementOr($ClaimReceived, $EndOfHiringDate)) then insert( new Alert(firstNotificationAfterLeftJobSetttings.getName(), firstNotificationAfterLeftJobSetttings.getScore(),firstNotificationAfterLeftJobSetttings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end;",
-	"consequence": {"score":110, "recommendation" : "Review Physician for patterns"},
+	"consequence": {"score":187, "recommendation" : "Review Claimant's financial history and reason for losing their job, pass claim to fraud examiner if there is any doubt about the legitimacy of the claim."},
 	"setting":{
-		"score":100, 
-		"recommendation": "TODO Review Physician for patterns", 
+		"score":187, 
+		"recommendation": "Review Claimant's financial history and reason for losing their job, pass claim to fraud examiner if there is any doubt about the legitimacy of the claim.", 
 		"configHint": "",
 		"category": "Timing",
 		"name": "First Notification of Claim after Claimant has left job"
 		},
 	"relatedRules": [
 		
-		{"parentRule": "First Notification of Claim after Claimant has left job", "ruleName": "Subjective Injury Rule", "correlationWeight" : 0.444},
+		{"parentRule": "First Notification of Claim after Claimant has left job", "ruleName": "Subjective Injury", "correlationWeight" : 0.444},
 		{"parentRule": "First Notification of Claim after Claimant has left job", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.443},
-		{"parentRule": "First Notification of Claim after Claimant has left job", "ruleName": "Missing Accident Report Rule", "correlationWeight" : 0.420},
-		{"parentRule": "First Notification of Claim after Claimant has left job", "ruleName": "Claimant Claiming Same Injury Number Of Times Rule", "correlationWeight" : 0.378},
-		{"parentRule": "First Notification of Claim after Claimant has left job", "ruleName": "Sales Office with same Diagnosis Multiple times Rule", "correlationWeight" : 0.350},
+		{"parentRule": "First Notification of Claim after Claimant has left job", "ruleName": "Missing Accident Report", "correlationWeight" : 0.420},
+		{"parentRule": "First Notification of Claim after Claimant has left job", "ruleName": "Claimant Claiming Same Injury Number Of Times", "correlationWeight" : 0.378},
+		{"parentRule": "First Notification of Claim after Claimant has left job", "ruleName": "Sales Office with same Diagnosis Multiple Times", "correlationWeight" : 0.350},
 		{"parentRule": "First Notification of Claim after Claimant has left job", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.345},
-		{"parentRule": "First Notification of Claim after Claimant has left job", "ruleName": "Physician Fraudulent History Rule", "correlationWeight" : 0.317},
-		{"parentRule": "First Notification of Claim after Claimant has left job", "ruleName": "Physician Diagnosing Same Injury Rule", "correlationWeight" : 0.313}
+		{"parentRule": "First Notification of Claim after Claimant has left job", "ruleName": "Physician Fraudulent History", "correlationWeight" : 0.317},
+		{"parentRule": "First Notification of Claim after Claimant has left job", "ruleName": "Physician Diagnosing Same Injury", "correlationWeight" : 0.313}
 	],
 	"global": "firstNotificationAfterLeftJobSetttings"
 },
@@ -591,59 +589,59 @@
 
 
 {
-    "description": "This Rule flags claims have been claimed against relatively new Claims",
-    "name": "New Policy Rule",
-    "script": "package com.rules  import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting newPolicySettings rule 'New Policy Rule' when Contact($ContactId : id, $ClaimantName : Name); $Claim : Cve__Claim__c($ClaimId : id,  $ClaimName : Name, Cve__ClaimantInsured__c == $ContactId, RuleUtil.isClaimOpen(cve__Status__c)); Cve__BenefitClaimed__c(cve__Claim__c == $ClaimId, $dateOfDisability : cve__DateOfDisability__c); Cve__PolicyRelationship__c(cve__Contact__c == $ContactId, cve__Start__c != null); Cve__PolicyRelationship__c(cve__Contact__c == $ContactId,  $policyStartDate : cve__Start__c); eval(RuleUtil.dayAfterStartDate($policyStartDate, $dateOfDisability, newPolicySettings.getNumberOfDays())) then insert( new Alert(drools.getRule().getName(), newPolicySettings.getScore(), newPolicySettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end",
-	"consequence": {"score":100, "recommendation":" Ensure claimant has a valid claim, this policy was recently purchased"},
+    "description": "This rule will flag claims that have been made within ' + setting.getNumberOfDays() + ' of purchasing the claim.",
+    "name": "New Policy",
+    "script": "package com.rules  import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting newPolicySettings rule 'New Policy' when Contact($ContactId : id, $ClaimantName : Name); $Claim : Cve__Claim__c($ClaimId : id,  $ClaimName : Name, Cve__ClaimantInsured__c == $ContactId, RuleUtil.isClaimOpen(cve__Status__c)); Cve__BenefitClaimed__c(cve__Claim__c == $ClaimId, $dateOfDisability : cve__DateOfDisability__c); Cve__PolicyRelationship__c(cve__Contact__c == $ContactId, cve__Start__c != null); Cve__PolicyRelationship__c(cve__Contact__c == $ContactId,  $policyStartDate : cve__Start__c); eval(RuleUtil.dayAfterStartDate($policyStartDate, $dateOfDisability, newPolicySettings.getNumberOfDays())) then insert( new Alert(newPolicySettings.getName(), newPolicySettings.getScore(), newPolicySettings.getRecommendation(), $ClaimId, $ClaimName, $ClaimantName, $Claim)); end",
+	"consequence": {"score":139, "recommendation":" Ensure claimant has a valid claim, this policy was recently purchased"},
 	"setting":{
-		"score":100, 
+		"score":139, 
 		"recommendation": " Ensure claimant has a valid claim, this policy was recently purchased", 
 		"numberOfDays": 10,
 		"configHint": "Please enter the number of days after a policy is purchased that would not be deemed suspicious if a claim was filed against it",
 		"category": "Policy",
-		"name": "New Policy Rule"
+		"name": "New Policy"
 		},
 	"relatedRules":[
 		
-		{"parentRule": "New Policy Rule", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.446},
-		{"parentRule": "New Policy Rule", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.361},
-		{"parentRule": "New Policy Rule", "ruleName": "Subjective Injury Rule", "correlationWeight" : 0.357},
-		{"parentRule": "New Policy Rule", "ruleName": "Physician Invalid Address Rule", "correlationWeight" : 0.331},
-		{"parentRule": "New Policy Rule", "ruleName": "Physician Missing Address Rule", "correlationWeight" : 0.309}
+		{"parentRule": "New Policy", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.446},
+		{"parentRule": "New Policy", "ruleName": "Physician and Lawyer with Multiple Same type of Claim", "correlationWeight" : 0.361},
+		{"parentRule": "New Policy", "ruleName": "Subjective Injury", "correlationWeight" : 0.357},
+		{"parentRule": "New Policy", "ruleName": "Physician Invalid Address", "correlationWeight" : 0.331},
+		{"parentRule": "New Policy", "ruleName": "Physician Missing Address", "correlationWeight" : 0.309}
 	],
 	"global": "newPolicySettings"
 },
 
 
 {
-    "description": " TODO For all",
+    "description": " This rule looks at all the claims in the organization and detects any patterns that emerge from the physician and lawyer be associated with the same claim diagnosis",
     "name": "Physician and Lawyer with Multiple Same type of Claim",
     "script": "package com.rules import com.claimvantage.model.* import com.sforce.soap.enterprise.sobject.*  import com.claimvantage.rules.* import java.io.PrintStream global com.claimvantage.rules.Setting physicianLawyerMultipleDiagnosisSettings rule 'Physician and Lawyer with Multiple Same type of Claim'  salience 100 when Cve__Claim__c($ClaimId : id) Cve__ClaimRelationship__c( cve__Claim__c == $ClaimId, cve__Type__c == 'Attending Physician', $PhysicianId : cve__Contact__c  ) Cve__ClaimRelationship__c( cve__Claim__c == $ClaimId, cve__Type__c == 'Attorney',  $AttorneyId : cve__Contact__c )  Contact( id == $PhysicianId , $physicianName : name)  Contact( id == $AttorneyId, $attorneyName : name) Cve__Journal__c( $JournalId : id, cve__Claim__c == $ClaimId) Cve__Diagnosis__c(cve__Journal__c == $JournalId, $medicalCode : cve__MedicalCode__c, cve__MedicalCode__c != null ) then insert( new PhysicianLawyerDiagnosis($PhysicianId, $AttorneyId, $ClaimId, $medicalCode) ); end; rule 'Count Physician and Lawyer with Multiple Same type of Claim' salience 0 when PhysicianLawyerDiagnosis($physicianId : physicianId, $lawyerId : lawyerId, $medicalCode : medicalCode, $claimId : claimId); $claim : Cve__Claim__c(id == $claimId, $claimName : name, $claimantId : cve__ClaimantInsured__c);  Contact( id == $claimantId, $claimantName : name)  Number( $diagnosisCount : intValue) from accumulate(  $claims :  PhysicianLawyerDiagnosis($physicianId == physicianId, $lawyerId == lawyerId, medicalCode == $medicalCode), count( $claims )) eval( $diagnosisCount > physicianLawyerMultipleDiagnosisSettings.getNumberOfClaims()) then insert( new Alert(physicianLawyerMultipleDiagnosisSettings.getName(), physicianLawyerMultipleDiagnosisSettings.getScore(), physicianLawyerMultipleDiagnosisSettings.getRecommendation(), $claimId, $claimName, $claimantName, $claim)); end;",
-	"consequence": {"score":100, "recommendation":" Ensure claimant has a valid claim, this policy was recently purchased"},
+	"consequence": {"score":116, "recommendation":"Initiate an internal investigation on the physician and lawyer associated with this claim. "},
 	"setting":{
-		"score": 100, 
-		"recommendation": "TODO for all", 
+		"score": 116, 
+		"recommendation": "Initiate an internal investigation on the physician and lawyer associated with this claim. ", 
 		"numberOfClaims": 1,
 		"configHint": "Please enter the number of diagnosis you would deem suspicious if a claim had the same Physician and Lawyer pairing for the same diagnosis.",
 		"category": "Legal",
 		"name": "Physician and Lawyer with Multiple Same type of Claim"
 		},
 	"relatedRules":[
-		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Claimant Claiming Same Injury Number Of Times Rule", "correlationWeight" : 0.501},
-		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Missing Medical Documents Rule", "correlationWeight" : 0.496},
-		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Sales Office with same Diagnosis Multiple times Rule", "correlationWeight" : 0.468},
+		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Claimant Claiming Same Injury Number Of Times", "correlationWeight" : 0.501},
+		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Missing Medical Documents", "correlationWeight" : 0.496},
+		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Sales Office with same Diagnosis Multiple Times", "correlationWeight" : 0.468},
 		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "History Of Subjective Injury Claims", "correlationWeight" : 0.459},
-		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Missing Accident Report Rule", "correlationWeight" : 0.451},
-		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Claimants Previous Claims Rule", "correlationWeight" : 0.433},
+		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Missing Accident Report", "correlationWeight" : 0.451},
+		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Claimants has made Previous Claims", "correlationWeight" : 0.433},
 		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Physician and Sales Office with same Diagnosis Multiple times", "correlationWeight" : 0.431},
-		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Missing Multiple Documents Rule", "correlationWeight" : 0.413},
-		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Physician Missing Address Rule", "correlationWeight" : 0.402},
-		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Physician Fraudulent History Rule", "correlationWeight" : 0.385},
+		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Missing Multiple Documents", "correlationWeight" : 0.413},
+		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Physician Missing Address", "correlationWeight" : 0.402},
+		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Physician Fraudulent History", "correlationWeight" : 0.385},
 		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "First Notification of Claim after Claimant has left job", "correlationWeight" : 0.370},
-		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "New Policy Rule", "correlationWeight" : 0.361},
-		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Physician Diagnosing Same Injury Rule", "correlationWeight" : 0.350},
-		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Physician Invalid Address Rule", "correlationWeight" : 0.340},
-		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Subjective Injury Rule", "correlationWeight" : 0.340},
+		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "New Policy", "correlationWeight" : 0.361},
+		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Physician Diagnosing Same Injury", "correlationWeight" : 0.350},
+		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Physician Invalid Address", "correlationWeight" : 0.340},
+		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Subjective Injury", "correlationWeight" : 0.340},
 		{"parentRule": "Physician and Lawyer with Multiple Same type of Claim", "ruleName": "Missing Physician", "correlationWeight" : 0.309}
 		
 	],

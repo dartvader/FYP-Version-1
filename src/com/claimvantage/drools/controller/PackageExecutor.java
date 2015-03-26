@@ -19,11 +19,13 @@ import com.claimvantage.data.ExecutionRepository;
 import com.claimvantage.data.PackageRepository;
 import com.claimvantage.data.RulesRepository;
 import com.claimvantage.data.exporter.DataLoader;
-import com.claimvantage.drools.listeners.TrackingWorkingMemoryEventListener;
+import com.claimvantage.drools.listeners.WorkingMemoryEventListener;
 import com.claimvantage.model.Alert;
 import com.claimvantage.model.Execution;
 import com.claimvantage.model.Rule;
 import com.claimvantage.model.Sobject;
+import com.claimvantage.model.Package;
+
 
 public class PackageExecutor {
 	
@@ -46,73 +48,77 @@ public class PackageExecutor {
 		selectedPackage = packageRepo.getPackagesById(this.packageId);
 		ArrayList<Rule> realRules = rulesRepo.getRulesByNames(selectedPackage.getRuleNames());
 
-		KieSession session = createKieSession(realRules);
+		KieSession session = createDroolsSession(realRules);
 		loadData(session, selectedPackage.getRequiredObjects());
 		executeRules(session, selectedPackage, realRules);
 	}
 	
 	
-	public KieSession createKieSession(ArrayList<Rule> rules) {
-
-		KieServices kieServices = KieServices.Factory.get();
-		KieRepository kieRepository = kieServices.getRepository();
-		KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
+	public KieSession createDroolsSession(ArrayList<Rule> rules) {
+		// KieServices factory is used to create the virtual building blocks need to create a drools session
+		KieServices droolsServices = KieServices.Factory.get();
+		
+		// The Drools repository class is used to store all available KieModules
+		KieRepository droolsRulesRepository = droolsServices.getRepository();
+		// Virtual file system used to write the rules to
+		KieFileSystem droolsFileSystem = droolsServices.newKieFileSystem();
 		
 		for (Rule r : rules) {
-			kieFileSystem.write(REPOSITORY_LOCATION + r.getName() + ".drl", r.getScript().toString());
+			// writing the rules to the virtual rule system
+			droolsFileSystem.write(REPOSITORY_LOCATION + r.getName() + ".drl", r.getScript().toString());
 		}
-		
-		KieBuilder kb = kieServices.newKieBuilder(kieFileSystem);
-		kb.buildAll(); // kieModule is automatically deployed to KieRepository
-						// if successfully built.
-
-		if (kb.getResults().hasMessages(Level.ERROR)) {
+		// create a rule builder 
+		KieBuilder droolsRuleBuilder = droolsServices.newKieBuilder(droolsFileSystem);
+		// Build all rules
+		droolsRuleBuilder.buildAll(); // kieModule is automatically deployed to KieRepository
+						
+		// if successfully built.
+		if (droolsRuleBuilder.getResults().hasMessages(Level.ERROR)) {
 			throw new RuntimeException("Build Errors:\n"
-					+ kb.getResults().toString());
+					+ droolsRuleBuilder.getResults().toString());
 		}
-
-		KieContainer kContainer = kieServices.newKieContainer(kieRepository.getDefaultReleaseId());
-		return kContainer.newKieSession();
+		// Create a container for the session
+		KieContainer droolsContainer = droolsServices.newKieContainer(droolsRulesRepository.getDefaultReleaseId());
+		return droolsContainer.newKieSession();
 	}
 	
-	private void loadData(KieSession kieSession, HashSet<Sobject> requiredObjects) {
-		// pass reference to the kieSession into the bulk data exporter
-		DataLoader.execute(kieSession, requiredObjects);
+	private void loadData(KieSession droolsSession, HashSet<Sobject> requiredObjects) {
+		// pass reference to the droolsSession into the bulk data exporter
+		DataLoader.execute(droolsSession, requiredObjects);
 	}
 
-	public Execution executeRules(KieSession kieSession, com.claimvantage.model.Package selectedPacakge, ArrayList<Rule> rules) {
-
+	private Execution executeRules(KieSession droolsSession, Package selectedPacakge, ArrayList<Rule> rules) {
+		
 		selectedPacakge.incrementNumberOfExecutions();
 		List<Alert> alerts = new ArrayList<Alert>();
-
-		TrackingWorkingMemoryEventListener workingMemoryListener = new TrackingWorkingMemoryEventListener();
-		kieSession.addEventListener(workingMemoryListener);
-		
+		// Loading a listener to capture any matched rules
+		WorkingMemoryEventListener workingMemoryListener = new WorkingMemoryEventListener();
+		droolsSession.addEventListener(workingMemoryListener);
+		// Injecting the Rules settings (Configurations, Scores and Recommendations)
 		for (Rule rule : rules) {
 			if (rule.getSetting() != null && rule.getGlobal() != null) {
-				kieSession.setGlobal(rule.getGlobal(), rule.getSetting());
+				droolsSession.setGlobal(rule.getGlobal(), rule.getSetting());
 			}
 		}
-		
-		int numberOfRuleFired = kieSession.fireAllRules();
-		
-		long factCount = kieSession.getFactCount();
+		// Firing the rules against the loaded claims data
+		int numberOfRuleFired = droolsSession.fireAllRules();
+		// Retrieving and storing all necessary information in regards the execution of the drools rules.
+		long factCount = droolsSession.getFactCount();
 		selectedPacakge.incrementNumberOfRulesFired(numberOfRuleFired);
-
+		// Retrieving the alerts fired
 		alerts = workingMemoryListener.getAlerts();
 		selectedPacakge.incrementNumberOfAlerts(alerts.size());
-		Execution execution = new Execution(alerts, rules, selectedPacakge.getId(), numberOfRuleFired, factCount, alerts.size());
-		
 		alertsRepo.addAlerts(new Timestamp(new Date().getTime()).toLocalDateTime().toString(), alerts);
-		executionsRepo.addExecution(new Timestamp(new Date().getTime()).toLocalDateTime().toString(), execution);
-		
 		selectedPackage.addNewAlerts(alerts);
+		
+		Execution execution = new Execution(alerts, rules, selectedPacakge.getId(), numberOfRuleFired, factCount, alerts.size());
+		executionsRepo.addExecution(new Timestamp(new Date().getTime()).toLocalDateTime().toString(), execution);
 		selectedPacakge.executions.add(execution);
 		selectedPacakge.setLastExecutionDate(new Timestamp(new Date().getTime()).toLocalDateTime().toString());
 		
 		// Cleaning up Session memory
-		kieSession.removeEventListener(workingMemoryListener);
-		kieSession.dispose();
+		droolsSession.removeEventListener(workingMemoryListener);
+		droolsSession.dispose();
 
 		return execution;
 	}

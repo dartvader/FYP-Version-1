@@ -36,8 +36,6 @@ public class RuleUtil {
 		for (OpenStatus status : OpenStatus.values()) {
 			if (status.toString() == claimStatus
 					|| status.toString().contains(claimStatus)) {
-				// System.out.println(" Claim Status " + claimStatus +
-				// " fraudster " + f);
 				return true;
 			}
 		}
@@ -122,17 +120,14 @@ public class RuleUtil {
 		return (largeNumber < notes + attachments + documents) ? true : false;
 	}
 
-	public static Boolean dayAfterStartDate(Calendar calendar1, Calendar calendar2, int daysAllowedAfter) {
+	public static Boolean dayAfterStartDate(Calendar policyStartDate, Calendar dateOfDisability, int daysAllowedAfter) {
 		
-		if (calendar1 == null || calendar2 == null) {
+		if (policyStartDate == null || dateOfDisability == null) {
 			return false;
 		}
-		Date date1 =  calendar1.getTime();
-		Date date2 =  calendar2.getTime();
-		Days days = Days.daysBetween(new DateTime(date1), new DateTime(date2));
+		Days days = Days.daysBetween(new DateTime(policyStartDate.getTime()), new DateTime(dateOfDisability.getTime()));
 		int daysBetween = days.getDays();
 		
-		System.out.println("Days Between " + days);
 		return daysBetween <= daysAllowedAfter ? true: false;
 	}
 	
