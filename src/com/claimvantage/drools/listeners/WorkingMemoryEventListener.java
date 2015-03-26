@@ -5,24 +5,16 @@ import java.util.List;
 import org.kie.api.event.rule.DefaultRuleRuntimeEventListener;
 import org.kie.api.event.rule.ObjectInsertedEvent;
 import org.kie.api.runtime.rule.FactHandle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.claimvantage.model.Alert;
 
 public class WorkingMemoryEventListener extends DefaultRuleRuntimeEventListener {
 
-	private static Logger log = LoggerFactory.getLogger(WorkingMemoryEventListener.class);
-	
     private List<Alert> alerts = new ArrayList<Alert>();
 	
 	private FactHandle handleFilter;
 	private Class<?> classFilter;
 	
-	/**
-	* Void constructor sets the listener to record all working memory events
-	* with no filtering.
-	*/
 	public WorkingMemoryEventListener() {
 		this.handleFilter = null;
 	}
@@ -47,7 +39,6 @@ public class WorkingMemoryEventListener extends DefaultRuleRuntimeEventListener 
 			if (event.getObject().getClass().equals(Alert.class)) {
 				a = (Alert) event.getObject();
 				alerts.add(a);
-				log.trace("Insertion: " + a.getRuleName());
 			}
 		}
 	}

@@ -32,12 +32,11 @@ public class Rule {
 	private Setting setting;
 	private ArrayList<RuleCorrelation> relatedRules;
 	
-	private Rule() {
-		// this.status = true;
-	}
-	
 	private Rule(ArrayList<RuleCorrelation> relatedRules) {
 		this.relatedRules = relatedRules;
+	}
+	private Rule() {
+		
 	}
 	
 	public String getName() {
@@ -77,7 +76,6 @@ public class Rule {
 		return script;
 	}
 	public void buildScript() {
-		// TODO Remove StringBuilder s = BuilderUtil.buildRuleScript(this);
 		this.script = BuilderUtil.buildRuleScript(this);
 	}
 	public Boolean getStatus() {

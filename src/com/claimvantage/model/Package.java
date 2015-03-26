@@ -1,6 +1,5 @@
 package com.claimvantage.model;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -112,7 +111,7 @@ public class Package {
 	}
 	*/
 	public HashSet<Sobject> getRequiredObjects() {
-
+		// Code used for custom builder
 		//== null ? createRequiredObjects(rulesRepo.getRulesByNames(this.ruleNames)) : this.requiredObjects;
 		return this.requiredObjects;
 	}

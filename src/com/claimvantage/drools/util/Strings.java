@@ -1,8 +1,11 @@
 package com.claimvantage.drools.util;
 
+
+/**
+ * This code was taken from the ClaimVantage enterprise application.
+ */
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import com.claimvantage.model.SobField;
 

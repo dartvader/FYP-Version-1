@@ -15,7 +15,6 @@ public class RulesRepository {
 		rules = new ArrayList<Rule>();
 	}
 	
-	// Quick and dirty need to maybe re-factor this TODO
 	public ArrayList<Rule> updateRules(ArrayList<Rule> updatedRules) {
 		this.rules.clear();
 		this.rules.addAll(updatedRules);
@@ -53,14 +52,11 @@ public class RulesRepository {
 	
 	public ArrayList<Rule> getRulesByNames(ArrayList<String> packageRuleNames) {
 		
-		
 		ArrayList<Rule> returnRules = new ArrayList<Rule>();	
 		for (String ruleName : packageRuleNames) {
 			
 			for (Rule rule : this.rules) {
-				// This might change to the settings
 				if (rule.getName() == ruleName || rule.getName().contains(ruleName)) {
-					System.out.println("<<<< Matching >>>>> " + ruleName);
 					returnRules.add(rule);
 				}
 			}
@@ -70,12 +66,11 @@ public class RulesRepository {
 	
 	public ArrayList<Rule> getRulesByCategory(ArrayList<String> packageRuleCategories) {
 		
-		ArrayList returnRules = new ArrayList<Rule>();	
+		ArrayList<Rule> returnRules = new ArrayList<Rule>();	
 		for (String ruleCategory : packageRuleCategories) {
 			for (Rule rule : this.rules) {
 				// This might change to the settings
 				if (rule.getName() == ruleCategory || rule.getName().contains(ruleCategory)) {
-					System.out.println("<<<< Matching Category >>>>> " + ruleCategory);
 					returnRules.add(rule);
 				}
 			}

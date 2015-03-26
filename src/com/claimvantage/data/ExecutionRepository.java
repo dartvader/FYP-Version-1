@@ -1,10 +1,6 @@
 package com.claimvantage.data;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
-import com.claimvantage.model.Alert;
 import com.claimvantage.model.Execution;
 
 public class ExecutionRepository {

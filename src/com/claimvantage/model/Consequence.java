@@ -20,15 +20,4 @@ public class Consequence {
 	public void setRecommendation(String recommendation) {
 		this.recommendation = recommendation;
 	}
-	
-	// TODO Build consequence Script
-	public String buildScript() {
-		// 
-		
-		return "";
-	}
-	
-	// TODO look at how to find the claim object or build alert object that can find claim when uploaded to Salesforce
-	
-	
 }

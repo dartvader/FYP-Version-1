@@ -34,7 +34,6 @@ public class Execution {
 		this.setFormattedDate(dateFormatter.format(now));
 		// Calculate the Frequency of the Alerts rules
 		this.ruleFrequency = calculateRuleFrequency(alerts, rules);
-		System.out.println("Calculating Rule Frequency ");
 	}
 	
 	
@@ -77,7 +76,6 @@ public class Execution {
 				ruleFrequency.put(ruleName, 0);
 			} 
 		}
-		System.out.println("Calculating Rule Frequency t" + ruleFrequency.toString());
 		return ruleFrequency;
 	}
 

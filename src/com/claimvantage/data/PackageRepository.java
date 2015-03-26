@@ -3,9 +3,6 @@ package com.claimvantage.data;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import javax.persistence.Entity;
-
 import com.claimvantage.model.Package;
 
 public class PackageRepository {
